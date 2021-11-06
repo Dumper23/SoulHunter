@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -13,9 +14,10 @@ public class playerController : MonoBehaviour
     public float gravityScale = 10f;
     public int maxJumps = 2;
     public ParticleSystem jumpParticle;
+    public ParticleSystem walkParticles;
 
     private int availableJumps;
-
+    private bool hittedGround = true;
 
     [Header("Dash settings")]
     public float dashForce = 40f;
@@ -44,7 +46,14 @@ public class playerController : MonoBehaviour
     public LayerMask enemyLayer;
     public int attackDamage = 10;
     public float attackRate = 2f;
+
     private float nextAttackTime = 0;
+    private float relPos;
+
+    [Header("UI settings")]
+    public RawImage dashIndicator;
+    public RawImage jumpIndicator1;
+    public RawImage jumpIndicator2;
 
     //Other settings
     private Transform t;
@@ -52,19 +61,22 @@ public class playerController : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private Transform groundCollider;
+    private AudioSource audio;
 
     
 
 
     void Start()
     {
+        relPos = 0.4f;
         //We get all the components we need
         sprite = GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
 
         t = gameObject.transform;
-        
+
         //We set the rigidBody to freeze rotation, continuous colisions and the gravity scale
         r2d.freezeRotation = true;
         r2d.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -84,8 +96,38 @@ public class playerController : MonoBehaviour
 
         r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
+        if (availableJumps < 2)
+        {
+            jumpIndicator1.enabled = false;
+        }
+        if (availableJumps < 1)
+        {
+            jumpIndicator2.enabled = false;
+        }
+        if (availableJumps >= 2)
+        {
+            jumpIndicator1.enabled = true;
+            jumpIndicator2.enabled = true;
+        }
 
         bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+
+        //After the jump we create effects as we hit the ground
+        if (isGrounded)
+        {
+            if (hittedGround)
+            {
+                Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
+                Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                hittedGround = false;
+                audio.Play();
+            }
+        }
+        else
+        {
+            hittedGround = true;
+        }
+
 
         if (isGrounded && !Input.GetButton("Jump"))
         {
@@ -99,6 +141,7 @@ public class playerController : MonoBehaviour
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
             
             availableJumps--;
+            
             jumpParticle.Play();
         }
 
@@ -115,6 +158,7 @@ public class playerController : MonoBehaviour
             currentDashRecoveryTime = dashRecoveryTime;
             isDashing = true;
             dashParticle.Play();
+            dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
             r2d.velocity = Vector3.zero;
             if (horizontalIn > 0)
@@ -148,7 +192,8 @@ public class playerController : MonoBehaviour
             if(currentDashRecoveryTime <= 0)
             {
                 dashed = false;
-                
+                dashIndicator.color = Color.green;
+
             }
             else
             {
@@ -179,20 +224,32 @@ public class playerController : MonoBehaviour
         #endregion
 
         #region Combat
-        if(Time.time >= nextAttackTime )
-        if (Input.GetKeyDown(KeyCode.K))
+        if (horizontalIn < 0)
         {
-            //Play attack animation
-            
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+            attackPoint.position = new Vector3(-relPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+        }
+        else if(horizontalIn > 0)
+        {
+            attackPoint.position = new Vector3(relPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+        }
 
-            foreach(Collider2D enemy in hitEnemies)
+        if (Time.time >= nextAttackTime)
+        {
+            if (Input.GetKeyDown(KeyCode.K))
             {
-                //Creidar la funcio de lenemic per restarli vida
-                //enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-                nextAttackTime = Time.time + 1 / attackRate;
-            }
+                //Play attack animation
 
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    //Creidar la funcio de lenemic per restarli vida
+                    //enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                    Debug.Log("We hit -> " + enemy.name);
+                    nextAttackTime = Time.time + 1 / attackRate;
+                }
+
+            }
         }
         #endregion
 

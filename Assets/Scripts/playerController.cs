@@ -14,10 +14,14 @@ public class playerController : MonoBehaviour
     public float gravityScale = 10f;
     public int maxJumps = 2;
     public ParticleSystem jumpParticle;
+    public ParticleSystem groundImpactParticles;
     public ParticleSystem walkParticles;
+    public float startTimeTrail;
 
     private int availableJumps;
     private bool hittedGround = true;
+    private float timeTrail;
+    
 
     [Header("Dash settings")]
     public float dashForce = 40f;
@@ -110,6 +114,8 @@ public class playerController : MonoBehaviour
             jumpIndicator2.enabled = true;
         }
 
+        
+
         bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
 
         //After the jump we create effects as we hit the ground
@@ -117,10 +123,24 @@ public class playerController : MonoBehaviour
         {
             if (hittedGround)
             {
-                Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
+                groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
+                Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
                 audio.Play();
+            }
+            if (horizontalIn != 0)
+            {
+                if (timeTrail <= 0)
+                {
+                    walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
+                    Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
+                    timeTrail = startTimeTrail;
+                }
+                else
+                {
+                    timeTrail -= Time.deltaTime;
+                }
             }
         }
         else

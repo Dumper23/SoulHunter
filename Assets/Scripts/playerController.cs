@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,13 +60,16 @@ public class playerController : MonoBehaviour
     public RawImage jumpIndicator1;
     public RawImage jumpIndicator2;
 
+    [Header("Sound Settings")]
+    public List<AudioSource> playerSounds = new List<AudioSource>();
+
     //Other settings
     private Transform t;
     private Rigidbody2D r2d;
     private SpriteRenderer sprite;
     private Animator animator;
     private Transform groundCollider;
-    private AudioSource audio;
+    
 
     
 
@@ -77,7 +81,6 @@ public class playerController : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        audio = GetComponent<AudioSource>();
 
         t = gameObject.transform;
 
@@ -127,7 +130,7 @@ public class playerController : MonoBehaviour
                 Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
-                audio.Play();
+                playerSounds[0].Play();
             }
             if (horizontalIn != 0)
             {
@@ -136,6 +139,7 @@ public class playerController : MonoBehaviour
                     walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
                     Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                     timeTrail = startTimeTrail;
+                    playerSounds[1].Play();
                 }
                 else
                 {
@@ -161,6 +165,7 @@ public class playerController : MonoBehaviour
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
             
             availableJumps--;
+            playerSounds[3].Play();
             
             jumpParticle.Play();
         }
@@ -178,6 +183,7 @@ public class playerController : MonoBehaviour
             currentDashRecoveryTime = dashRecoveryTime;
             isDashing = true;
             dashParticle.Play();
+            playerSounds[2].Play();
             dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
             r2d.velocity = Vector3.zero;

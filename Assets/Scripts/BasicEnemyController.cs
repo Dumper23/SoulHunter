@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class BasicEnemyController : MonoBehaviour
 {
+   
+
     private enum State
     {
         Walking,
         Knockback,
         Dead
     }
+
+
+    public int damageToPlayer = 1;
 
     private State currentState;
 
@@ -188,8 +193,10 @@ public class BasicEnemyController : MonoBehaviour
 
     //----ALTRES----
 
-    private void Damage(float[] attackDetails)
+    public void Damage(float[] attackDetails)
     {
+       
+
         currentHealth -= attackDetails[0];
 
         Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));

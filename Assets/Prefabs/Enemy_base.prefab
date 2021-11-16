@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7314299274910249636}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7314299275404080530}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: GroundCheckBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7314299275460659523}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 7314299275699822469}
   - component: {fileID: 7314299275699822472}
   - component: {fileID: 7314299275699822471}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Alive
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -289,10 +289,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1d718dc20686840a2acf8566e27a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damagePop: {fileID: 29987218943662502, guid: df1596eb87b94444a97d215524f9bf60, type: 3}
+  damageToPlayer: 1
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   movementSpeed: 3
-  maxHealth: 100
+  maxHealth: 20
   knockbackDuration: 0.5
   groundCheck: {fileID: 7314299274910249636}
   groundCheckBack: {fileID: 7314299275404080530}
@@ -304,8 +306,6 @@ MonoBehaviour:
   hitParticle: {fileID: 7336040460848702072}
   deathChunkParticle: {fileID: 4011056946076971215, guid: 4d205629c7094b44995ec74a4b2c60e6, type: 3}
   deathBloodParticle: {fileID: 5640961278513363789, guid: 41a827ce79efc01498a12343a29550ad, type: 3}
-  takedamage: 0
-  player: {fileID: 0}
   particleDamage: {fileID: 7336040460053002169}
 --- !u!1001 &2668601805059071501
 PrefabInstance:
@@ -361,6 +361,10 @@ PrefabInstance:
     - target: {fileID: 4667452001360329845, guid: bf4753790a6749346bf259581db78257, type: 3}
       propertyPath: m_Name
       value: damage
+      objectReference: {fileID: 0}
+    - target: {fileID: 4667452001360329845, guid: bf4753790a6749346bf259581db78257, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf4753790a6749346bf259581db78257, type: 3}

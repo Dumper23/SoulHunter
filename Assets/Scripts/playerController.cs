@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -29,6 +30,7 @@ public class playerController : MonoBehaviour
     public float startDashTime = 0.25f;
     public float dashRecoveryTime = 1.5f;
     public ParticleSystem dashParticle;
+    public float dashAlpha = 0.75f;
 
     private float currentDashRecoveryTime;
     private bool isDashing;
@@ -51,6 +53,7 @@ public class playerController : MonoBehaviour
     public LayerMask enemyLayer;
     public int attackDamage = 10;
     public float attackRate = 2f;
+    public int playerLives = 3;
 
     private float nextAttackTime = 0;
     private float relPos;
@@ -59,6 +62,9 @@ public class playerController : MonoBehaviour
     public RawImage dashIndicator;
     public RawImage jumpIndicator1;
     public RawImage jumpIndicator2;
+    public RawImage live1;
+    public RawImage live2;
+    public RawImage live3;
 
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
@@ -126,7 +132,7 @@ public class playerController : MonoBehaviour
         {
             if (hittedGround)
             {
-                groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
+                //groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
                 Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
@@ -136,7 +142,7 @@ public class playerController : MonoBehaviour
             {
                 if (timeTrail <= 0)
                 {
-                    walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
+                    //walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
                     Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                     timeTrail = startTimeTrail;
                     playerSounds[1].Play();
@@ -199,10 +205,11 @@ public class playerController : MonoBehaviour
         Color tmp = sprite.color;
         if (isDashing)
         {
+            animator.SetBool("isDashing", isDashing);
             r2d.velocity = transform.right * dashDirection * dashForce;
             currentDashTime -= Time.deltaTime;
             
-            tmp.a = 0.2f;
+            tmp.a = dashAlpha;
             sprite.color = tmp;
             dashed = true;
             if (currentDashTime <= 0)
@@ -211,6 +218,10 @@ public class playerController : MonoBehaviour
                 tmp.a = 1;
                 sprite.color = tmp;
             }
+        }
+        else
+        {
+            animator.SetBool("isDashing", isDashing);
         }
 
         if (dashed)
@@ -270,7 +281,10 @@ public class playerController : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     //Creidar la funcio de lenemic per restarli vida
-                    //enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                    float[] damageMessage = new float[2];
+                    damageMessage[0] = attackDamage;
+                    damageMessage[1] = transform.position.x;
+                    enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
                     Debug.Log("We hit -> " + enemy.name);
                     nextAttackTime = Time.time + 1 / attackRate;
                 }
@@ -281,7 +295,44 @@ public class playerController : MonoBehaviour
 
         animator.SetFloat("hVel", Mathf.Abs(r2d.velocity.x));
 
+        if(playerLives <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.transform.tag == "Enemy")
+        {
+            Color color = new Color();
+            color.r = 255;
+            color.g = 255;
+            color.b = 255;
+            color.a = 1f;
+            playerLives--;
+            if(playerLives == 3)
+            {
+                live1.color = color;
+                live2.color = color;
+                live3.color = color;
+            }else if (playerLives == 2) {
+                color.a = 1f;
+                live1.color = color;
+                live2.color = color;
+                color.a = 0.2f;
+                live3.color = color;
+            }
+            else
+            {
+                color.a = 1f;
+                live1.color = color;
+                color.a = 0.2f;
+                live2.color = color;
+                live3.color = color;
+            }
+        }
     }
 
     private void OnDrawGizmosSelected()

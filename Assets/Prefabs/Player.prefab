@@ -39,6 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4556257231163928205}
+  - component: {fileID: 6634550069733280285}
   - component: {fileID: 4556257231163928206}
   - component: {fileID: 4556257231163928203}
   - component: {fileID: 4556257231163928204}
@@ -75,6 +76,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6634550069733280285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4556257231163928207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c4c4d3f07f2194f8423ae4b817eecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagePop: {fileID: 29987218943662502, guid: df1596eb87b94444a97d215524f9bf60, type: 3}
 --- !u!212 &4556257231163928206
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -171,6 +185,7 @@ MonoBehaviour:
   startDashTime: 0.25
   dashRecoveryTime: 1.5
   dashParticle: {fileID: 4556257231513842241}
+  dashAlpha: 0.75
   frontCheck: {fileID: 4556257230822722489}
   wallSlidingSpeed: 1
   checkRadius: 0.3
@@ -180,10 +195,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   attackDamage: 10
-  attackRate: 2
+  attackRate: 10
+  playerLives: 3
   dashIndicator: {fileID: 0}
   jumpIndicator1: {fileID: 0}
   jumpIndicator2: {fileID: 0}
+  live1: {fileID: 0}
+  live2: {fileID: 0}
+  live3: {fileID: 0}
   playerSounds:
   - {fileID: 4556257231163928200}
   - {fileID: 4556257231163926903}
@@ -683,21 +702,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
-  m_Color: {r: 0.85069764, g: 0.75, b: 1, a: 1}
-  m_Intensity: 1
+  m_FalloffIntensity: 0.721
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1.14
   m_LightVolumeOpacity: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
-  m_LightOrder: 0
+  m_LightOrder: 33
   m_AlphaBlendOnOverlap: 0
-  m_ShadowIntensity: 0.6
+  m_ShadowIntensity: 1
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 13.864398
+  m_PointLightInnerRadius: 0.9
+  m_PointLightOuterRadius: 1.74
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5

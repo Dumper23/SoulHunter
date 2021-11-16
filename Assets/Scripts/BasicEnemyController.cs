@@ -24,6 +24,7 @@ public class BasicEnemyController : MonoBehaviour
     [SerializeField]
     private Transform
         groundCheck,
+        groundCheckBack,
         wallCheck;
 
     [SerializeField]
@@ -50,6 +51,7 @@ public class BasicEnemyController : MonoBehaviour
 
     private bool 
         groundDetected,
+        groundDetectedBack,
         wallDetected;
 
     private GameObject alive;
@@ -117,9 +119,10 @@ public class BasicEnemyController : MonoBehaviour
     private void UpdateWalkingState()
     {
         groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
+        groundDetectedBack = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsGround);
         wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
 
-        if(!groundDetected || wallDetected)
+        if((!groundDetected && groundDetectedBack) || wallDetected)
         {
           
             Flip();
@@ -246,6 +249,7 @@ public class BasicEnemyController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
+        Gizmos.DrawLine(groundCheckBack.position, new Vector2(groundCheckBack.position.x, groundCheckBack.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
     }
 }

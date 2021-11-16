@@ -199,7 +199,7 @@ public class BasicEnemyController : MonoBehaviour
 
         currentHealth -= attackDetails[0];
 
-        Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+        //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
         particleDamage.Play();
         if (attackDetails[1] > alive.transform.position.x)
         {

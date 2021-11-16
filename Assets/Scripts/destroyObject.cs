@@ -7,7 +7,7 @@ public class destroyObject : MonoBehaviour
     public float timeToDestroy = 3f;
     void Start()
     {
-        Destroy(gameObject, timeToDestroy);
+        Destroy(this.gameObject, timeToDestroy);
     }
 
 }

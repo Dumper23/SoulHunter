@@ -132,7 +132,7 @@ public class playerController : MonoBehaviour
         {
             if (hittedGround)
             {
-                //groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
+                groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
                 Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
@@ -142,7 +142,7 @@ public class playerController : MonoBehaviour
             {
                 if (timeTrail <= 0)
                 {
-                    //walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
+                    walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
                     Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                     timeTrail = startTimeTrail;
                     playerSounds[1].Play();
@@ -293,7 +293,6 @@ public class playerController : MonoBehaviour
         }
         #endregion
 
-        animator.SetFloat("hVel", Mathf.Abs(r2d.velocity.x));
 
         if(playerLives <= 0)
         {

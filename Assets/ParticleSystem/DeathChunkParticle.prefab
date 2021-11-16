@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3714880380074785816}
   - component: {fileID: 1961355898768779500}
   - component: {fileID: 300595681993510543}
+  - component: {fileID: -8290663935806905543}
   m_Layer: 0
   m_Name: DeathChunkParticle
   m_TagString: Untagged
@@ -4875,3 +4876,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-8290663935806905543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4011056946076971215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f66c9460a976c54eb103ca0fefa0f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToDestroy: 2

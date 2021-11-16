@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7860880343662132919}
   - component: {fileID: 7860880343662132916}
   - component: {fileID: 7860880345017729049}
+  - component: {fileID: 8509282825386138242}
   m_Layer: 0
   m_Name: dashParticles
   m_TagString: Untagged
@@ -4857,3 +4858,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8509282825386138242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860880345017729048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f66c9460a976c54eb103ca0fefa0f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToDestroy: 1

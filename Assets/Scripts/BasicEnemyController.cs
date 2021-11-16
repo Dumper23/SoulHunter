@@ -60,12 +60,15 @@ public class BasicEnemyController : MonoBehaviour
 
     private Animator aliveAnim;
 
-    public bool takedamage = false;//PROVA
+    /*public bool takedamage = false;//PROVA
     [SerializeField]
     private GameObject player;//PROVA
 
+    */
+
     [SerializeField]
-    private ParticleSystem particleDamage;//PROVA
+    private ParticleSystem particleDamage;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -93,13 +96,14 @@ public class BasicEnemyController : MonoBehaviour
                 UpdateDeadState();
                 break;
         }
-        if (Input.GetKeyDown("p"))
+
+        /*if (Input.GetKeyDown("p"))
         {
             takedamage = true;
         }
+
         if (takedamage)
-        {
-            
+        { 
             float[] f = new float[2];
 
             f[0] = 10;
@@ -107,7 +111,8 @@ public class BasicEnemyController : MonoBehaviour
             takedamage = false;
             Damage(f);
 
-        }
+        }*/
+
     }
 
     //---------WALKING---------------
@@ -160,6 +165,7 @@ public class BasicEnemyController : MonoBehaviour
     {
         aliveAnim.SetBool("Knockback", false);
     }
+
     //---------DEAD---------------
     private void EnterDeadState()
     {

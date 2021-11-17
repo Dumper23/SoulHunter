@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1371265932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371265933}
+  m_Layer: 6
+  m_Name: EnemyCollision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1371265933
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371265932}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.681, y: -0.041, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7314299275699822468}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7314299274910249635
 GameObject:
   m_ObjectHideFlags: 0
@@ -24,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7314299274910249635}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.176, y: -0.304, z: 0}
+  m_LocalPosition: {x: 0.326, y: -0.304, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7314299275699822468}
@@ -54,7 +84,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7314299275404080529}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.28, y: -0.304, z: 0}
+  m_LocalPosition: {x: -0.13000003, y: -0.304, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7314299275699822468}
@@ -84,7 +114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7314299275460659522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.241, y: -0.307, z: 0}
+  m_LocalPosition: {x: 0.352, y: -0.307, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7314299275699822468}
@@ -125,6 +155,7 @@ Transform:
   - {fileID: 7314299275460659523}
   - {fileID: 7336040461143108042}
   - {fileID: 7314299275404080530}
+  - {fileID: 1371265933}
   m_Father: {fileID: 7314299276509080382}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -232,7 +263,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01220876, y: -0.06535566}
+  m_Offset: {x: 0.1, y: -0.01}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -243,7 +274,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.39998114, y: 0.82758}
+  m_Size: {x: 0.39998114, y: 0.98}
   m_EdgeRadius: 0
 --- !u!1 &7314299276509080381
 GameObject:
@@ -290,17 +321,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageToPlayer: 1
+  pointsToGive: 10
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   movementSpeed: 3
   maxHealth: 20
   knockbackDuration: 0.5
+  enemyDetectionRange: 0.25
   groundCheck: {fileID: 7314299274910249636}
   groundCheckBack: {fileID: 7314299275404080530}
   wallCheck: {fileID: 7314299275460659523}
+  enemyCollision: {fileID: 1371265933}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 64
   knockbackSpeed: {x: 5, y: 2}
   hitParticle: {fileID: 7336040460848702072}
   deathChunkParticle: {fileID: 4011056946076971215, guid: 4d205629c7094b44995ec74a4b2c60e6, type: 3}

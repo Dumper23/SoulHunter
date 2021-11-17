@@ -77,6 +77,9 @@ public class playerController : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private Transform groundCollider;
+    private bool immune = false;
+    private Collision2D[] enemy = new Collision2D[10];
+    private int enemyCounter = 0;
     
 
     
@@ -108,6 +111,7 @@ public class playerController : MonoBehaviour
         float horizontalIn = Input.GetAxis("Horizontal");
         bool wantsToJump = Input.GetButtonDown("Jump");
 
+
         if (horizontalIn != 0 && !isDashing)
         {
             animator.SetBool("isRunning", true);
@@ -138,13 +142,15 @@ public class playerController : MonoBehaviour
         
 
         bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-
+        animator.SetBool("isGrounded", isGrounded);
         //After the jump we create effects as we hit the ground
         if (isGrounded)
         {
+            
             if (hittedGround)
             {
                 Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                animator.SetBool("isJumping", false);
                 if (aux.GetComponent<SpriteRenderer>() != null)
                 {
                     groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
@@ -193,7 +199,7 @@ public class playerController : MonoBehaviour
             float hVelocity = r2d.velocity.y;
 
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
-            
+            animator.SetBool("isJumping", true);
             availableJumps--;
             playerSounds[3].Play();
             
@@ -218,6 +224,7 @@ public class playerController : MonoBehaviour
             dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
             r2d.velocity = Vector3.zero;
+            immune = true;
             if (horizontalIn > 0)
             {
                 dashDirection = 1;
@@ -248,6 +255,7 @@ public class playerController : MonoBehaviour
         {
             animator.SetBool("isDashing", isDashing);
             ghost.makeGhost = false;
+            immune = false;
         }
 
         if (dashed)
@@ -282,6 +290,7 @@ public class playerController : MonoBehaviour
         if (wallSliding)
         {
             r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, float.MaxValue));
+
         }
 
         #endregion
@@ -329,7 +338,18 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.transform.tag == "Enemy")
+        if (collision.transform.tag == "Enemy" && isDashing)
+        {
+            enemy[enemyCounter] = collision;
+            enemyCounter++;
+
+            collision.transform.GetComponentInChildren<Rigidbody2D>().isKinematic = true;
+            collision.transform.GetComponentInChildren<BoxCollider2D>().isTrigger = true;
+            Invoke("returnEnemyToCollision", 0.25f);
+        }
+
+
+        if (collision.transform.tag == "Enemy" && !immune)
         {
             Color color = new Color();
             color.r = 255;
@@ -337,7 +357,11 @@ public class playerController : MonoBehaviour
             color.b = 255;
             color.a = 1f;
             playerLives--;
-            if(playerLives == 3)
+            playerSounds[4].Play();
+            //Reaction to damage
+            r2d.velocity = (new Vector2((sprite.flipX ? 1:-1) * 2 * playerVelocity, jumpVelocity * 1));
+            
+            if (playerLives == 3)
             {
                 live1.color = color;
                 live2.color = color;
@@ -367,5 +391,23 @@ public class playerController : MonoBehaviour
             return;
         }
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    private void returnEnemyToCollision()
+    {
+        for (int i = 0; i < enemy.Length; i++)
+        {
+            if (enemy[i] != null)
+            {
+                enemy[i].transform.GetComponentInChildren<Rigidbody2D>().isKinematic = false;
+                enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
+            }
+        }
+        for (int i = 0; i < enemy.Length; i++)
+        {
+            enemy[i] = null;
+        }
+
+        enemyCounter = 0;
     }
 }

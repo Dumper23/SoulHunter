@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BasicEnemyController : MonoBehaviour
 {
-   
-
     private enum State
     {
         Walking,
@@ -15,6 +13,7 @@ public class BasicEnemyController : MonoBehaviour
 
 
     public int damageToPlayer = 1;
+    public int pointsToGive = 10;
 
     private State currentState;
 
@@ -24,16 +23,20 @@ public class BasicEnemyController : MonoBehaviour
         wallCheckDistance,
         movementSpeed,
         maxHealth,
-        knockbackDuration;
+        knockbackDuration,
+        enemyDetectionRange;
 
     [SerializeField]
     private Transform
         groundCheck,
         groundCheckBack,
-        wallCheck;
+        wallCheck,
+        enemyCollision;
 
     [SerializeField]
-    private LayerMask whatIsGround;
+    private LayerMask 
+        whatIsGround, 
+        whatIsEnemy;
 
     [SerializeField]
     private Vector2 knockbackSpeed;
@@ -54,10 +57,11 @@ public class BasicEnemyController : MonoBehaviour
         currentHealth,
         knockbackStartTime;
 
-    private bool 
+    private bool
         groundDetected,
         groundDetectedBack,
-        wallDetected;
+        wallDetected,
+        enemyDetected;
 
     private GameObject alive;
 
@@ -130,9 +134,11 @@ public class BasicEnemyController : MonoBehaviour
     {
         groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
         groundDetectedBack = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
 
-        if((!groundDetected && groundDetectedBack) || wallDetected)
+        wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
+        enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsEnemy);
+
+        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected)
         {
           
             Flip();
@@ -210,7 +216,7 @@ public class BasicEnemyController : MonoBehaviour
             damageDirection = 1;
         }
 
-        //Hir particle
+        //Hit particle
 
         if (currentHealth > 0.0f)
         {
@@ -219,6 +225,7 @@ public class BasicEnemyController : MonoBehaviour
         else if (currentHealth <= 0.0f)
         {
             SwitchState(State.Dead);
+            GameManager.Instance.addPoints(pointsToGive);
         }
     }
 
@@ -264,5 +271,6 @@ public class BasicEnemyController : MonoBehaviour
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(groundCheckBack.position, new Vector2(groundCheckBack.position.x, groundCheckBack.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
+        Gizmos.DrawWireSphere(enemyCollision.position, enemyDetectionRange);
     }
 }

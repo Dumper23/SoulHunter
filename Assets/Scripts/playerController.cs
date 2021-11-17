@@ -82,9 +82,6 @@ public class playerController : MonoBehaviour
     private int enemyCounter = 0;
     
 
-    
-
-
     void Start()
     {
         //We get all the components we need
@@ -110,20 +107,18 @@ public class playerController : MonoBehaviour
         #region Movement
         float horizontalIn = Input.GetAxis("Horizontal");
         bool wantsToJump = Input.GetButtonDown("Jump");
+        
+        animator.SetFloat("vSpeed", r2d.velocity.y);
 
-
-        if (horizontalIn != 0 && !isDashing)
+        r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
+        if(horizontalIn != 0)
         {
             animator.SetBool("isRunning", true);
         }
-
-        if (isDashing)
+        else
         {
             animator.SetBool("isRunning", false);
-            animator.SetBool("isDashing", true);
         }
-
-        r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
         if (availableJumps < 2)
         {
@@ -150,7 +145,6 @@ public class playerController : MonoBehaviour
             if (hittedGround)
             {
                 Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                animator.SetBool("isJumping", false);
                 if (aux.GetComponent<SpriteRenderer>() != null)
                 {
                     groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
@@ -178,10 +172,6 @@ public class playerController : MonoBehaviour
                     timeTrail -= Time.deltaTime;
                 }
             }
-            else
-            {
-                animator.SetBool("isRunning", false);
-            }
         }
         else
         {
@@ -199,7 +189,6 @@ public class playerController : MonoBehaviour
             float hVelocity = r2d.velocity.y;
 
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
-            animator.SetBool("isJumping", true);
             availableJumps--;
             playerSounds[3].Play();
             
@@ -237,7 +226,7 @@ public class playerController : MonoBehaviour
         Color tmp = sprite.color;
         if (isDashing)
         {
-            animator.SetBool("isDashing", isDashing);
+            animator.SetTrigger("isDashing");
             r2d.velocity = transform.right * dashDirection * dashForce;
             currentDashTime -= Time.deltaTime;
             
@@ -253,7 +242,6 @@ public class playerController : MonoBehaviour
         }
         else
         {
-            animator.SetBool("isDashing", isDashing);
             ghost.makeGhost = false;
             immune = false;
         }
@@ -310,7 +298,7 @@ public class playerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.K))
             {
                 //Play attack animation
-
+                animator.SetTrigger("isAttacking");
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
                 foreach (Collider2D enemy in hitEnemies)
@@ -321,11 +309,11 @@ public class playerController : MonoBehaviour
                     damageMessage[1] = transform.position.x;
                     enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
                     Debug.Log("We hit -> " + enemy.name);
-                    nextAttackTime = Time.time + 1 / attackRate;
                 }
-
+                nextAttackTime = Time.time + 1 / attackRate;
             }
         }
+
         #endregion
 
 

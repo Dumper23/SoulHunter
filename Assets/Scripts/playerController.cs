@@ -31,6 +31,7 @@ public class playerController : MonoBehaviour
     public float dashRecoveryTime = 1.5f;
     public ParticleSystem dashParticle;
     public float dashAlpha = 0.75f;
+    public Ghost ghost;
 
     private float currentDashRecoveryTime;
     private bool isDashing;
@@ -54,9 +55,10 @@ public class playerController : MonoBehaviour
     public int attackDamage = 10;
     public float attackRate = 2f;
     public int playerLives = 3;
+    public float relativeAttackPointPos = 0.58f;
 
     private float nextAttackTime = 0;
-    private float relPos;
+    
 
     [Header("UI settings")]
     public RawImage dashIndicator;
@@ -82,7 +84,6 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
-        relPos = 0.4f;
         //We get all the components we need
         sprite = GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
@@ -106,6 +107,17 @@ public class playerController : MonoBehaviour
         #region Movement
         float horizontalIn = Input.GetAxis("Horizontal");
         bool wantsToJump = Input.GetButtonDown("Jump");
+
+        if (horizontalIn != 0 && !isDashing)
+        {
+            animator.SetBool("isRunning", true);
+        }
+
+        if (isDashing)
+        {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isDashing", true);
+        }
 
         r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
@@ -132,7 +144,11 @@ public class playerController : MonoBehaviour
         {
             if (hittedGround)
             {
-                groundImpactParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color; 
+                Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                if (aux.GetComponent<SpriteRenderer>() != null)
+                {
+                    groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                }
                 Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
@@ -142,7 +158,11 @@ public class playerController : MonoBehaviour
             {
                 if (timeTrail <= 0)
                 {
-                    walkParticles.startColor = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground")).GetComponent<SpriteRenderer>().color;
+                    Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                    if (aux.GetComponent<SpriteRenderer>() != null)
+                    {
+                        walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                    }
                     Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                     timeTrail = startTimeTrail;
                     playerSounds[1].Play();
@@ -151,6 +171,10 @@ public class playerController : MonoBehaviour
                 {
                     timeTrail -= Time.deltaTime;
                 }
+            }
+            else
+            {
+                animator.SetBool("isRunning", false);
             }
         }
         else
@@ -186,9 +210,10 @@ public class playerController : MonoBehaviour
         #region Dash
         if ((Input.GetKeyDown(KeyCode.LeftShift) && !dashed))
         {
+            ghost.makeGhost = true;
             currentDashRecoveryTime = dashRecoveryTime;
             isDashing = true;
-            dashParticle.Play();
+            //dashParticle.Play();
             playerSounds[2].Play();
             dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
@@ -222,6 +247,7 @@ public class playerController : MonoBehaviour
         else
         {
             animator.SetBool("isDashing", isDashing);
+            ghost.makeGhost = false;
         }
 
         if (dashed)
@@ -263,11 +289,11 @@ public class playerController : MonoBehaviour
         #region Combat
         if (horizontalIn < 0)
         {
-            attackPoint.position = new Vector3(-relPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+            attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
         }
         else if(horizontalIn > 0)
         {
-            attackPoint.position = new Vector3(relPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+            attackPoint.position = new Vector3(relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
         }
 
         if (Time.time >= nextAttackTime)

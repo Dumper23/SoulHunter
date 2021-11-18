@@ -69,12 +69,6 @@ public class BasicEnemyController : MonoBehaviour
 
     private Animator aliveAnim;
 
-    /*public bool takedamage = false;//PROVA
-    [SerializeField]
-    private GameObject player;//PROVA
-
-    */
-
     [SerializeField]
     private ParticleSystem particleDamage;
     
@@ -106,25 +100,10 @@ public class BasicEnemyController : MonoBehaviour
                 break;
         }
 
-        /*if (Input.GetKeyDown("p"))
-        {
-            takedamage = true;
-        }
-
-        if (takedamage)
-        { 
-            float[] f = new float[2];
-
-            f[0] = 10;
-            f[1] = player.transform.position.x;
-            takedamage = false;
-            Damage(f);
-
-        }*/
-
     }
 
     //---------WALKING---------------
+    #region WALKING
     private void EnterWalkingState()
     {
 
@@ -154,8 +133,11 @@ public class BasicEnemyController : MonoBehaviour
     {
 
     }
+    #endregion
+
 
     //---------KNOCKBACK---------------
+    #region KNOCKBACK
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
@@ -176,8 +158,10 @@ public class BasicEnemyController : MonoBehaviour
     {
         aliveAnim.SetBool("Knockback", false);
     }
+    #endregion
 
     //---------DEAD---------------
+    #region DEAD
     private void EnterDeadState()
     {
         //Spawn chunks and blood
@@ -195,6 +179,7 @@ public class BasicEnemyController : MonoBehaviour
     {
 
     }
+    #endregion
 
 
     //----ALTRES----

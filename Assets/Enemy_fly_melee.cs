@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
-public class BasicEnemyController : MonoBehaviour
+public class Enemy_fly_melee : MonoBehaviour
 {
     private enum State
     {
@@ -27,18 +28,6 @@ public class BasicEnemyController : MonoBehaviour
         enemyDetectionRange;
 
     [SerializeField]
-    private Transform
-        groundCheck,
-        groundCheckBack,
-        wallCheck,
-        enemyCollision;
-
-    [SerializeField]
-    private LayerMask 
-        whatIsGround, 
-        whatIsEnemy;
-
-    [SerializeField]
     private Vector2 knockbackSpeed;
 
     [SerializeField]
@@ -47,40 +36,33 @@ public class BasicEnemyController : MonoBehaviour
         deathChunkParticle,
         deathBloodParticle;
 
-    private int 
-        facingDirection,
-        damageDirection;
+    private int
+        damageDirectionX,
+        damageDirectionY;
 
     private Vector2 movement;
 
-    private float 
+    private float
         currentHealth,
         knockbackStartTime;
 
-    private bool
-        groundDetected,
-        groundDetectedBack,
-        wallDetected,
-        enemyDetected;
 
-    private GameObject alive;
+    private Rigidbody2D rb;
 
-    private Rigidbody2D aliveRb;
+    private AIPath aiPath;
 
-    private Animator aliveAnim;
 
     [SerializeField]
     private ParticleSystem particleDamage;
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
-        alive = transform.Find("Alive").gameObject;
-        aliveRb = alive.GetComponent<Rigidbody2D>();
-        aliveAnim = alive.GetComponent<Animator>();
 
-        facingDirection = 1;
+        rb = GetComponent<Rigidbody2D>();
+        aiPath = GetComponent<AIPath>();
+
         currentHealth = maxHealth;
     }
 
@@ -106,32 +88,17 @@ public class BasicEnemyController : MonoBehaviour
     #region WALKING
     private void EnterWalkingState()
     {
-
+        aiPath.canMove = true;
     }
 
     private void UpdateWalkingState()
     {
-        groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
-        groundDetectedBack = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsGround);
 
-        wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
-        enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsEnemy);
-
-        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected)
-        {
-          
-            Flip();
-        }
-        else
-        {
-            movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
-            aliveRb.velocity = movement;
-        }
     }
 
     private void ExitWalkingState()
     {
-
+        aiPath.canMove = false;
     }
     #endregion
 
@@ -141,9 +108,8 @@ public class BasicEnemyController : MonoBehaviour
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
-        movement.Set(knockbackSpeed.x * damageDirection, knockbackSpeed.y);
-        aliveRb.velocity = movement;
-        aliveAnim.SetBool("Knockback", true);
+        movement.Set(knockbackSpeed.x * damageDirectionX, knockbackSpeed.y * damageDirectionY);
+        rb.velocity = movement;
     }
 
     private void UpdateKnockbackState()
@@ -156,7 +122,7 @@ public class BasicEnemyController : MonoBehaviour
 
     private void ExitKnockbackState()
     {
-        aliveAnim.SetBool("Knockback", false);
+
     }
     #endregion
 
@@ -165,8 +131,8 @@ public class BasicEnemyController : MonoBehaviour
     private void EnterDeadState()
     {
         //Spawn chunks and blood
-        Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
-        Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
+        Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
+        Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
         Destroy(gameObject);
     }
 
@@ -182,23 +148,30 @@ public class BasicEnemyController : MonoBehaviour
     #endregion
 
 
-    //----ALTRES----
-
     public void Damage(float[] attackDetails)
     {
-       
+
 
         currentHealth -= attackDetails[0];
 
         //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
         particleDamage.Play();
-        if (attackDetails[1] > alive.transform.position.x)
+        if (attackDetails[1] > transform.position.x)
         {
-            damageDirection = -1;
+            damageDirectionX = -1;
         }
         else
         {
-            damageDirection = 1;
+            damageDirectionX = 1;
+        }
+
+        if (attackDetails[2] > transform.position.y)
+        {
+            damageDirectionY = -1;
+        }
+        else
+        {
+            damageDirectionY = 1;
         }
 
         //Hit particle
@@ -213,13 +186,6 @@ public class BasicEnemyController : MonoBehaviour
             GameManager.Instance.addPoints(pointsToGive);
         }
     }
-
-    private void Flip()
-    {
-        facingDirection *= -1;
-        alive.transform.Rotate(0.0f, 180.0f, 0.0f);
-    }
-
     private void SwitchState(State state)
     {
         switch (currentState)
@@ -249,13 +215,5 @@ public class BasicEnemyController : MonoBehaviour
         }
 
         currentState = state;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
-        Gizmos.DrawLine(groundCheckBack.position, new Vector2(groundCheckBack.position.x, groundCheckBack.position.y - groundCheckDistance));
-        Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
-        Gizmos.DrawWireSphere(enemyCollision.position, enemyDetectionRange);
     }
 }

@@ -299,16 +299,15 @@ public class playerController : MonoBehaviour
             {
                 //Play attack animation
                 animator.SetTrigger("isAttacking");
+
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
                 foreach (Collider2D enemy in hitEnemies)
                 {
-                    //Creidar la funcio de lenemic per restarli vida
                     float[] damageMessage = new float[2];
                     damageMessage[0] = attackDamage;
                     damageMessage[1] = transform.position.x;
                     enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
-                    Debug.Log("We hit -> " + enemy.name);
                 }
                 nextAttackTime = Time.time + 1 / attackRate;
             }
@@ -316,7 +315,7 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-
+        //Reset the game if the player loses all lives
         if(playerLives <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -326,6 +325,8 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        #region Dash immunity
+
         if (collision.transform.tag == "Enemy" && isDashing)
         {
             enemy[enemyCounter] = collision;
@@ -346,6 +347,7 @@ public class playerController : MonoBehaviour
             color.a = 1f;
             playerLives--;
             playerSounds[4].Play();
+
             //Reaction to damage
             r2d.velocity = (new Vector2((sprite.flipX ? 1:-1) * 2 * playerVelocity, jumpVelocity * 1));
             
@@ -370,6 +372,7 @@ public class playerController : MonoBehaviour
                 live3.color = color;
             }
         }
+        #endregion
     }
 
     private void OnDrawGizmosSelected()
@@ -381,6 +384,7 @@ public class playerController : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
+    //Makes the enemy colidable after the player passed through it with a dash or immune
     private void returnEnemyToCollision()
     {
         for (int i = 0; i < enemy.Length; i++)

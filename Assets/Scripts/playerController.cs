@@ -304,10 +304,22 @@ public class playerController : MonoBehaviour
 
                 foreach (Collider2D enemy in hitEnemies)
                 {
-                    float[] damageMessage = new float[2];
-                    damageMessage[0] = attackDamage;
-                    damageMessage[1] = transform.position.x;
-                    enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
+                    if(enemy.tag == "EnemyFlyMele")
+                    {
+                        float[] damageMessage = new float[3];
+                        damageMessage[0] = attackDamage;
+                        damageMessage[1] = transform.position.x;
+                        damageMessage[2] = transform.position.y;
+                        enemy.GetComponentInParent<Enemy_fly_melee>().Damage(damageMessage);
+                    }
+
+                    if (enemy.tag == "Enemy")
+                    {
+                        float[] damageMessage = new float[2];
+                        damageMessage[0] = attackDamage;
+                        damageMessage[1] = transform.position.x;
+                        enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
+                    }
                 }
                 nextAttackTime = Time.time + 1 / attackRate;
             }
@@ -327,30 +339,56 @@ public class playerController : MonoBehaviour
     {
         #region Dash immunity
 
-        if (collision.transform.tag == "Enemy" && isDashing)
+
+        //Optimitzar no haver de comprovar cada cop si son enemic o enemic volador
+        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && isDashing)
         {
             enemy[enemyCounter] = collision;
             enemyCounter++;
 
             collision.transform.GetComponentInChildren<Rigidbody2D>().isKinematic = true;
-            collision.transform.GetComponentInChildren<BoxCollider2D>().isTrigger = true;
+
+            if (collision.transform.tag == "Enemy")
+            {
+                collision.transform.GetComponentInChildren<BoxCollider2D>().isTrigger = true;
+            }
+            else
+            {
+                collision.transform.GetComponentInChildren<CircleCollider2D>().isTrigger = true;
+            }
             Invoke("returnEnemyToCollision", 0.25f);
         }
 
+        #endregion
 
-        if (collision.transform.tag == "Enemy" && !immune)
+        #region Damage to player
+
+        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && !immune)
         {
             Color color = new Color();
             color.r = 255;
             color.g = 255;
             color.b = 255;
             color.a = 1f;
-            playerLives--;
+            
+
             playerSounds[4].Play();
 
             //Reaction to damage
-            r2d.velocity = (new Vector2((sprite.flipX ? 1:-1) * 2 * playerVelocity, jumpVelocity * 1));
-            
+            if (collision.transform.tag == "EnemyFlyMele")
+            {
+                playerLives = playerLives - collision.transform.GetComponentInParent<Enemy_fly_melee>().damageToPlayer;
+                collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
+                r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
+            }
+
+            if (collision.transform.tag == "Enemy")
+            {
+                playerLives = playerLives - collision.transform.GetComponentInParent<BasicEnemyController>().damageToPlayer;
+                r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
+            }
+
+
             if (playerLives == 3)
             {
                 live1.color = color;
@@ -392,7 +430,14 @@ public class playerController : MonoBehaviour
             if (enemy[i] != null)
             {
                 enemy[i].transform.GetComponentInChildren<Rigidbody2D>().isKinematic = false;
-                enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
+                if (enemy[i].transform.tag == "Enemy")
+                {
+                    enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
+                }
+                else
+                {
+                    enemy[i].transform.GetComponentInChildren<CircleCollider2D>().isTrigger = false;
+                }
             }
         }
         for (int i = 0; i < enemy.Length; i++)

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1371265933}
   m_Layer: 6
   m_Name: EnemyCollision
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 7314299274910249636}
   m_Layer: 6
   m_Name: GroundCheck
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 7314299275404080530}
   m_Layer: 6
   m_Name: GroundCheckBack
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7314299275460659523}
   m_Layer: 6
   m_Name: WallCheck
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -401,6 +401,10 @@ PrefabInstance:
     - target: {fileID: 4667452001360329845, guid: bf4753790a6749346bf259581db78257, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4667452001360329845, guid: bf4753790a6749346bf259581db78257, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf4753790a6749346bf259581db78257, type: 3}

@@ -20,12 +20,8 @@ public class Enemy_fly_melee : MonoBehaviour
 
     [SerializeField]
     private float
-        groundCheckDistance,
-        wallCheckDistance,
-        movementSpeed,
         maxHealth,
-        knockbackDuration,
-        enemyDetectionRange;
+        knockbackDuration;
 
     [SerializeField]
     private Vector2 knockbackSpeed;
@@ -216,4 +212,11 @@ public class Enemy_fly_melee : MonoBehaviour
 
         currentState = state;
     }
+
+    public void applyKnockback()
+    {
+        ExitWalkingState();
+        SwitchState(State.Knockback);
+    }
+
 }

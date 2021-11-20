@@ -31,6 +31,12 @@ public class GameManager : MonoBehaviour
         pointText.text = playerPoints.ToString();
     }
 
+    public void loadPoints(int p)
+    {
+        playerPoints = p;
+        pointText.text = playerPoints.ToString();
+    }
+
     public int getPoints()
     {
         return playerPoints;

@@ -327,12 +327,31 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-        //Reset the game if the player loses all lives
-        if(playerLives <= 0)
+        //Player Death functionality
+        #region Player death
+        if (playerLives <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            PlayerData data = PlayerSave.LoadPlayer();
 
+            GameManager.Instance.loadPoints(data.points);
+            playerLives = data.lives;
+
+            attackDamage = data.attackDamage;
+            attackRate = data.attackRate;
+
+            Vector3 pos;
+            pos.x = data.position[0];
+            pos.y = data.position[1];
+            pos.z = data.position[2];
+            transform.position = pos;
+
+            playerVelocity = data.speed;
+            maxJumps = data.jumpAmount;
+            updateLiveUI();
+
+        }
+        #endregion
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -365,13 +384,6 @@ public class playerController : MonoBehaviour
 
         if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && !immune)
         {
-            Color color = new Color();
-            color.r = 255;
-            color.g = 255;
-            color.b = 255;
-            color.a = 1f;
-            
-
             playerSounds[4].Play();
 
             //Reaction to damage
@@ -388,29 +400,40 @@ public class playerController : MonoBehaviour
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 
-
-            if (playerLives == 3)
-            {
-                live1.color = color;
-                live2.color = color;
-                live3.color = color;
-            }else if (playerLives == 2) {
-                color.a = 1f;
-                live1.color = color;
-                live2.color = color;
-                color.a = 0.2f;
-                live3.color = color;
-            }
-            else
-            {
-                color.a = 1f;
-                live1.color = color;
-                color.a = 0.2f;
-                live2.color = color;
-                live3.color = color;
-            }
+            updateLiveUI();
         }
         #endregion
+    }
+
+    private void updateLiveUI()
+    {
+        Color color = new Color();
+        color.r = 255;
+        color.g = 255;
+        color.b = 255;
+        color.a = 1f;
+        if (playerLives == 3)
+        {
+            live1.color = color;
+            live2.color = color;
+            live3.color = color;
+        }
+        else if (playerLives == 2)
+        {
+            color.a = 1f;
+            live1.color = color;
+            live2.color = color;
+            color.a = 0.2f;
+            live3.color = color;
+        }
+        else
+        {
+            color.a = 1f;
+            live1.color = color;
+            color.a = 0.2f;
+            live2.color = color;
+            live3.color = color;
+        }
     }
 
     private void OnDrawGizmosSelected()

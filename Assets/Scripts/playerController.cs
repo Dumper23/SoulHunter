@@ -58,6 +58,8 @@ public class playerController : MonoBehaviour
     public float relativeAttackPointPos = 0.58f;
 
     private float nextAttackTime = 0;
+
+    [Header("Boost settings")]
     
 
     [Header("UI settings")]
@@ -67,6 +69,7 @@ public class playerController : MonoBehaviour
     public RawImage live1;
     public RawImage live2;
     public RawImage live3;
+    public Text attackIndicator;
 
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
@@ -351,6 +354,22 @@ public class playerController : MonoBehaviour
             updateLiveUI();
 
         }
+        #endregion
+
+        //Player Boost Functionality
+        #region Boost
+        if (GameManager.Instance.getPoints() >= 100)
+        {
+            int excendentPoints = 0;
+            if(GameManager.Instance.getPoints()> 100)
+            {
+                excendentPoints = GameManager.Instance.getPoints() - 100;
+            }
+            GameManager.Instance.loadPoints(excendentPoints);
+            attackDamage = attackDamage + 5;
+            Debug.Log("Attack +5!");
+        }
+        attackIndicator.text = attackDamage.ToString();
         #endregion
     }
 

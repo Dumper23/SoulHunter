@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     public int playerPoints;
     public Text pointText;
+    public int maxPoints = 125;
 
     public static GameManager Instance { get { return _instance; } }
 
@@ -27,8 +28,16 @@ public class GameManager : MonoBehaviour
 
     public void addPoints(int points)
     {
-        playerPoints += points;
-        pointText.text = playerPoints.ToString();
+        if (playerPoints + points < 125)
+        {
+            playerPoints += points;
+            pointText.text = playerPoints.ToString();
+        }
+        else
+        {
+            playerPoints = 125;
+            pointText.text = playerPoints.ToString();
+        }
     }
 
     public void loadPoints(int p)

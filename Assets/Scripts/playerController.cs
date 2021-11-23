@@ -11,9 +11,9 @@ using UnityEngine.UI;
 public class playerController : MonoBehaviour
 {
     [Header("Basic Movement settings")]
-    public float playerVelocity = 30f;
-    public float jumpVelocity = 20f;
-    public float gravityScale = 10f;
+    public float playerVelocity = 10f;
+    public float jumpVelocity = 12f;
+    public float gravityScale = 4f;
     public int maxJumps = 2;
     public ParticleSystem jumpParticle;
     public ParticleSystem groundImpactParticles;
@@ -57,10 +57,13 @@ public class playerController : MonoBehaviour
     public int playerLives = 3;
     public float relativeAttackPointPos = 0.58f;
 
-    private float nextAttackTime = 0;
+    private float nextAttackTime = 0f;
+    private float attackUptime = 1f;
 
     [Header("Boost settings")]
-    
+    public int soulBarSpeed = 3;
+
+    private float originalPlayerSpeed;
 
     [Header("UI settings")]
     public RawImage dashIndicator;
@@ -87,6 +90,7 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        originalPlayerSpeed = playerVelocity;
         //We get all the components we need
         sprite = GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
@@ -272,10 +276,12 @@ public class playerController : MonoBehaviour
         if(isTouchingFront && !isGrounded && horizontalIn != 0)
         {
             wallSliding = true;
+            animator.SetBool("isWallSliding", wallSliding);
         }
         else
         {
             wallSliding = false;
+            animator.SetBool("isWallSliding", wallSliding);
         }
 
         if (wallSliding)
@@ -286,6 +292,7 @@ public class playerController : MonoBehaviour
 
         #endregion
 
+        //Combat functionality
         #region Combat
         if (horizontalIn < 0)
         {
@@ -301,7 +308,15 @@ public class playerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.K))
             {
                 //Play attack animation
-                animator.SetTrigger("isAttacking");
+                if (isGrounded)
+                {
+                    animator.SetTrigger("isAttacking");
+                }
+                
+                if(!isGrounded)
+                {
+                    animator.SetBool("isAttackingUp", true);
+                }
 
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
@@ -356,20 +371,45 @@ public class playerController : MonoBehaviour
         }
         #endregion
 
-        //Player Boost Functionality
-        #region Boost
-        if (GameManager.Instance.getPoints() >= 100)
+        //Boost bar functionality
+        #region Boost bar
+        int points = GameManager.Instance.getPoints();
+        //Augmento de daño, Dash recovery, Velocidad
+        float t = 0f;
+
+        t += Time.time;
+
+        //Functionality that substracts souls each second
+        if(points <= 0)
         {
-            int excendentPoints = 0;
-            if(GameManager.Instance.getPoints()> 100)
-            {
-                excendentPoints = GameManager.Instance.getPoints() - 100;
-            }
-            GameManager.Instance.loadPoints(excendentPoints);
-            attackDamage = attackDamage + 5;
-            Debug.Log("Attack +5!");
+            points = 0;
+            GameManager.Instance.loadPoints(points);
         }
-        attackIndicator.text = attackDamage.ToString();
+
+        if (t % 2 <= 0)
+        {
+            if (points >= 0)
+            {
+                points -= soulBarSpeed;
+                GameManager.Instance.loadPoints(points);
+            }
+            else
+            {
+                points = 0;
+                GameManager.Instance.loadPoints(points);
+            }
+        }
+
+        //Boosts given at a certain % of souls
+        if (GameManager.Instance.getPoints() >= 125 * 0.25)
+        {
+            playerVelocity = originalPlayerSpeed + (originalPlayerSpeed/4);
+        }
+        else
+        {
+            playerVelocity = originalPlayerSpeed;
+        }
+
         #endregion
     }
 
@@ -424,6 +464,7 @@ public class playerController : MonoBehaviour
         #endregion
     }
 
+    //Update the ui to display the correct number of lives
     private void updateLiveUI()
     {
         Color color = new Color();

@@ -59,14 +59,17 @@ public class playerController : MonoBehaviour
 
     private float nextAttackTime = 0f;
     private float attackUptime = 1f;
-    private bool shielded = false;
+    
 
     [Header("Boost settings")]
     public int soulBarSpeed = 3;
+    public float shieldRecoveryTime = 6f;
 
     private float originalPlayerSpeed;
     private int originalPlayerAttackDamage;
     private float startKillTime;
+    private bool shielded = false;
+    private float nextShield = 3f;
 
     [Header("UI settings")]
     public RawImage dashIndicator;
@@ -316,16 +319,16 @@ public class playerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.K))
             {
+                Debug.Log("att");
+                animator.SetTrigger("isAttackingUp");
+
                 //Play attack animation
                 if (isGrounded)
                 {
                     animator.SetTrigger("isAttacking");
                 }
+
                 
-                if(!isGrounded)
-                {
-                    animator.SetBool("isAttackingUp", true);
-                }
 
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
@@ -431,11 +434,18 @@ public class playerController : MonoBehaviour
 
         if (GameManager.Instance.getPoints() >= 125 * 0.75)
         {
-            shield.enabled = true;
+            if (Time.time - nextShield > shieldRecoveryTime)
+            {
+                nextShield = Time.time;
+                shield.enabled = true;
+                shield.color = new Color(255, 255, 255, 255);
+                shielded = true;
+            }
         }
         else
         {
             shield.enabled = false;
+            shielded = false;
         }
 
         #endregion
@@ -476,14 +486,30 @@ public class playerController : MonoBehaviour
             //Reaction to damage
             if (collision.transform.tag == "EnemyFlyMele")
             {
-                playerLives = playerLives - collision.transform.GetComponentInParent<Enemy_fly_melee>().damageToPlayer;
+                if (!shielded)
+                {
+                    playerLives = playerLives - collision.transform.GetComponentInParent<Enemy_fly_melee>().damageToPlayer;
+                }
+                else
+                {
+                    shield.color = new Color(0, 0, 0, 0);
+                    shielded = false;
+                }
                 collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 
             if (collision.transform.tag == "Enemy")
             {
-                playerLives = playerLives - collision.transform.GetComponentInParent<BasicEnemyController>().damageToPlayer;
+                if (!shielded)
+                {
+                    playerLives = playerLives - collision.transform.GetComponentInParent<BasicEnemyController>().damageToPlayer;
+                }
+                else
+                {
+                    shield.color = new Color(0, 0, 0, 0);
+                    shielded = false;
+                }
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 

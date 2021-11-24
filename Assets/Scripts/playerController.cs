@@ -59,11 +59,14 @@ public class playerController : MonoBehaviour
 
     private float nextAttackTime = 0f;
     private float attackUptime = 1f;
+    private bool shielded = false;
 
     [Header("Boost settings")]
     public int soulBarSpeed = 3;
 
     private float originalPlayerSpeed;
+    private int originalPlayerAttackDamage;
+    private float startKillTime;
 
     [Header("UI settings")]
     public RawImage dashIndicator;
@@ -72,6 +75,7 @@ public class playerController : MonoBehaviour
     public RawImage live1;
     public RawImage live2;
     public RawImage live3;
+    public RawImage shield;
     public Text attackIndicator;
 
     [Header("Sound Settings")]
@@ -90,7 +94,10 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        startKillTime = Time.time;
         originalPlayerSpeed = playerVelocity;
+        originalPlayerAttackDamage = attackDamage;
+
         //We get all the components we need
         sprite = GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
@@ -110,6 +117,8 @@ public class playerController : MonoBehaviour
 
     void Update()
     {
+        attackIndicator.text = "" + attackDamage;
+
         // Movement controlls
         #region Movement
         float horizontalIn = Input.GetAxis("Horizontal");
@@ -377,7 +386,7 @@ public class playerController : MonoBehaviour
         //Augmento de daño, Dash recovery, Velocidad
         float t = 0f;
 
-        t += Time.time;
+        t += Mathf.RoundToInt(Time.time);
 
         //Functionality that substracts souls each second
         if(points <= 0)
@@ -386,9 +395,10 @@ public class playerController : MonoBehaviour
             GameManager.Instance.loadPoints(points);
         }
 
-        if (t % 2 <= 0)
+        if (Time.time - startKillTime > 1) 
         {
-            if (points >= 0)
+            startKillTime = Time.time;
+            if (points >= 0 && points - soulBarSpeed >= 0)
             {
                 points -= soulBarSpeed;
                 GameManager.Instance.loadPoints(points);
@@ -408,6 +418,24 @@ public class playerController : MonoBehaviour
         else
         {
             playerVelocity = originalPlayerSpeed;
+        }
+
+        if (GameManager.Instance.getPoints() >= 125 * 0.5)
+        {
+            attackDamage = Mathf.RoundToInt(originalPlayerAttackDamage + (originalPlayerAttackDamage / 2));
+        }
+        else
+        {
+            attackDamage = originalPlayerAttackDamage;
+        }
+
+        if (GameManager.Instance.getPoints() >= 125 * 0.75)
+        {
+            shield.enabled = true;
+        }
+        else
+        {
+            shield.enabled = false;
         }
 
         #endregion

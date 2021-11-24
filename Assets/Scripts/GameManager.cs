@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     public int playerPoints;
     public Text pointText;
+    public Slider soulBar;
     public int maxPoints = 125;
 
     public static GameManager Instance { get { return _instance; } }
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+            soulBar.maxValue = maxPoints;
+            soulBar.value = playerPoints;
         }
     }
 
@@ -51,4 +54,8 @@ public class GameManager : MonoBehaviour
         return playerPoints;
     }
 
+    private void Update()
+    {
+        soulBar.value = playerPoints;
+    }
 }

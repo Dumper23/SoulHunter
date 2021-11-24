@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1733533690}
   m_Layer: 0
   m_Name: Circle
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 4556257230822722489}
   m_Layer: 0
   m_Name: frontCheck
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -284,12 +284,15 @@ MonoBehaviour:
   attackRate: 10
   playerLives: 3
   relativeAttackPointPos: 0.704
+  soulBarSpeed: 3
   dashIndicator: {fileID: 0}
   jumpIndicator1: {fileID: 0}
   jumpIndicator2: {fileID: 0}
   live1: {fileID: 0}
   live2: {fileID: 0}
   live3: {fileID: 0}
+  shield: {fileID: 0}
+  attackIndicator: {fileID: 0}
   playerSounds:
   - {fileID: 4556257231163928200}
   - {fileID: 4556257231163926903}
@@ -822,7 +825,7 @@ GameObject:
   - component: {fileID: 4556257231514175596}
   m_Layer: 0
   m_Name: groundCollider
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -853,7 +856,7 @@ GameObject:
   - component: {fileID: 4556257231619769985}
   m_Layer: 0
   m_Name: Point Light 2D
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -924,7 +927,7 @@ GameObject:
   - component: {fileID: 4556257231665376299}
   m_Layer: 0
   m_Name: attackPoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -937,7 +940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4556257231665376300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.704, y: -0.072, z: 0}
+  m_LocalPosition: {x: 0.704, y: 0.206, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1733533689}
@@ -954,6 +957,10 @@ PrefabInstance:
     - target: {fileID: 22313068255101752, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
       propertyPath: m_Name
       value: jumpParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 22313068255101752, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 22313068698896522, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
       propertyPath: m_RootOrder
@@ -1001,7 +1008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22313070125405945, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -4729503683817756318, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
@@ -1070,6 +1077,10 @@ PrefabInstance:
     - target: {fileID: 7860880345017729048, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
       propertyPath: m_Name
       value: dashParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 7860880345017729048, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8509282825386138242, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}

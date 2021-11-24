@@ -56,9 +56,11 @@ public class playerController : MonoBehaviour
     public float attackRate = 2f;
     public int playerLives = 3;
     public float relativeAttackPointPos = 0.58f;
+    public float attackAnimationDelay = 0.25f;
 
     private float nextAttackTime = 0f;
     private float attackUptime = 1f;
+    private bool isAttacking = false;
     
 
     [Header("Boost settings")]
@@ -80,6 +82,8 @@ public class playerController : MonoBehaviour
     public RawImage live3;
     public RawImage shield;
     public Text attackIndicator;
+    public Text speedIndicator;
+    public Text shieldTimer;
 
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
@@ -89,10 +93,21 @@ public class playerController : MonoBehaviour
     private Rigidbody2D r2d;
     private SpriteRenderer sprite;
     private Animator animator;
+    private string currentState;
     private Transform groundCollider;
     private bool immune = false;
     private Collision2D[] enemy = new Collision2D[10];
     private int enemyCounter = 0;
+
+    //Animation States
+    const string PLAYER_IDLE = "idle";
+    const string PLAYER_ATTACK = "attack";
+    const string PLAYER_DASH = "dash";
+    const string PLAYER_RUN = "run";
+    const string PLAYER_FALL = "fall";
+    const string PLAYER_JUMP = "jump";
+    const string PLAYER_WALLSLIDE = "wallSlide";
+    const string PLAYER_ATTACKUP = "attackUp";
     
 
     void Start()
@@ -117,27 +132,49 @@ public class playerController : MonoBehaviour
         groundCollider = transform.Find("groundCollider");
     }
 
-
+    //-----------TODO: FixedUpdate (All the physics calculation and Update All the imput recievement)
+    
     void Update()
     {
         attackIndicator.text = "" + attackDamage;
-
+        speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
+        
         // Movement controlls
         #region Movement
         float horizontalIn = Input.GetAxis("Horizontal");
         bool wantsToJump = Input.GetButtonDown("Jump");
-        
-        animator.SetFloat("vSpeed", r2d.velocity.y);
+        bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
 
         r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
-        if(horizontalIn != 0)
+
+        if (!isDashing && !wallSliding && !isAttacking)
         {
-            animator.SetBool("isRunning", true);
+            if (isGrounded)
+            {
+                if (horizontalIn != 0)
+                {
+                    changeAnimationState(PLAYER_RUN);
+                }
+                else
+                {
+                    changeAnimationState(PLAYER_IDLE);
+                }
+            }
+            else
+            {
+                if (r2d.velocity.y > 0)
+                {
+                    changeAnimationState(PLAYER_JUMP);
+                }
+                else if (r2d.velocity.y < 0)
+                {
+                    changeAnimationState(PLAYER_FALL);
+                }
+
+            }
         }
-        else
-        {
-            animator.SetBool("isRunning", false);
-        }
+
+
 
         if (availableJumps < 2)
         {
@@ -155,12 +192,10 @@ public class playerController : MonoBehaviour
 
         
 
-        bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-        animator.SetBool("isGrounded", isGrounded);
+        
         //After the jump we create effects as we hit the ground
         if (isGrounded)
         {
-            
             if (hittedGround)
             {
                 Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
@@ -206,11 +241,9 @@ public class playerController : MonoBehaviour
         if (wantsToJump && availableJumps > 0)
         {
             float hVelocity = r2d.velocity.y;
-
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
             availableJumps--;
             playerSounds[3].Play();
-            
             jumpParticle.Play();
         }
 
@@ -218,6 +251,7 @@ public class playerController : MonoBehaviour
         {
             sprite.flipX = (horizontalIn < 0);
         }
+
         #endregion
 
         //Dashing functionality
@@ -245,7 +279,7 @@ public class playerController : MonoBehaviour
         Color tmp = sprite.color;
         if (isDashing)
         {
-            animator.SetTrigger("isDashing");
+            changeAnimationState(PLAYER_DASH);
             r2d.velocity = transform.right * dashDirection * dashForce;
             currentDashTime -= Time.deltaTime;
             
@@ -288,12 +322,11 @@ public class playerController : MonoBehaviour
         if(isTouchingFront && !isGrounded && horizontalIn != 0)
         {
             wallSliding = true;
-            animator.SetBool("isWallSliding", wallSliding);
+            changeAnimationState(PLAYER_WALLSLIDE);
         }
         else
         {
             wallSliding = false;
-            animator.SetBool("isWallSliding", wallSliding);
         }
 
         if (wallSliding)
@@ -319,18 +352,27 @@ public class playerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.K))
             {
-                Debug.Log("att");
-                animator.SetTrigger("isAttackingUp");
-
+                isAttacking = true;
                 //Play attack animation
                 if (isGrounded)
                 {
-                    animator.SetTrigger("isAttacking");
+                    changeAnimationState(PLAYER_ATTACK);
                 }
 
-                
+                if (!isGrounded && !isDashing && !wallSliding)
+                {   
+                    if (r2d.velocity.y > 0)
+                    {
+                        changeAnimationState(PLAYER_ATTACKUP);
+                    }
+                    else if (r2d.velocity.y < 0)
+                    {
 
-                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+                    }
+                }
+                Invoke("stopAttack", attackAnimationDelay);
+
+                Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
 
                 foreach (Collider2D enemy in hitEnemies)
                 {
@@ -414,7 +456,7 @@ public class playerController : MonoBehaviour
         }
 
         //Boosts given at a certain % of souls
-        if (GameManager.Instance.getPoints() >= 125 * 0.25)
+        if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.25)
         {
             playerVelocity = originalPlayerSpeed + (originalPlayerSpeed/4);
         }
@@ -423,7 +465,7 @@ public class playerController : MonoBehaviour
             playerVelocity = originalPlayerSpeed;
         }
 
-        if (GameManager.Instance.getPoints() >= 125 * 0.5)
+        if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.5)
         {
             attackDamage = Mathf.RoundToInt(originalPlayerAttackDamage + (originalPlayerAttackDamage / 2));
         }
@@ -432,23 +474,44 @@ public class playerController : MonoBehaviour
             attackDamage = originalPlayerAttackDamage;
         }
 
-        if (GameManager.Instance.getPoints() >= 125 * 0.75)
+        if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.75)
         {
-            if (Time.time - nextShield > shieldRecoveryTime)
+            if (!shielded)
             {
+                if (Time.time - nextShield > shieldRecoveryTime)
+                {
+                    nextShield = Time.time;
+                    shield.enabled = true;
+                    shield.color = new Color(255, 255, 255, 255);
+                    shielded = true;
+                }
+                else
+                {
+                    shieldTimer.enabled = true;
+                }
+                
+            }
+            else
+            {
+                shieldTimer.enabled = false;
                 nextShield = Time.time;
-                shield.enabled = true;
-                shield.color = new Color(255, 255, 255, 255);
-                shielded = true;
             }
         }
         else
         {
             shield.enabled = false;
             shielded = false;
+            shieldTimer.enabled = false;
         }
 
         #endregion
+
+        shieldTimer.text = 10 - (Time.time - nextShield) + "s";
+    }
+
+    void stopAttack() 
+    {
+        isAttacking = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -494,6 +557,8 @@ public class playerController : MonoBehaviour
                 {
                     shield.color = new Color(0, 0, 0, 0);
                     shielded = false;
+                    shieldTimer.enabled = true;
+                    
                 }
                 collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
@@ -509,6 +574,7 @@ public class playerController : MonoBehaviour
                 {
                     shield.color = new Color(0, 0, 0, 0);
                     shielded = false;
+                    shieldTimer.enabled = true;
                 }
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
@@ -556,7 +622,7 @@ public class playerController : MonoBehaviour
         {
             return;
         }
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        Gizmos.DrawWireCube(attackPoint.position, new Vector3(attackRange, attackRange, 0));
     }
 
     //Makes the enemy colidable after the player passed through it with a dash or immune
@@ -583,5 +649,17 @@ public class playerController : MonoBehaviour
         }
 
         enemyCounter = 0;
+    }
+
+    //Function that allows us to play any animation of the animator (Avoiding horrible web structures)
+    private void changeAnimationState(string newState)
+    {
+        //We avoid playing the same animation multiple times
+        if (currentState == newState) return;
+
+        //We play a determinated animation
+        animator.Play(newState);
+
+        currentState = newState;
     }
 }

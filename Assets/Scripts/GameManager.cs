@@ -58,4 +58,9 @@ public class GameManager : MonoBehaviour
     {
         soulBar.value = playerPoints;
     }
+
+    public int getMaxPoints()
+    {
+        return maxPoints;
+    }
 }

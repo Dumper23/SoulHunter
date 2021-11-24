@@ -276,15 +276,17 @@ MonoBehaviour:
   wallSlidingSpeed: 1
   checkRadius: 0.3
   attackPoint: {fileID: 4556257231665376299}
-  attackRange: 0.45
+  attackRange: 1.3
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
   attackDamage: 10
-  attackRate: 10
+  attackRate: 3
   playerLives: 3
   relativeAttackPointPos: 0.704
-  soulBarSpeed: 3
+  attackAnimationDelay: 0.25
+  soulBarSpeed: 0
+  shieldRecoveryTime: 10
   dashIndicator: {fileID: 0}
   jumpIndicator1: {fileID: 0}
   jumpIndicator2: {fileID: 0}
@@ -293,6 +295,8 @@ MonoBehaviour:
   live3: {fileID: 0}
   shield: {fileID: 0}
   attackIndicator: {fileID: 0}
+  speedIndicator: {fileID: 0}
+  shieldTimer: {fileID: 0}
   playerSounds:
   - {fileID: 4556257231163928200}
   - {fileID: 4556257231163926903}
@@ -940,7 +944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4556257231665376300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.704, y: 0.206, z: 0}
+  m_LocalPosition: {x: 0.396, y: 0.335, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1733533689}

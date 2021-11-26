@@ -136,6 +136,7 @@ public class playerController : MonoBehaviour
     
     void Update()
     {
+        Debug.Log("Inici Update " + r2d.velocity);
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
         
@@ -145,6 +146,7 @@ public class playerController : MonoBehaviour
         bool wantsToJump = Input.GetButtonDown("Jump");
         bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
 
+        Debug.Log("Modificant la velocitat en funcio del input del player (x) " + r2d.velocity);
         r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
         if (!isDashing && !wallSliding && !isAttacking)
@@ -240,7 +242,10 @@ public class playerController : MonoBehaviour
 
         if (wantsToJump && availableJumps > 0)
         {
-            float hVelocity = r2d.velocity.y;
+            //----------------------------------------------------------NO ENTENC EL HVELOCITY
+
+            Debug.Log("Salt " + r2d.velocity);
+            float hVelocity = r2d.velocity.x;
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
             availableJumps--;
             playerSounds[3].Play();
@@ -265,6 +270,7 @@ public class playerController : MonoBehaviour
             playerSounds[2].Play();
             dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
+            Debug.Log("velocity = 0 ? " + r2d.velocity);
             r2d.velocity = Vector3.zero;
             immune = true;
             if (horizontalIn > 0)
@@ -280,6 +286,7 @@ public class playerController : MonoBehaviour
         if (isDashing)
         {
             changeAnimationState(PLAYER_DASH);
+            Debug.Log("Velocity modificada per a fer el dash (vector right * direction * dash force) " + r2d.velocity);
             r2d.velocity = transform.right * dashDirection * dashForce;
             currentDashTime -= Time.deltaTime;
             
@@ -319,6 +326,7 @@ public class playerController : MonoBehaviour
         #region Wall Sliding
 
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, LayerMask.GetMask("Ground"));
+
         if(isTouchingFront && !isGrounded && horizontalIn != 0)
         {
             wallSliding = true;
@@ -331,8 +339,24 @@ public class playerController : MonoBehaviour
 
         if (wallSliding)
         {
-            r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, float.MaxValue));
+            Debug.Log("Modifico la velocity per fer el wallslide " + r2d.velocity);
+            r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
 
+            if (wantsToJump)
+            {
+                if (frontCheck.position.x > transform.position.x)
+                {
+                    Debug.Log("Modifico la velocity per a saltar del muro " + r2d.velocity);
+                    r2d.velocity = new Vector2(-100, r2d.velocity.y);
+                }
+                else
+                {
+                    Debug.Log("Modifico la velocity per a saltar del muro " + r2d.velocity);
+                    r2d.velocity = new Vector2(100, r2d.velocity.y);
+                }
+                wallSliding = false;
+            }
+            //Aqui si funciones bé el velocity del rigidbody podriem fer salt de paret :(
         }
 
         #endregion
@@ -458,10 +482,12 @@ public class playerController : MonoBehaviour
         //Boosts given at a certain % of souls
         if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.25)
         {
+            Debug.Log("Augmento de la velocidad por los puntos " + r2d.velocity);
             playerVelocity = originalPlayerSpeed + (originalPlayerSpeed/4);
         }
         else
         {
+            Debug.Log("Augmento de la velocidad por los puntos " + r2d.velocity);
             playerVelocity = originalPlayerSpeed;
         }
 
@@ -561,6 +587,7 @@ public class playerController : MonoBehaviour
                     
                 }
                 collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
+                Debug.Log("Aplico knockback al jugador quan el toca un enemic " + r2d.velocity);
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 
@@ -576,6 +603,7 @@ public class playerController : MonoBehaviour
                     shielded = false;
                     shieldTimer.enabled = true;
                 }
+                Debug.Log("Aplico knockback al jugador quan el toca un enemic " + r2d.velocity);
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 

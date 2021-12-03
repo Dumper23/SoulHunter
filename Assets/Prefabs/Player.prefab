@@ -285,8 +285,7 @@ MonoBehaviour:
   playerLives: 3
   relativeAttackPointPos: 0.704
   attackAnimationDelay: 0.25
-  attackParticles: {fileID: 0}
-  soulBarSpeed: 0
+  soulBarSpeed: 2
   shieldRecoveryTime: 10
   dashIndicator: {fileID: 0}
   jumpIndicator1: {fileID: 0}

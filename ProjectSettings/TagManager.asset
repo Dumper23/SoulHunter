@@ -8,6 +8,7 @@ TagManager:
   - ground
   - EnemyFlyMele
   - Checkpoint
+  - LostSoul
   layers:
   - Default
   - TransparentFX

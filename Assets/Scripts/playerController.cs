@@ -88,6 +88,12 @@ public class playerController : MonoBehaviour
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
 
+    [Header("LostSouls Settings")]
+    public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
+    public Transform ThornsPoint;
+    public float ThornsRange = 0.5f;
+
+
     //Other settings
     private Transform t;
     private Rigidbody2D r2d;
@@ -136,7 +142,6 @@ public class playerController : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("Inici Update " + r2d.velocity);
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
         
@@ -146,7 +151,6 @@ public class playerController : MonoBehaviour
         bool wantsToJump = Input.GetButtonDown("Jump");
         bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
 
-        Debug.Log("Modificant la velocitat en funcio del input del player (x) " + r2d.velocity);
         r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
         if (!isDashing && !wallSliding && !isAttacking)
@@ -244,7 +248,6 @@ public class playerController : MonoBehaviour
         {
             //----------------------------------------------------------NO ENTENC EL HVELOCITY
 
-            Debug.Log("Salt " + r2d.velocity);
             float hVelocity = r2d.velocity.x;
             r2d.velocity = new Vector2(hVelocity, jumpVelocity);
             availableJumps--;
@@ -270,9 +273,9 @@ public class playerController : MonoBehaviour
             playerSounds[2].Play();
             dashIndicator.color = Color.red;
             currentDashTime = startDashTime;
-            Debug.Log("velocity = 0 ? " + r2d.velocity);
             r2d.velocity = Vector3.zero;
             immune = true;
+            Invoke("damageImmunity", 0.25f);
             if (horizontalIn > 0)
             {
                 dashDirection = 1;
@@ -286,7 +289,6 @@ public class playerController : MonoBehaviour
         if (isDashing)
         {
             changeAnimationState(PLAYER_DASH);
-            Debug.Log("Velocity modificada per a fer el dash (vector right * direction * dash force) " + r2d.velocity);
             r2d.velocity = transform.right * dashDirection * dashForce;
             currentDashTime -= Time.deltaTime;
             
@@ -303,7 +305,6 @@ public class playerController : MonoBehaviour
         else
         {
             ghost.makeGhost = false;
-            immune = false;
         }
 
         if (dashed)
@@ -339,19 +340,16 @@ public class playerController : MonoBehaviour
 
         if (wallSliding)
         {
-            Debug.Log("Modifico la velocity per fer el wallslide " + r2d.velocity);
             r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
 
             if (wantsToJump)
             {
                 if (frontCheck.position.x > transform.position.x)
                 {
-                    Debug.Log("Modifico la velocity per a saltar del muro " + r2d.velocity);
                     r2d.velocity = new Vector2(-100, r2d.velocity.y);
                 }
                 else
                 {
-                    Debug.Log("Modifico la velocity per a saltar del muro " + r2d.velocity);
                     r2d.velocity = new Vector2(100, r2d.velocity.y);
                 }
                 wallSliding = false;
@@ -482,12 +480,10 @@ public class playerController : MonoBehaviour
         //Boosts given at a certain % of souls
         if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.25)
         {
-            Debug.Log("Augmento de la velocidad por los puntos " + r2d.velocity);
             playerVelocity = originalPlayerSpeed + (originalPlayerSpeed/4);
         }
         else
         {
-            Debug.Log("Augmento de la velocidad por los puntos " + r2d.velocity);
             playerVelocity = originalPlayerSpeed;
         }
 
@@ -542,6 +538,16 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        #region LostSoul colision
+
+        if(collision.transform.tag == "LostSoul")
+        {
+            lostSouls.Add(collision.transform.GetComponent<LostSouls>().lostSoulName, collision.transform.GetComponent<LostSouls>());
+            Destroy(collision.gameObject);
+        }
+
+        #endregion
+
         #region Dash immunity
 
 
@@ -570,40 +576,29 @@ public class playerController : MonoBehaviour
 
         if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && !immune)
         {
-            playerSounds[4].Play();
-
             //Reaction to damage
-            if (collision.transform.tag == "EnemyFlyMele")
+            if (collision.transform.tag == "EnemyFlyMele" || collision.transform.tag == "Enemy")
             {
                 if (!shielded)
                 {
-                    playerLives = playerLives - collision.transform.GetComponentInParent<Enemy_fly_melee>().damageToPlayer;
+                    playerSounds[4].Play();
+                    playerLives--;
+                    //Activate Thorns here
                 }
                 else
                 {
                     shield.color = new Color(0, 0, 0, 0);
                     shielded = false;
                     shieldTimer.enabled = true;
-                    
-                }
-                collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
-                Debug.Log("Aplico knockback al jugador quan el toca un enemic " + r2d.velocity);
-                r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
-            }
+                    playerSounds[4].Play();
 
-            if (collision.transform.tag == "Enemy")
-            {
-                if (!shielded)
-                {
-                    playerLives = playerLives - collision.transform.GetComponentInParent<BasicEnemyController>().damageToPlayer;
                 }
-                else
+                if (collision.transform.tag == "EnemyFlyMele")
                 {
-                    shield.color = new Color(0, 0, 0, 0);
-                    shielded = false;
-                    shieldTimer.enabled = true;
+                    collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
                 }
-                Debug.Log("Aplico knockback al jugador quan el toca un enemic " + r2d.velocity);
+                immune = true;
+                Invoke("damageImmunity", 1f);
                 r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             }
 
@@ -651,6 +646,7 @@ public class playerController : MonoBehaviour
             return;
         }
         Gizmos.DrawWireCube(attackPoint.position, new Vector3(attackRange, attackRange, 0));
+        Gizmos.DrawWireSphere(ThornsPoint.position, ThornsRange);
     }
 
     //Makes the enemy colidable after the player passed through it with a dash or immune
@@ -689,5 +685,28 @@ public class playerController : MonoBehaviour
         animator.Play(newState);
 
         currentState = newState;
+    }
+
+    //function to Invoke that makes the immunity false
+    private void damageImmunity()
+    {
+        immune = false;
+    }
+
+    private void lostSoulsFunctionality()
+    {
+        if (lostSouls.ContainsKey("Thorns"))
+        {
+            lostSouls.TryGetValue("Thorns", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(ThornsPoint.position, ThornsRange, enemyLayer);
+
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    Debug.Log(enemy.name);
+                }
+            }
+        }
     }
 }

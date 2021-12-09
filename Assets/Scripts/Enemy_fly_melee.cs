@@ -7,6 +7,7 @@ public class Enemy_fly_melee : MonoBehaviour
 {
     private enum State
     {
+        Waiting,
         Walking,
         Knockback,
         Dead
@@ -21,7 +22,8 @@ public class Enemy_fly_melee : MonoBehaviour
     [SerializeField]
     private float
         maxHealth,
-        knockbackDuration;
+        knockbackDuration,
+        lineOfSite;
 
     [SerializeField]
     private Vector2 knockbackSpeed;
@@ -36,7 +38,9 @@ public class Enemy_fly_melee : MonoBehaviour
         damageDirectionX,
         damageDirectionY;
 
-    private Vector2 movement;
+    private Vector2 
+        movement,
+        aux;
 
     private float
         currentHealth,
@@ -47,6 +51,9 @@ public class Enemy_fly_melee : MonoBehaviour
 
     private AIPath aiPath;
 
+    private Transform player;
+
+    private bool knocking;
 
     [SerializeField]
     private ParticleSystem particleDamage;
@@ -58,15 +65,34 @@ public class Enemy_fly_melee : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         aiPath = GetComponent<AIPath>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
+        float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         currentHealth = maxHealth;
+        if (distanceFromPlayer > lineOfSite)
+        {
+            SwitchState(State.Waiting);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+        if(distanceFromPlayer < lineOfSite && !knocking)
+        {
+            SwitchState(State.Walking);
+        }
+        else if(distanceFromPlayer > lineOfSite)
+        {
+            SwitchState(State.Waiting);
+        }*/
+
         switch (currentState)
         {
+            case State.Waiting:
+                UpdateWaitingState();
+                break;
             case State.Walking:
                 UpdateWalkingState();
                 break;
@@ -79,7 +105,28 @@ public class Enemy_fly_melee : MonoBehaviour
         }
 
     }
-
+    //---------WAITING--------------
+    #region WAITING
+    private void EnterWaitingState()
+    {
+        aiPath.canMove = false;
+    }
+    private void UpdateWaitingState()
+    {
+        
+        aux.Set(0, 0);
+        rb.velocity = aux;
+        float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+        if (distanceFromPlayer < lineOfSite)
+        {
+            SwitchState(State.Walking);
+        }
+    }
+    #endregion
+    private void ExitWaitingState()
+    {
+        aiPath.canMove = true;
+    }
     //---------WALKING---------------
     #region WALKING
     private void EnterWalkingState()
@@ -89,7 +136,11 @@ public class Enemy_fly_melee : MonoBehaviour
 
     private void UpdateWalkingState()
     {
-
+        float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+        if (distanceFromPlayer > lineOfSite)
+        {
+            SwitchState(State.Waiting);
+        }
     }
 
     private void ExitWalkingState()
@@ -103,6 +154,7 @@ public class Enemy_fly_melee : MonoBehaviour
     #region KNOCKBACK
     private void EnterKnockbackState()
     {
+        knocking = true;
         knockbackStartTime = Time.time;
         movement.Set(knockbackSpeed.x * damageDirectionX, knockbackSpeed.y * damageDirectionY);
         rb.velocity = movement;
@@ -112,13 +164,21 @@ public class Enemy_fly_melee : MonoBehaviour
     {
         if (Time.time >= knockbackStartTime + knockbackDuration)
         {
-            SwitchState(State.Walking);
+            float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+            if(distanceFromPlayer < lineOfSite)
+            {
+                SwitchState(State.Walking);
+            }
+            if(distanceFromPlayer > lineOfSite)
+            {
+                SwitchState(State.Waiting);
+            }
         }
     }
 
     private void ExitKnockbackState()
     {
-
+        knocking = false;
     }
     #endregion
 
@@ -186,6 +246,9 @@ public class Enemy_fly_melee : MonoBehaviour
     {
         switch (currentState)
         {
+            case State.Waiting:
+                ExitWaitingState();
+                break;
             case State.Walking:
                 ExitWalkingState();
                 break;
@@ -199,6 +262,9 @@ public class Enemy_fly_melee : MonoBehaviour
 
         switch (state)
         {
+            case State.Waiting:
+                EnterWaitingState();
+                break;
             case State.Walking:
                 EnterWalkingState();
                 break;
@@ -219,4 +285,8 @@ public class Enemy_fly_melee : MonoBehaviour
         SwitchState(State.Knockback);
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, lineOfSite);
+    }
 }

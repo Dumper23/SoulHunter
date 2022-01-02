@@ -59,7 +59,6 @@ public class playerController : MonoBehaviour
     public float attackAnimationDelay = 0.25f;
 
     private float nextAttackTime = 0f;
-    private float attackUptime = 1f;
     private bool isAttacking = false;
     
 
@@ -139,12 +138,18 @@ public class playerController : MonoBehaviour
     }
 
     //-----------TODO: FixedUpdate (All the physics calculation and Update All the imput recievement)
-    
+
+    [System.Obsolete]
     void Update()
     {
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
         
+        if(lostSouls.Count > 0)
+        {
+            lostSoulsFunctionality();
+        }
+
         // Movement controlls
         #region Movement
         float horizontalIn = Input.GetAxis("Horizontal");
@@ -264,7 +269,7 @@ public class playerController : MonoBehaviour
 
         //Dashing functionality
         #region Dash
-        if ((Input.GetKeyDown(KeyCode.LeftShift) && !dashed))
+        if ((Input.GetButtonDown("Dash") && !dashed))
         {
             ghost.makeGhost = true;
             currentDashRecoveryTime = dashRecoveryTime;
@@ -372,7 +377,7 @@ public class playerController : MonoBehaviour
 
         if (Time.time >= nextAttackTime)
         {
-            if (Input.GetKeyDown(KeyCode.K))
+            if (Input.GetButtonDown("Attack"))
             {
                 isAttacking = true;
                 //Play attack animation
@@ -701,7 +706,6 @@ public class playerController : MonoBehaviour
             if (ls.isEquiped && ls.isActive)
             {
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(ThornsPoint.position, ThornsRange, enemyLayer);
-
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     Debug.Log(enemy.name);

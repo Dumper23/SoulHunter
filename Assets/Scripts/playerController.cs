@@ -61,7 +61,6 @@ public class playerController : MonoBehaviour
     private float nextAttackTime = 0f;
     private bool isAttacking = false;
     
-
     [Header("Boost settings")]
     public int soulBarSpeed = 3;
     public float shieldRecoveryTime = 6f;
@@ -83,6 +82,8 @@ public class playerController : MonoBehaviour
     public Text attackIndicator;
     public Text speedIndicator;
     public Text shieldTimer;
+    public List<GameObject> lostSoulToggles = new List<GameObject>();
+    public GameObject inventoryUI;
 
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
@@ -91,6 +92,10 @@ public class playerController : MonoBehaviour
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
     public Transform ThornsPoint;
     public float ThornsRange = 0.5f;
+    public GameObject light;
+    private bool inventory = false;
+    public int maxLostSoulsEquipped = 3;
+    private int lostSoulsEquipped = 0;
 
 
     //Other settings
@@ -117,6 +122,7 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        light.SetActive(false);
         startKillTime = Time.time;
         originalPlayerSpeed = playerVelocity;
         originalPlayerAttackDamage = attackDamage;
@@ -144,11 +150,30 @@ public class playerController : MonoBehaviour
     {
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
-        
-        if(lostSouls.Count > 0)
+
+        //Lost Souls functionality
+        #region LostSouls
+        //Lost souls inventory
+
+        if (Input.GetButtonDown("Inventory")){
+            inventory = !inventory;
+            updateInventory();
+            toggleInventory();
+        }
+
+        if (lostSouls.Count > 0)
         {
             lostSoulsFunctionality();
         }
+
+        if (lostSouls.TryGetValue("Thorns", out LostSouls th))
+        {
+            if (th.isActive && th.isEquiped)
+            {
+                th.isActive = false;
+            }
+        }
+        #endregion
 
         // Movement controlls
         #region Movement
@@ -541,18 +566,21 @@ public class playerController : MonoBehaviour
         isAttacking = false;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        #region LostSoul colision
-
-        if(collision.transform.tag == "LostSoul")
+        #region LostSoul Trigger
+        
+        if (collision.transform.tag == "LostSoul")
         {
             lostSouls.Add(collision.transform.GetComponent<LostSouls>().lostSoulName, collision.transform.GetComponent<LostSouls>());
             Destroy(collision.gameObject);
         }
 
         #endregion
+    }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
         #region Dash immunity
 
 
@@ -589,6 +617,12 @@ public class playerController : MonoBehaviour
                     playerSounds[4].Play();
                     playerLives--;
                     //Activate Thorns here
+                    if(lostSouls.TryGetValue("Thorns", out LostSouls thorns)){
+                        if (thorns.isEquiped)
+                        {
+                            thorns.isActive = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -700,6 +734,19 @@ public class playerController : MonoBehaviour
 
     private void lostSoulsFunctionality()
     {
+        if (lostSouls.ContainsKey("Light"))
+        {
+            lostSouls.TryGetValue("Light", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                light.SetActive(true);
+            }
+            else
+            {
+                light.SetActive(false);
+            }
+        }
+
         if (lostSouls.ContainsKey("Thorns"))
         {
             lostSouls.TryGetValue("Thorns", out LostSouls ls);
@@ -708,8 +755,69 @@ public class playerController : MonoBehaviour
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(ThornsPoint.position, ThornsRange, enemyLayer);
                 foreach (Collider2D enemy in hitEnemies)
                 {
+                    //Fer mal als enemics un cop hi hagi herencies
                     Debug.Log(enemy.name);
                 }
+            }
+        }
+    }
+
+    private void updateInventory()
+    {
+        if (lostSoulToggles.Count >= 0) {
+            lostSoulToggles[0].GetComponent<Toggle>().Select();
+        }
+        for (int i = 0; i < lostSoulToggles.Count; i++)
+        {
+            if (lostSouls.TryGetValue(lostSoulToggles[i].name, out LostSouls ls))
+            {
+                Color c = lostSoulToggles[i].GetComponent<Image>().color;
+                c.a = 1f;
+                lostSoulToggles[i].GetComponent<Image>().color = c;
+                lostSoulToggles[i].GetComponent<Toggle>().interactable = true;
+            }
+            else
+            {
+                Color c = lostSoulToggles[i].GetComponent<Image>().color;
+                c.a = 0.1f;
+                lostSoulToggles[i].GetComponent<Image>().color = c;
+                lostSoulToggles[i].GetComponent<Toggle>().interactable = false;
+            }
+        }
+    }
+
+    private void toggleInventory()
+    {
+        if (inventory)
+        {
+            Time.timeScale = 0f;
+            inventoryUI.SetActive(true);
+        }
+        else{
+            Time.timeScale = 1f;
+            inventoryUI.SetActive(false);
+        }
+    }
+
+    public void toggleLostSoul(string value)
+    {
+        if(lostSouls.TryGetValue(value, out LostSouls ls))
+        {
+            if (lostSoulsEquipped < maxLostSoulsEquipped)
+            {
+                ls.isEquiped = !ls.isEquiped;
+                if (ls.isEquiped)
+                {
+                    lostSoulsEquipped++;
+                }
+                else
+                {
+                    lostSoulsEquipped--;
+                }
+            }
+            else
+            {
+                //No hi ha mes espai per a equipar lost souls
             }
         }
     }

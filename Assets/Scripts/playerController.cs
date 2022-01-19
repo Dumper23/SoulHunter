@@ -58,6 +58,7 @@ public class playerController : MonoBehaviour
     public float relativeAttackPointPos = 0.58f;
     public float attackAnimationDelay = 0.25f;
 
+    private int maxLives;
     private float nextAttackTime = 0f;
     private bool isAttacking = false;
     
@@ -122,6 +123,7 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        maxLives = playerLives;
         light.SetActive(false);
         startKillTime = Time.time;
         originalPlayerSpeed = playerVelocity;
@@ -372,7 +374,7 @@ public class playerController : MonoBehaviour
         {
             r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
 
-            if (wantsToJump)
+            /*if (wantsToJump)
             {
                 if (frontCheck.position.x > transform.position.x)
                 {
@@ -383,7 +385,7 @@ public class playerController : MonoBehaviour
                     r2d.velocity = new Vector2(100, r2d.velocity.y);
                 }
                 wallSliding = false;
-            }
+            }*/
             //Aqui si funciones bé el velocity del rigidbody podriem fer salt de paret :(
         }
 
@@ -443,6 +445,11 @@ public class playerController : MonoBehaviour
                         damageMessage[0] = attackDamage;
                         damageMessage[1] = transform.position.x;
                         enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
+                    }
+
+                    if(enemy.tag == "Healer")
+                    {
+                        enemy.GetComponentInParent<healer>().Damage(attackDamage);
                     }
                 }
                 nextAttackTime = Time.time + 1 / attackRate;
@@ -559,6 +566,15 @@ public class playerController : MonoBehaviour
         #endregion
 
         shieldTimer.text = 10 - (Time.time - nextShield) + "s";
+    }
+
+    public void addLive()
+    {
+        if (playerLives + 1 <= maxLives)
+        {
+            playerLives++;
+            updateLiveUI();
+        }
     }
 
     void stopAttack() 

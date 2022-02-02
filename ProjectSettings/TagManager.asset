@@ -10,6 +10,7 @@ TagManager:
   - Checkpoint
   - LostSoul
   - Healer
+  - Trap
   layers:
   - Default
   - TransparentFX

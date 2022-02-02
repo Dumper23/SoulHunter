@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &868142689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 868142690}
+  m_Layer: 8
+  m_Name: ThornsPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &868142690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 868142689}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4556257231163928205}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1733533688
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1733533689}
   - component: {fileID: 1733533690}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Circle
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -91,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4556257230822722489}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: frontCheck
   m_TagString: Player
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
@@ -132,7 +162,7 @@ GameObject:
   - component: {fileID: 4556257231163926902}
   - component: {fileID: 4556257231163926901}
   - component: {fileID: 148214777}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -156,6 +186,7 @@ Transform:
   - {fileID: 4556257231513842242}
   - {fileID: 4556257230030485262}
   - {fileID: 4556257231665376299}
+  - {fileID: 868142690}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -258,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72aaddea04571640a95f307666187e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerVelocity: 10
+  playerVelocity: 7
   jumpVelocity: 12
   gravityScale: 4
   maxJumps: 2
@@ -285,6 +316,7 @@ MonoBehaviour:
   playerLives: 3
   relativeAttackPointPos: 0.704
   attackAnimationDelay: 0.25
+  deathParticles: {fileID: 4667452001621715380, guid: bf4753790a6749346bf259581db78257, type: 3}
   soulBarSpeed: 2
   shieldRecoveryTime: 10
   dashIndicator: {fileID: 0}
@@ -297,12 +329,21 @@ MonoBehaviour:
   attackIndicator: {fileID: 0}
   speedIndicator: {fileID: 0}
   shieldTimer: {fileID: 0}
+  lostSoulToggles:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inventoryUI: {fileID: 0}
   playerSounds:
   - {fileID: 4556257231163928200}
   - {fileID: 4556257231163926903}
   - {fileID: 4556257231163926902}
   - {fileID: 4556257231163926901}
   - {fileID: 148214777}
+  ThornsPoint: {fileID: 868142690}
+  ThornsRange: 2
+  light: {fileID: 4556257231619769987}
+  maxLostSoulsEquipped: 3
 --- !u!95 &4556257231163928202
 Animator:
   serializedVersion: 3
@@ -827,7 +868,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4556257231514175596}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: groundCollider
   m_TagString: Player
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
@@ -858,13 +899,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4556257231619769986}
   - component: {fileID: 4556257231619769985}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point Light 2D
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4556257231619769986
 Transform:
   m_ObjectHideFlags: 0
@@ -906,8 +947,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.9
-  m_PointLightOuterRadius: 1.74
+  m_PointLightInnerRadius: 1.16
+  m_PointLightOuterRadius: 3.67
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5
@@ -929,7 +970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4556257231665376299}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: attackPoint
   m_TagString: Player
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
@@ -961,6 +1002,10 @@ PrefabInstance:
     - target: {fileID: 22313068255101752, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
       propertyPath: m_Name
       value: jumpParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 22313068255101752, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 22313068255101752, guid: 59ffd559803462f4d9139c310082d2d7, type: 3}
       propertyPath: m_TagString
@@ -1081,6 +1126,10 @@ PrefabInstance:
     - target: {fileID: 7860880345017729048, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
       propertyPath: m_Name
       value: dashParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 7860880345017729048, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7860880345017729048, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
       propertyPath: m_TagString

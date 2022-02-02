@@ -57,6 +57,7 @@ public class playerController : MonoBehaviour
     public int playerLives = 3;
     public float relativeAttackPointPos = 0.58f;
     public float attackAnimationDelay = 0.25f;
+    public ParticleSystem deathParticles;
 
     private int maxLives;
     private float nextAttackTime = 0f;
@@ -97,7 +98,6 @@ public class playerController : MonoBehaviour
     private bool inventory = false;
     public int maxLostSoulsEquipped = 3;
     private int lostSoulsEquipped = 0;
-
 
     //Other settings
     private Transform t;
@@ -157,7 +157,7 @@ public class playerController : MonoBehaviour
         #region LostSouls
         //Lost souls inventory
 
-        if (Input.GetButtonDown("Inventory")){
+        if (Input.GetButtonDown("Inventory") && !GameManager.Instance.isPaused()){
             inventory = !inventory;
             updateInventory();
             toggleInventory();
@@ -296,7 +296,7 @@ public class playerController : MonoBehaviour
 
         //Dashing functionality
         #region Dash
-        if ((Input.GetButtonDown("Dash") && !dashed))
+        if ((Input.GetButtonDown("Dash") || Input.GetAxisRaw("Dash") != 0) && !dashed)
         {
             ghost.makeGhost = true;
             currentDashRecoveryTime = dashRecoveryTime;
@@ -444,7 +444,10 @@ public class playerController : MonoBehaviour
                         float[] damageMessage = new float[2];
                         damageMessage[0] = attackDamage;
                         damageMessage[1] = transform.position.x;
-                        enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
+                        if (enemy.GetComponentInParent<BasicEnemyController>() != null)
+                        {
+                            enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
+                        }
                     }
 
                     if(enemy.tag == "Healer")
@@ -462,7 +465,13 @@ public class playerController : MonoBehaviour
         #region Player death
         if (playerLives <= 0)
         {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Invoke("die", 2f);
+            (Instantiate(deathParticles, transform.position, Quaternion.identity) as ParticleSystem).Play();
+            this.gameObject.GetComponent<playerController>().enabled = false;
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            this.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            this.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+            /*
             PlayerData data = PlayerSave.LoadPlayer();
 
             GameManager.Instance.loadPoints(data.points);
@@ -480,7 +489,7 @@ public class playerController : MonoBehaviour
             playerVelocity = data.speed;
             maxJumps = data.jumpAmount;
             updateLiveUI();
-
+            */
         }
         #endregion
 
@@ -568,6 +577,11 @@ public class playerController : MonoBehaviour
         shieldTimer.text = 10 - (Time.time - nextShield) + "s";
     }
 
+    private void die()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     public void addLive()
     {
         if (playerLives + 1 <= maxLives)
@@ -622,6 +636,11 @@ public class playerController : MonoBehaviour
         #endregion
 
         #region Damage to player
+
+        if (collision.transform.tag == "Trap")
+        {
+            playerLives = 0;
+        }
 
         if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && !immune)
         {
@@ -807,9 +826,11 @@ public class playerController : MonoBehaviour
         if (inventory)
         {
             Time.timeScale = 0f;
+            GameManager.Instance.changeInventory(true);
             inventoryUI.SetActive(true);
         }
         else{
+            GameManager.Instance.changeInventory(false);
             Time.timeScale = 1f;
             inventoryUI.SetActive(false);
         }
@@ -833,7 +854,7 @@ public class playerController : MonoBehaviour
             }
             else
             {
-                //No hi ha mes espai per a equipar lost souls
+                //No hi ha mes espai per a equipar lost souls maybe informar jugador
             }
         }
     }

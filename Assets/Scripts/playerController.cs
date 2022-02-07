@@ -782,6 +782,27 @@ public class playerController : MonoBehaviour
             }
         }
 
+        if (lostSouls.ContainsKey("Fireflies"))
+        {
+            lostSouls.TryGetValue("Fireflies", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                GameObject[] traps = GameObject.FindGameObjectsWithTag("Trap");
+                foreach (GameObject trap in traps)
+                {
+                    trap.GetComponent<Traps>().setFireflies(true);
+                }
+            }
+            else
+            {
+                GameObject[] traps = GameObject.FindGameObjectsWithTag("Trap");
+                foreach (GameObject trap in traps)
+                {
+                    trap.GetComponent<Traps>().setFireflies(false);
+                }
+            }
+        }
+
         if (lostSouls.ContainsKey("Thorns"))
         {
             lostSouls.TryGetValue("Thorns", out LostSouls ls);

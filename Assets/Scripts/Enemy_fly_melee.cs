@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class Enemy_fly_melee : MonoBehaviour
+public class Enemy_fly_melee : FatherEnemy
 {
     private enum State
     {
@@ -45,6 +45,7 @@ public class Enemy_fly_melee : MonoBehaviour
     private float
         currentHealth,
         knockbackStartTime;
+    private float[] posPlayerForKnockback;
 
 
     private Rigidbody2D rb;
@@ -156,6 +157,30 @@ public class Enemy_fly_melee : MonoBehaviour
     {
         knocking = true;
         knockbackStartTime = Time.time;
+        if (null != posPlayerForKnockback)
+        {
+            if (posPlayerForKnockback[0] == 1.0f)
+            {
+                if (posPlayerForKnockback[1] > transform.position.x)
+                {
+                    damageDirectionX = -1;
+                }
+                else
+                {
+                    damageDirectionX = 1;
+                }
+
+                if (posPlayerForKnockback[2] > transform.position.y)
+                {
+                    damageDirectionY = -1;
+                }
+                else
+                {
+                    damageDirectionY = 1;
+                }
+                posPlayerForKnockback[0] = 0.0f;
+            }
+        }
         movement.Set(knockbackSpeed.x * damageDirectionX, knockbackSpeed.y * damageDirectionY);
         rb.velocity = movement;
     }
@@ -204,7 +229,7 @@ public class Enemy_fly_melee : MonoBehaviour
     #endregion
 
 
-    public void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails)
     {
 
 
@@ -279,14 +304,22 @@ public class Enemy_fly_melee : MonoBehaviour
         currentState = state;
     }
 
-    public void applyKnockback()
+    public override void applyKnockback(float[] position)
     {
         ExitWalkingState();
+        posPlayerForKnockback = new float[3];
+        posPlayerForKnockback[0] = position[0];
+        posPlayerForKnockback[1] = position[1];
+        posPlayerForKnockback[2] = position[2];
         SwitchState(State.Knockback);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, lineOfSite);
+    }
+    public override void mostraMissatge()
+    {
+        Debug.Log("EEEEEEIIII3");
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemyController : MonoBehaviour
+public class BasicEnemyController : FatherEnemy
 {
     private enum State
     {
@@ -56,6 +56,7 @@ public class BasicEnemyController : MonoBehaviour
     private float 
         currentHealth,
         knockbackStartTime;
+    private float[] posPlayerForKnockback;
 
     private bool
         groundDetected,
@@ -141,6 +142,21 @@ public class BasicEnemyController : MonoBehaviour
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
+        if(null != posPlayerForKnockback)
+        {
+            if(posPlayerForKnockback[0] == 1.0f)
+            {
+                if (posPlayerForKnockback[1] > alive.transform.position.x)
+                {
+                    damageDirection = -1;
+                }
+                else
+                {
+                    damageDirection = 1;
+                }
+                posPlayerForKnockback[0] = 0.0f;
+            }
+        }
         movement.Set(knockbackSpeed.x * damageDirection, knockbackSpeed.y);
         aliveRb.velocity = movement;
         aliveAnim.SetBool("Knockback", true);
@@ -184,7 +200,7 @@ public class BasicEnemyController : MonoBehaviour
 
     //----ALTRES----
 
-    public void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails)
     {
        
 
@@ -257,5 +273,18 @@ public class BasicEnemyController : MonoBehaviour
         Gizmos.DrawLine(groundCheckBack.position, new Vector2(groundCheckBack.position.x, groundCheckBack.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
         Gizmos.DrawWireSphere(enemyCollision.position, enemyDetectionRange);
+    }
+
+    public override void mostraMissatge()
+    {
+        Debug.Log("EEEEEEIIII");
+    }
+
+    public override void applyKnockback(float[] position)
+    {
+        posPlayerForKnockback = new float[2];
+        posPlayerForKnockback[0] = position[0];
+        posPlayerForKnockback[1] = position[1];
+        SwitchState(State.Knockback);
     }
 }

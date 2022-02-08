@@ -430,6 +430,7 @@ public class playerController : MonoBehaviour
 
                 foreach (Collider2D enemy in hitEnemies)
                 {
+                    /*
                     if(enemy.tag == "EnemyFlyMele")
                     {
                         float[] damageMessage = new float[3];
@@ -453,6 +454,21 @@ public class playerController : MonoBehaviour
                     if(enemy.tag == "Healer")
                     {
                         enemy.GetComponentInParent<healer>().Damage(attackDamage);
+                    }*/
+                    if (enemy.tag == "Enemy")
+                    {
+                        float[] damageMessage = new float[3];
+                        damageMessage[0] = attackDamage;
+                        damageMessage[1] = transform.position.x;
+                        damageMessage[2] = transform.position.y;
+                        if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                        {
+                            enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                        }
+                    }
+                    if (enemy.tag == "Healer")
+                    {
+                        enemy.GetComponentInParent<healer>().Damage(attackDamage);
                     }
                 }
                 nextAttackTime = Time.time + 1 / attackRate;
@@ -465,12 +481,14 @@ public class playerController : MonoBehaviour
         #region Player death
         if (playerLives <= 0)
         {
+            updateLiveUI();
             Invoke("die", 2f);
             (Instantiate(deathParticles, transform.position, Quaternion.identity) as ParticleSystem).Play();
             this.gameObject.GetComponent<playerController>().enabled = false;
             this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
             this.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             this.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+            this.gameObject.SetActive(false);
             /*
             PlayerData data = PlayerSave.LoadPlayer();
 
@@ -577,6 +595,36 @@ public class playerController : MonoBehaviour
         shieldTimer.text = 10 - (Time.time - nextShield) + "s";
     }
 
+    public void takeDamage()
+    {
+        if (!shielded)
+        {
+            playerSounds[4].Play();
+            playerLives--;
+            //Activate Thorns here
+            if (lostSouls.TryGetValue("Thorns", out LostSouls thorns))
+            {
+                if (thorns.isEquiped)
+                {
+                    thorns.isActive = true;
+                }
+            }
+        }
+        else
+        {
+            shield.color = new Color(0, 0, 0, 0);
+            shielded = false;
+            shieldTimer.enabled = true;
+            playerSounds[4].Play();
+
+        }
+
+        immune = true;
+        Invoke("damageImmunity", 1f);
+        r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
+        updateLiveUI();
+    }
+
     private void die()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -607,6 +655,12 @@ public class playerController : MonoBehaviour
         }
 
         #endregion
+
+        if (collision.transform.tag == "Bullet")
+        {
+            takeDamage();
+            Destroy(collision.gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -615,21 +669,27 @@ public class playerController : MonoBehaviour
 
 
         //Optimitzar no haver de comprovar cada cop si son enemic o enemic volador
-        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && isDashing)
+        if ((collision.transform.tag == "Enemy") && isDashing)
         {
             enemy[enemyCounter] = collision;
             enemyCounter++;
 
             collision.transform.GetComponentInChildren<Rigidbody2D>().isKinematic = true;
 
-            if (collision.transform.tag == "Enemy")
+            if (null != collision.transform.GetComponentInChildren<BoxCollider2D>())
             {
                 collision.transform.GetComponentInChildren<BoxCollider2D>().isTrigger = true;
             }
-            else
+            if (null != collision.transform.GetComponentInChildren<CapsuleCollider2D>())
+            {
+                collision.transform.GetComponentInChildren<CapsuleCollider2D>().isTrigger = true;
+            }
+            if (null != collision.transform.GetComponentInChildren<CircleCollider2D>())
             {
                 collision.transform.GetComponentInChildren<CircleCollider2D>().isTrigger = true;
             }
+            
+
             Invoke("returnEnemyToCollision", 0.25f);
         }
 
@@ -642,41 +702,27 @@ public class playerController : MonoBehaviour
             playerLives = 0;
         }
 
-        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "EnemyFlyMele") && !immune)
+        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "Bullet") && !immune)
         {
-            //Reaction to damage
-            if (collision.transform.tag == "EnemyFlyMele" || collision.transform.tag == "Enemy")
-            {
-                if (!shielded)
-                {
-                    playerSounds[4].Play();
-                    playerLives--;
-                    //Activate Thorns here
-                    if(lostSouls.TryGetValue("Thorns", out LostSouls thorns)){
-                        if (thorns.isEquiped)
-                        {
-                            thorns.isActive = true;
-                        }
-                    }
-                }
-                else
-                {
-                    shield.color = new Color(0, 0, 0, 0);
-                    shielded = false;
-                    shieldTimer.enabled = true;
-                    playerSounds[4].Play();
 
-                }
-                if (collision.transform.tag == "EnemyFlyMele")
-                {
-                    collision.transform.GetComponentInParent<Enemy_fly_melee>().applyKnockback();
-                }
-                immune = true;
-                Invoke("damageImmunity", 1f);
-                r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
+            //Reaction to damage
+            takeDamage();
+
+            if (collision.transform.tag == "Enemy")
+            {
+                float[] knockbackInfo = new float[3];
+                knockbackInfo[0] = 1.0f;
+                knockbackInfo[1] = transform.position.x;
+                knockbackInfo[2] = transform.position.y;
+                collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+            }
+            if (collision.transform.tag == "Bullet")
+            {
+                Destroy(collision.gameObject);
             }
 
-            updateLiveUI();
+            
+
         }
         #endregion
     }
@@ -703,11 +749,19 @@ public class playerController : MonoBehaviour
             color.a = 0.2f;
             live3.color = color;
         }
-        else
+        else if(playerLives == 1)
         {
             color.a = 1f;
             live1.color = color;
             color.a = 0.2f;
+            live2.color = color;
+            live3.color = color;
+        }
+        else
+        {
+            color.a = 1f;
+            color.a = 0.2f;
+            live1.color = color;
             live2.color = color;
             live3.color = color;
         }
@@ -733,11 +787,18 @@ public class playerController : MonoBehaviour
                 enemy[i].transform.GetComponentInChildren<Rigidbody2D>().isKinematic = false;
                 if (enemy[i].transform.tag == "Enemy")
                 {
-                    enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
-                }
-                else
-                {
-                    enemy[i].transform.GetComponentInChildren<CircleCollider2D>().isTrigger = false;
+                    if (null != enemy[i].transform.GetComponentInChildren<BoxCollider2D>())
+                    {
+                        enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
+                    }
+                    if (null != enemy[i].transform.GetComponentInChildren<CapsuleCollider2D>())
+                    {
+                        enemy[i].transform.GetComponentInChildren<CapsuleCollider2D>().isTrigger = false;
+                    }
+                    if (null != enemy[i].transform.GetComponentInChildren<CircleCollider2D>())
+                    {
+                        enemy[i].transform.GetComponentInChildren<CircleCollider2D>().isTrigger = false;
+                    }
                 }
             }
         }

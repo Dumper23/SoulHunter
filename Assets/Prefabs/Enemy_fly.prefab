@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 483738991}
   m_Layer: 6
   m_Name: Enemy_fly
-  m_TagString: EnemyFlyMele
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageToPlayer: 1
-  pointsToGive: 25
+  pointsToGive: 30
   maxHealth: 50
   knockbackDuration: 1
   lineOfSite: 5.72

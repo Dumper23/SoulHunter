@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 5668566062277139047}
   m_Layer: 6
   m_Name: Shooter
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,11 +131,11 @@ MonoBehaviour:
   damageToPlayer: 1
   pointsToGive: 10
   speed: 3
-  speedKnockback: 2
+  speedKnockback: 0.01
   lineOfSite: 4.12
   shootingRange: 2.43
-  maxHealth: 10
-  knockbackDuration: 2
+  maxHealth: 20
+  knockbackDuration: 1
   fireRate: 1
   bullet: {fileID: 8069326041670184453, guid: bbf888167fbe9ed45a71b1ad18e5e3a5, type: 3}
   bulletParent: {fileID: 5668566061518866024}

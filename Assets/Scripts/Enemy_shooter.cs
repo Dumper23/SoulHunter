@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_shooter : MonoBehaviour
+public class Enemy_shooter : FatherEnemy
 {
 
     public int damageToPlayer = 1;
@@ -24,6 +24,8 @@ public class Enemy_shooter : MonoBehaviour
         currentHealth,
         nextFireTime,
         knockbackStartTime;
+    private float[] posPlayerForKnockback;
+
 
     [SerializeField]
     private GameObject
@@ -37,14 +39,19 @@ public class Enemy_shooter : MonoBehaviour
     private int 
         damageDirectionX,
         damageDirectionY;
+    private Rigidbody2D rb;
 
     private bool isKnockback = false;
+    private bool inRange = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        
         player = GameObject.FindGameObjectWithTag("Player").transform;
         currentHealth = maxHealth;
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -53,19 +60,26 @@ public class Enemy_shooter : MonoBehaviour
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if(distanceFromPlayer < lineOfSite && distanceFromPlayer > shootingRange)
         {
+            inRange = true;
             transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
         }
         else if (distanceFromPlayer < shootingRange && nextFireTime < Time.time )
         {
+            inRange = true;
             Instantiate(bullet, bulletParent.transform.position, Quaternion.identity);
             nextFireTime = Time.time + fireRate;
+        }
+        if (distanceFromPlayer > lineOfSite)
+        {
+            rb.velocity = Vector2.zero;
+            inRange = false;
         }
         if (isKnockback)
         {
             Knockback();
         }
     }
-    public void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails)
     {
 
         currentHealth -= attackDetails[0];
@@ -104,15 +118,51 @@ public class Enemy_shooter : MonoBehaviour
             GameManager.Instance.addPoints(pointsToGive);
         }
     }
-    public void applyKnockback()
+    public override void applyKnockback(float[] position)
     {
+        posPlayerForKnockback = new float[3];
+        posPlayerForKnockback[0] = position[0];
+        posPlayerForKnockback[1] = position[1];
+        posPlayerForKnockback[2] = position[2];
         Knockback();
     }
     private void Knockback()
     {
         knockbackStartTime = Time.time;
         isKnockback = true;
-        transform.position = transform.position + new Vector3(damageDirectionX, damageDirectionY, 0.0f) * speedKnockback;
+        if (null != posPlayerForKnockback)
+        {
+            if (posPlayerForKnockback[0] == 1.0f)
+            {
+
+                if (posPlayerForKnockback[1] > transform.position.x)
+                {
+                    damageDirectionX = -1;
+                }
+                else
+                {
+                    damageDirectionX = 1;
+                }
+
+                if (posPlayerForKnockback[2] > transform.position.y)
+                {
+                    damageDirectionY = -1;
+                }
+                else
+                {
+                    damageDirectionY = 1;
+                }
+                posPlayerForKnockback[0] = 0.0f;
+            }
+        }
+        if (inRange)
+        {
+            transform.position = transform.position + new Vector3(damageDirectionX, damageDirectionY, 0.0f) * speedKnockback;
+        }
+        else
+        {
+            isKnockback = false;
+        }
         if (Time.time >= knockbackStartTime + knockbackDuration)
         {
             isKnockback = false;
@@ -130,5 +180,10 @@ public class Enemy_shooter : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, lineOfSite);
         Gizmos.DrawWireSphere(transform.position, shootingRange);
+    }
+
+    public override void mostraMissatge()
+    {
+        Debug.Log("EEEEEEIIII2");
     }
 }

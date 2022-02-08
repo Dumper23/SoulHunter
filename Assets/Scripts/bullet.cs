@@ -40,16 +40,10 @@ public class bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
         if (collision.transform.tag == "ground")
         {
-
-            Destroy(gameObject);
-        }
-        if (collision.transform.tag == "Player")
-        {
-
             Destroy(gameObject);
         }
     }
+
 }

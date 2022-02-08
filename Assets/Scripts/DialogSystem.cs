@@ -7,6 +7,9 @@ public class DialogSystem : MonoBehaviour
 {
     public GameObject dialogPanel;
     public Text dialogText;
+
+    public List<GameObject> imagesToDisplay;
+
     [TextArea]
     public string textToShow;
 
@@ -22,6 +25,11 @@ public class DialogSystem : MonoBehaviour
         {
             dialogText.text = textToShow;
             dialogPanel.SetActive(true);
+
+            foreach (GameObject img in imagesToDisplay)
+            {
+                img.SetActive(true);
+            }
         }
     }
 
@@ -29,6 +37,10 @@ public class DialogSystem : MonoBehaviour
     {
         if (collision.transform.tag == "Player")
         {
+            foreach (GameObject img in imagesToDisplay)
+            {
+                img.SetActive(false);
+            }
             dialogPanel.SetActive(false);
         }
     }

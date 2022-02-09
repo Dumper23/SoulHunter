@@ -57,13 +57,14 @@ public class Enemy_shooter : FatherEnemy
     // Update is called once per frame
     void Update()
     {
+        
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if(distanceFromPlayer < lineOfSite && distanceFromPlayer > shootingRange)
         {
             inRange = true;
             transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
         }
-        else if (distanceFromPlayer < shootingRange && nextFireTime < Time.time )
+        else if ((distanceFromPlayer < shootingRange && nextFireTime < Time.time) && player.gameObject.activeInHierarchy)
         {
             inRange = true;
             Instantiate(bullet, bulletParent.transform.position, Quaternion.identity);

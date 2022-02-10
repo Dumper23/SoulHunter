@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageToPlayer: 1
-  pointsToGive: 10
+  pointsToGive: 20
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   movementSpeed: 3

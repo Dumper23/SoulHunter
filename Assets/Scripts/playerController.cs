@@ -10,6 +10,8 @@ using UnityEngine.UI;
 
 public class playerController : MonoBehaviour
 {
+    public bool loadPlayerData = true;
+
     [Header("Basic Movement settings")]
     public float playerVelocity = 10f;
     public float jumpVelocity = 12f;
@@ -109,6 +111,7 @@ public class playerController : MonoBehaviour
     private bool immune = false;
     private Collision2D[] enemy = new Collision2D[10];
     private int enemyCounter = 0;
+    public string currentLevel = "Tutorial";
 
     //Animation States
     const string PLAYER_IDLE = "idle";
@@ -123,6 +126,17 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        if (loadPlayerData)
+        {
+            loadPlayer();
+            GameObject startPos = GameObject.FindGameObjectWithTag("Start");
+            if (startPos != null) {
+                transform.position = startPos.transform.position;
+            }
+        }
+
+        currentLevel = GameManager.Instance.getCurrentLevelName();
+
         maxLives = playerLives;
         light.SetActive(false);
         startKillTime = Time.time;
@@ -143,6 +157,36 @@ public class playerController : MonoBehaviour
 
         //We find the ground collider game object
         groundCollider = transform.Find("groundCollider");
+    }
+
+    public void setCurrentLevelName(string levelName)
+    {
+        currentLevel = levelName;
+    }
+
+    private void loadPlayer()
+    {
+        PlayerData temp = PlayerSave.LoadPlayer();
+        if (temp != null)
+        {
+
+            attackDamage = temp.attackDamage;
+            attackRate = temp.attackRate;
+            playerVelocity = temp.speed;
+            transform.position = new Vector3(temp.position[0], temp.position[1]);
+            currentLevel = temp.currentLevel;
+            for (int i = 0; i < temp.lostSouls.Length; i++)
+            {
+                if (temp.lostSouls[i] != null)
+                {
+                    LostSouls ls = new LostSouls();
+                    ls.lostSoulName = temp.lostSouls[i];
+                    ls.isActive = true;
+                    ls.isEquiped = false;
+                    lostSouls.Add(temp.lostSouls[i], ls);
+                }
+            }
+        }
     }
 
     //-----------TODO: FixedUpdate (All the physics calculation and Update All the imput recievement)
@@ -241,10 +285,13 @@ public class playerController : MonoBehaviour
                 {
                     groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
                 }
-                Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
-                Camera.main.GetComponent<Animator>().SetTrigger("shake");
                 hittedGround = false;
-                playerSounds[0].Play();
+                if (r2d.velocity.y <= 0)
+                {
+                    Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+                    Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                    playerSounds[0].Play();
+                }
             }
             if (horizontalIn != 0)
             {
@@ -314,7 +361,7 @@ public class playerController : MonoBehaviour
             }
             else
             {
-                dashDirection = -1;
+                dashDirection = (sprite.flipX ? -1 : 1);
             }
         }
         Color tmp = sprite.color;
@@ -386,7 +433,7 @@ public class playerController : MonoBehaviour
                 }
                 wallSliding = false;
             }*/
-            //Aqui si funciones bé el velocity del rigidbody podriem fer salt de paret :(
+            //Aqui si funciones bï¿½ el velocity del rigidbody podriem fer salt de paret :(
         }
 
         #endregion
@@ -430,31 +477,6 @@ public class playerController : MonoBehaviour
 
                 foreach (Collider2D enemy in hitEnemies)
                 {
-                    /*
-                    if(enemy.tag == "EnemyFlyMele")
-                    {
-                        float[] damageMessage = new float[3];
-                        damageMessage[0] = attackDamage;
-                        damageMessage[1] = transform.position.x;
-                        damageMessage[2] = transform.position.y;
-                        enemy.GetComponentInParent<Enemy_fly_melee>().Damage(damageMessage);
-                    }
-
-                    if (enemy.tag == "Enemy")
-                    {
-                        float[] damageMessage = new float[2];
-                        damageMessage[0] = attackDamage;
-                        damageMessage[1] = transform.position.x;
-                        if (enemy.GetComponentInParent<BasicEnemyController>() != null)
-                        {
-                            enemy.GetComponentInParent<BasicEnemyController>().Damage(damageMessage);
-                        }
-                    }
-
-                    if(enemy.tag == "Healer")
-                    {
-                        enemy.GetComponentInParent<healer>().Damage(attackDamage);
-                    }*/
                     if (enemy.tag == "Enemy")
                     {
                         float[] damageMessage = new float[3];
@@ -489,32 +511,13 @@ public class playerController : MonoBehaviour
             this.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             this.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
             this.gameObject.SetActive(false);
-            /*
-            PlayerData data = PlayerSave.LoadPlayer();
-
-            GameManager.Instance.loadPoints(data.points);
-            playerLives = data.lives;
-
-            attackDamage = data.attackDamage;
-            attackRate = data.attackRate;
-
-            Vector3 pos;
-            pos.x = data.position[0];
-            pos.y = data.position[1];
-            pos.z = data.position[2];
-            transform.position = pos;
-
-            playerVelocity = data.speed;
-            maxJumps = data.jumpAmount;
-            updateLiveUI();
-            */
         }
         #endregion
 
         //Boost bar functionality
         #region Boost bar
         int points = GameManager.Instance.getPoints();
-        //Augmento de daño, Dash recovery, Velocidad
+        //Augmento de daï¿½o, Dash recovery, Velocidad
         float t = 0f;
 
         t += Mathf.RoundToInt(Time.time);
@@ -658,8 +661,15 @@ public class playerController : MonoBehaviour
 
         if (collision.transform.tag == "Bullet")
         {
-            takeDamage();
-            collision.gameObject.SetActive(false);
+            if (!isDashing)
+            {
+                takeDamage();
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            }
         }
     }
 
@@ -720,11 +730,29 @@ public class playerController : MonoBehaviour
             {
                 Destroy(collision.gameObject);
             }
-
-            
-
         }
         #endregion
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if ((collision.transform.tag == "Enemy" || collision.transform.tag == "Bullet") && !immune)
+        {
+            takeDamage();
+
+            if (collision.transform.tag == "Enemy")
+            {
+                float[] knockbackInfo = new float[3];
+                knockbackInfo[0] = 1.0f;
+                knockbackInfo[1] = transform.position.x;
+                knockbackInfo[2] = transform.position.y;
+                collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+            }
+            if (collision.transform.tag == "Bullet")
+            {
+                Destroy(collision.gameObject);
+            }
+        }
     }
 
     //Update the ui to display the correct number of lives
@@ -873,7 +901,11 @@ public class playerController : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     //Fer mal als enemics un cop hi hagi herencies
-                    Debug.Log(enemy.name);
+                    float[] damageMessage = new float[3];
+                    damageMessage[0] = attackDamage;
+                    damageMessage[1] = transform.position.x;
+                    damageMessage[2] = transform.position.y;
+                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
                 }
             }
         }

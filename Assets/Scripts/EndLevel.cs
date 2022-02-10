@@ -11,7 +11,7 @@ public class EndLevel : MonoBehaviour
     {
         if(collision.transform.tag == "Player")
         {
-            SceneManager.LoadScene(nextLevelName);
+            GameManager.Instance.nextLevel(nextLevelName);
         }
     }
 }

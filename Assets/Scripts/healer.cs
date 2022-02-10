@@ -36,25 +36,28 @@ public class healer : MonoBehaviour
             }
         }
         else 
-        { 
-            playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-            Vector2 movement = Vector2.zero;
-
-            wallDetected = Physics2D.Raycast(transform.position, (playerPos.x > transform.position.x ? -transform.right : transform.right), wallDetectionDistance, whatIsGround);
-            Debug.Log(wallDetected);
-
-            if (!wallDetected)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
             {
-                movement.Set(movementSpeed * ((playerPos.x > transform.position.x) ? -direction : direction), rb.velocity.y);
-                rb.velocity = movement;
-            }
+                playerPos = player.transform.position;
+                Vector2 movement = Vector2.zero;
 
-            if (rb.velocity.y == 0 && Mathf.Abs(rb.velocity.x) > 0.6 && !wallDetected)
-            {
-                rb.AddForce(new Vector2(0, (Random.Range(0, 10) >= 9 ? jumpForce : 1)));
+                wallDetected = Physics2D.Raycast(transform.position, (playerPos.x > transform.position.x ? -transform.right : transform.right), wallDetectionDistance, whatIsGround);
+
+                if (!wallDetected)
+                {
+                    movement.Set(movementSpeed * ((playerPos.x > transform.position.x) ? -direction : direction), rb.velocity.y);
+                    rb.velocity = movement;
+                }
+
+                if (rb.velocity.y == 0 && Mathf.Abs(rb.velocity.x) > 0.6 && !wallDetected)
+                {
+                    rb.AddForce(new Vector2(0, (Random.Range(0, 10) >= 9 ? jumpForce : 1)));
+                }
+                //Animacio de desapareixer abans de eliminarse 
+                Destroy(gameObject, timeToDie);
             }
-            //Animacio de desapareixer abans de eliminarse 
-            Destroy(gameObject, timeToDie);
         }
     }
 
@@ -79,5 +82,13 @@ public class healer : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.transform.tag == "Trap")
+        {
+            Destroy(gameObject);
+        }
     }
 }

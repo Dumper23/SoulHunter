@@ -10,13 +10,14 @@ public class mainMenu : MonoBehaviour
 
     public AudioMixer audioMixer;
     public Dropdown resolutionDropDown;
+    public GameObject popUp;
 
     private Resolution[] resolutions;
 
     private void Start()
     {
         resolutions = Screen.resolutions;
-
+        popUp.SetActive(false);
         resolutionDropDown.ClearOptions();
 
         List<string> options = new List<string>();
@@ -41,7 +42,27 @@ public class mainMenu : MonoBehaviour
 
     public void playGame()
     {
-        SceneManager.LoadScene("Tutorial");
+        PlayerData data = PlayerSave.LoadPlayer();
+        if (data != null)
+        {
+            SceneManager.LoadScene(data.currentLevel);
+        }
+        else
+        {
+            SceneManager.LoadScene("Tutorial");
+        }
+    }
+
+    public void deleteSavedGame()
+    {
+        popUp.SetActive(true);
+        Invoke("delete", 1.5f);
+    }
+
+    private void delete()
+    {
+        popUp.SetActive(false);
+        PlayerSave.deleteSave();
     }
 
     public void quitGame()

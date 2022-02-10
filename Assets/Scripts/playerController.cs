@@ -659,7 +659,7 @@ public class playerController : MonoBehaviour
         if (collision.transform.tag == "Bullet")
         {
             takeDamage();
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
     }
 

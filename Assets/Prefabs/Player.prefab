@@ -289,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72aaddea04571640a95f307666187e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadPlayerData: 1
   playerVelocity: 7
   jumpVelocity: 12
   gravityScale: 4
@@ -344,6 +345,7 @@ MonoBehaviour:
   ThornsRange: 2
   light: {fileID: 4556257231619769987}
   maxLostSoulsEquipped: 3
+  currentLevel: Tutorial
 --- !u!95 &4556257231163928202
 Animator:
   serializedVersion: 3
@@ -913,8 +915,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4556257231619769987}
-  m_LocalRotation: {x: -0, y: -0, z: 0.008139436, w: 0.9999669}
-  m_LocalPosition: {x: -0.019, y: -0.237, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.0052068615, w: 0.99998647}
+  m_LocalPosition: {x: 0.021, y: -0.092, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4556257231163928205}
@@ -947,8 +949,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 1.16
-  m_PointLightOuterRadius: 3.67
+  m_PointLightInnerRadius: 2.6933138
+  m_PointLightOuterRadius: 6.606737
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5

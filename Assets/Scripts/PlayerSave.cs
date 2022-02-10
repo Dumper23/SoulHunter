@@ -28,8 +28,16 @@ public static class PlayerSave{
         }
         else
         {
-            Debug.LogError("Save File not found in " + path);
+            Debug.Log("Save File not found in " + path);
             return null;
+        }
+    }
+
+    public static void deleteSave()
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
         }
     }
 }

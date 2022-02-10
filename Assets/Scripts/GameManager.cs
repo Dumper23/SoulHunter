@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public string getCurrentLevelName()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
+
     public void addPoints(int points)
     {
         if (playerPoints + points < 125)
@@ -52,6 +58,14 @@ public class GameManager : MonoBehaviour
             playerPoints = 125;
             pointText.text = playerPoints.ToString();
         }
+    }
+
+    public void nextLevel(string nl)
+    {
+        playerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<playerController>();
+        playerController.setCurrentLevelName(nl);
+        PlayerSave.SavePlayer(playerController);
+        SceneManager.LoadScene(nl);
     }
 
     public void loadPoints(int p)

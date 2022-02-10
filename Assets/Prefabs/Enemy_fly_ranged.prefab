@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6483265610842248539}
   - component: {fileID: 6483265610842248536}
   - component: {fileID: 6483265610842248537}
-  - component: {fileID: 6483265610842248542}
   - component: {fileID: 6483265610842248543}
   m_Layer: 0
   m_Name: Enemy_fly_ranged
@@ -79,22 +78,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.25
---- !u!114 &6483265610842248542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6483265610842248540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1848be6e84e55bc4c8087f7cdacf8e55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  speed: 400
-  nextWayPointDistance: 3
-  enemyGFX: {fileID: 6483265611022460509}
 --- !u!50 &6483265610842248543
 Rigidbody2D:
   serializedVersion: 4
@@ -187,7 +170,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 45d8b0d61ed94be45b0bf2c7151ab040, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e0a2ff9f01c40d64ba36c55321ccc00a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

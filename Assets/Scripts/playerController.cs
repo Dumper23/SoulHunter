@@ -664,7 +664,7 @@ public class playerController : MonoBehaviour
             if (!isDashing)
             {
                 takeDamage();
-                Destroy(collision.gameObject);
+                collision.gameObject.SetActive(false);
             }
             else
             {

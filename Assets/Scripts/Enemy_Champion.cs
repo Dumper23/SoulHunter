@@ -82,6 +82,17 @@ public class Enemy_Champion : FatherEnemy
         statesToRandomize[0] = State.Defense;
         statesToRandomize[1] = State.AttackRoll;
         statesToRandomize[2] = State.Spikes;
+
+        if (player.position.x > this.transform.position.x)
+        {
+            facingDirection = 1;
+
+        }
+        else
+        {
+            viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+            viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
+        }
     }
 
     // Update is called once per frame

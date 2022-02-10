@@ -35,8 +35,8 @@ public class Enemy_Champion : FatherEnemy
     private float lineOfSite,
         maxHealth = 80,
         knockbackDuration = 0.5f,
-        walkingSwitchStateDuration = 2f,
-        AttackRollDuration = 2f,
+        maxWalkingSwitchStateDuration = 6f,
+        maxAttackRollDuration = 12f,
         DefenseDuration = 2f,
         SpikesDuration = 1f,
         wallCheckDistance;
@@ -55,7 +55,9 @@ public class Enemy_Champion : FatherEnemy
         AttackRollStartTime,
         DefenseStartTime,
         SpikesStartTime,
-        walkingStartTime;
+        walkingStartTime,
+        attackRollDuration,
+        walkingDuration;
 
     private State currentState;
     private State[] statesToRandomize;
@@ -72,16 +74,21 @@ public class Enemy_Champion : FatherEnemy
 
     public bool swicher = true;
 
+    [SerializeField]
+    private GameObject thornsSoul;
+
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        statesToRandomize = new State[3];
+        statesToRandomize = new State[5];
         statesToRandomize[0] = State.Defense;
         statesToRandomize[1] = State.AttackRoll;
         statesToRandomize[2] = State.Spikes;
+        statesToRandomize[3] = State.Defense;
+        statesToRandomize[4] = State.Spikes;
 
         if (player.position.x > this.transform.position.x)
         {
@@ -167,7 +174,7 @@ public class Enemy_Champion : FatherEnemy
         walkingStartTime = Time.time;
         swicher = true;
         inThorns = false;
-        
+        walkingDuration = Random.Range(maxWalkingSwitchStateDuration / 3, maxWalkingSwitchStateDuration + 1);
     }
 
     private void UpdateWalkingState()
@@ -196,7 +203,7 @@ public class Enemy_Champion : FatherEnemy
         }
         else
         {
-            if (Time.time >= walkingStartTime + walkingSwitchStateDuration) {
+            if (Time.time >= walkingStartTime + walkingDuration) {
                 SwitchState(randomBehaviour());
             }
             else
@@ -221,11 +228,12 @@ public class Enemy_Champion : FatherEnemy
         AttackRollStartTime = Time.time;
         swicher = false;
         inThorns = true;
+        attackRollDuration = Random.Range(maxAttackRollDuration/2, maxAttackRollDuration + 1);
     }
 
     private void UpdateAttackRollState()
     {
-        if (Time.time >= AttackRollStartTime + AttackRollDuration)
+        if (Time.time >= AttackRollStartTime + attackRollDuration)
         {
             SwitchState(State.Waiting);
         }
@@ -234,7 +242,6 @@ public class Enemy_Champion : FatherEnemy
             wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance*facingDirection, whatIsGround);
             if (wallDetected)
             {
-                Debug.Log("WAAAAALL");
                 Flip();
             }
             this.transform.Translate(new Vector2(1, 0) * speedRoll * facingDirection * Time.deltaTime);
@@ -260,7 +267,7 @@ public class Enemy_Champion : FatherEnemy
     {
         if (Time.time >= DefenseStartTime + DefenseDuration)
         {
-            SwitchState(State.Waiting);
+            SwitchState(randomBehaviour());
         }
     }
 
@@ -285,7 +292,7 @@ public class Enemy_Champion : FatherEnemy
     {
         if (Time.time >= SpikesStartTime + SpikesDuration)
         {
-            SwitchState(State.Defense);
+            SwitchState(randomBehaviour());
         }
     }
 
@@ -296,6 +303,7 @@ public class Enemy_Champion : FatherEnemy
         viewA.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
         viewB.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
     }
+
     #endregion
     //---------KNOCKBACK---------------
     #region KNOCKBACK
@@ -330,6 +338,7 @@ public class Enemy_Champion : FatherEnemy
         //Spawn chunks and blood
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
+        Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
         Destroy(gameObject);
     }
 

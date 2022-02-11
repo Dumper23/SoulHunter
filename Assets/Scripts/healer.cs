@@ -19,10 +19,18 @@ public class healer : MonoBehaviour
     public float wallDetectionDistance = 1f;
     public LayerMask whatIsGround;
 
+    private AudioSource audioSource;
+    private bool alreadySound = false;
+    public List<AudioClip> audios;
+    public GameObject deadSoundObject;
+
+    private const int INRANGE_SOUND = 0;
+    private const int DEAD_SOUND = 1;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -33,6 +41,16 @@ public class healer : MonoBehaviour
             if (playerInRange != null && playerInRange.tag == "Player")
             {
                 playerDetected = true;
+                if (!alreadySound)
+                {
+                    audioSource.clip = audios[INRANGE_SOUND];
+                    audioSource.Play();
+                    alreadySound = true;
+                }
+            }
+            else
+            {
+                alreadySound = false;
             }
         }
         else 
@@ -75,6 +93,8 @@ public class healer : MonoBehaviour
 
     private void die()
     {
+        deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
+        Instantiate(deadSoundObject, transform.position, transform.rotation);
         GameObject.FindGameObjectWithTag("Player").GetComponent<playerController>().addLive();
         Destroy(gameObject);
     }
@@ -88,6 +108,8 @@ public class healer : MonoBehaviour
     {
         if(collision.transform.tag == "Trap")
         {
+            deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
+            Instantiate(deadSoundObject, transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }

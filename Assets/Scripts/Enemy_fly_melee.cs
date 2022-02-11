@@ -17,6 +17,16 @@ public class Enemy_fly_melee : FatherEnemy
     public int damageToPlayer = 1;
     public int pointsToGive = 10;
 
+    private AudioSource audioSource;
+    private bool alreadySound = false;
+    public List<AudioClip> audios;
+    public GameObject deadSoundObject;
+
+    private const int DAMAGE_SOUND = 0;
+    private const int DEAD_SOUND = 1;
+    private const int INRANGE_SOUND = 2;
+    
+
     private State currentState;
 
     [SerializeField]
@@ -67,6 +77,7 @@ public class Enemy_fly_melee : FatherEnemy
         rb = GetComponent<Rigidbody2D>();
         aiPath = GetComponent<AIPath>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        audioSource = GetComponent<AudioSource>();
 
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         currentHealth = maxHealth;
@@ -121,6 +132,16 @@ public class Enemy_fly_melee : FatherEnemy
         if (distanceFromPlayer < lineOfSite)
         {
             SwitchState(State.Walking);
+            if (!alreadySound)
+            {
+                audioSource.clip = audios[INRANGE_SOUND];
+                audioSource.Play();
+                alreadySound = true;
+            }
+        }
+        else
+        {
+            alreadySound = false;
         }
     }
     #endregion
@@ -212,6 +233,9 @@ public class Enemy_fly_melee : FatherEnemy
     private void EnterDeadState()
     {
         //Spawn chunks and blood
+        deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
+        Instantiate(deadSoundObject, transform.position, transform.rotation);
+
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
         Destroy(gameObject);
@@ -235,6 +259,8 @@ public class Enemy_fly_melee : FatherEnemy
 
         currentHealth -= attackDetails[0];
 
+        audioSource.clip = audios[DAMAGE_SOUND];
+        audioSource.Play();
         //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
         particleDamage.Play();
         if (attackDetails[1] > transform.position.x)

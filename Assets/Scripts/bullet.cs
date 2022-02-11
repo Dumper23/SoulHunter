@@ -10,6 +10,7 @@ public class bullet : MonoBehaviour
     //private Vector3 targetPosition;
     private float timeCreated;
     public float maxTimeLife;
+    public GameObject deadSoundObject;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,9 @@ public class bullet : MonoBehaviour
     {
         if (collision.transform.tag == "ground")
         {
+            deadSoundObject.GetComponent<AudioSource>().clip = GetComponent<AudioSource>().clip;
+            Instantiate(deadSoundObject, transform.position, transform.rotation);
+            gameObject.GetComponent<AudioSource>().Play();
             Destroy(gameObject);
         }
     }

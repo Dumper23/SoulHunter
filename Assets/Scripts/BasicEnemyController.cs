@@ -15,6 +15,14 @@ public class BasicEnemyController : FatherEnemy
     public int damageToPlayer = 1;
     public int pointsToGive = 10;
 
+    private AudioSource audioSource;
+    public List<AudioClip> audios;
+    public GameObject deadSoundObject;
+
+    private const int DAMAGE_SOUND = 0;
+    private const int DEAD_SOUND = 1;
+
+
     private State currentState;
 
     [SerializeField]
@@ -80,6 +88,7 @@ public class BasicEnemyController : FatherEnemy
         alive = transform.Find("Alive").gameObject;
         aliveRb = alive.GetComponent<Rigidbody2D>();
         aliveAnim = alive.GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         facingDirection = 1;
         currentHealth = maxHealth;
@@ -181,6 +190,9 @@ public class BasicEnemyController : FatherEnemy
     private void EnterDeadState()
     {
         //Spawn chunks and blood
+        deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
+        Instantiate(deadSoundObject, transform.position, transform.rotation);
+        
         Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
         Destroy(gameObject);
@@ -205,7 +217,8 @@ public class BasicEnemyController : FatherEnemy
        
 
         currentHealth -= attackDetails[0];
-
+        audioSource.clip = audios[DAMAGE_SOUND];
+        audioSource.Play();
         //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
         particleDamage.Play();
         if (attackDetails[1] > alive.transform.position.x)

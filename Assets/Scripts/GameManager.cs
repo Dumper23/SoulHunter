@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviour
     #region Pause Menu
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
+        pauseMenuUI.SetActive(false);
         GameIsPaused = false;
     }
 
@@ -122,13 +122,15 @@ public class GameManager : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(buttonToSelect);
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
         GameIsPaused = true;
+        Time.timeScale = 0f;
     }
 
     public void LoadMenu()
     {
         Time.timeScale = 1f;
+        pauseMenuUI.SetActive(false);
+        GameIsPaused = false;
         SceneManager.LoadScene(mainMenuName);
     }
 

@@ -18,8 +18,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
+        pauseMenuUI.SetActive(false);
         GameIsPaused = false;
     }
 
@@ -27,8 +27,8 @@ public class PauseMenu : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(buttonToSelect);
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
         GameIsPaused = true;
+        Time.timeScale = 0f;
     }
 
     public void LoadMenu()

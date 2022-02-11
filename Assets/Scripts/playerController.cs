@@ -91,6 +91,10 @@ public class playerController : MonoBehaviour
 
     [Header("Sound Settings")]
     public List<AudioSource> playerSounds = new List<AudioSource>();
+    public GameObject deadSoundObject;
+    public AudioSource generalAudios;
+    public AudioClip deadSound;
+    public AudioClip bladeSound;
 
     [Header("LostSouls Settings")]
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
@@ -112,6 +116,7 @@ public class playerController : MonoBehaviour
     private Collision2D[] enemy = new Collision2D[10];
     private int enemyCounter = 0;
     public string currentLevel = "Tutorial";
+    private bool paused = false;
 
     //Animation States
     const string PLAYER_IDLE = "idle";
@@ -197,6 +202,7 @@ public class playerController : MonoBehaviour
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
 
+
         //Lost Souls functionality
         #region LostSouls
         //Lost souls inventory
@@ -222,288 +228,294 @@ public class playerController : MonoBehaviour
         #endregion
 
         // Movement controlls
-        #region Movement
-        float horizontalIn = Input.GetAxis("Horizontal");
-        bool wantsToJump = Input.GetButtonDown("Jump");
-        bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-
-        r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
-
-        if (!isDashing && !wallSliding && !isAttacking)
+        if (!inventory && !paused)
         {
-            if (isGrounded)
+            #region Movement
+            float horizontalIn = Input.GetAxis("Horizontal");
+            bool wantsToJump = Input.GetButtonDown("Jump");
+            bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+
+            r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
+
+            if (!isDashing && !wallSliding && !isAttacking)
             {
-                if (horizontalIn != 0)
+                if (isGrounded)
                 {
-                    changeAnimationState(PLAYER_RUN);
+                    if (horizontalIn != 0)
+                    {
+                        changeAnimationState(PLAYER_RUN);
+                    }
+                    else
+                    {
+                        changeAnimationState(PLAYER_IDLE);
+                    }
                 }
                 else
                 {
-                    changeAnimationState(PLAYER_IDLE);
+                    if (r2d.velocity.y > 0)
+                    {
+                        changeAnimationState(PLAYER_JUMP);
+                    }
+                    else if (r2d.velocity.y < 0)
+                    {
+                        changeAnimationState(PLAYER_FALL);
+                    }
+
                 }
             }
-            else
-            {
-                if (r2d.velocity.y > 0)
-                {
-                    changeAnimationState(PLAYER_JUMP);
-                }
-                else if (r2d.velocity.y < 0)
-                {
-                    changeAnimationState(PLAYER_FALL);
-                }
 
+
+
+            if (availableJumps < 2)
+            {
+                jumpIndicator1.enabled = false;
             }
-        }
-
-
-
-        if (availableJumps < 2)
-        {
-            jumpIndicator1.enabled = false;
-        }
-        if (availableJumps < 1)
-        {
-            jumpIndicator2.enabled = false;
-        }
-        if (availableJumps >= 2)
-        {
-            jumpIndicator1.enabled = true;
-            jumpIndicator2.enabled = true;
-        }
-
-        
-
-        
-        //After the jump we create effects as we hit the ground
-        if (isGrounded)
-        {
-            if (hittedGround)
+            if (availableJumps < 1)
             {
-                Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                if (aux.GetComponent<SpriteRenderer>() != null)
-                {
-                    groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
-                }
-                hittedGround = false;
-                if (r2d.velocity.y <= 0)
-                {
-                    Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
-                    Camera.main.GetComponent<Animator>().SetTrigger("shake");
-                    playerSounds[0].Play();
-                }
+                jumpIndicator2.enabled = false;
             }
-            if (horizontalIn != 0)
+            if (availableJumps >= 2)
             {
-                if (timeTrail <= 0)
+                jumpIndicator1.enabled = true;
+                jumpIndicator2.enabled = true;
+            }
+
+
+
+
+            //After the jump we create effects as we hit the ground
+            if (isGrounded)
+            {
+                if (hittedGround)
                 {
                     Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
                     if (aux.GetComponent<SpriteRenderer>() != null)
                     {
-                        walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                        groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
                     }
-                    Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
-                    timeTrail = startTimeTrail;
-                    playerSounds[1].Play();
-                }
-                else
-                {
-                    timeTrail -= Time.deltaTime;
-                }
-            }
-        }
-        else
-        {
-            hittedGround = true;
-        }
-
-
-        if (isGrounded && !Input.GetButton("Jump"))
-        {
-            availableJumps = maxJumps;
-        }
-
-        if (wantsToJump && availableJumps > 0)
-        {
-            //----------------------------------------------------------NO ENTENC EL HVELOCITY
-
-            float hVelocity = r2d.velocity.x;
-            r2d.velocity = new Vector2(hVelocity, jumpVelocity);
-            availableJumps--;
-            playerSounds[3].Play();
-            jumpParticle.Play();
-        }
-
-        if (horizontalIn != 0)
-        {
-            sprite.flipX = (horizontalIn < 0);
-        }
-
-        #endregion
-
-        //Dashing functionality
-        #region Dash
-        if ((Input.GetButtonDown("Dash") || Input.GetAxisRaw("Dash") != 0) && !dashed)
-        {
-            ghost.makeGhost = true;
-            currentDashRecoveryTime = dashRecoveryTime;
-            isDashing = true;
-            //dashParticle.Play();
-            playerSounds[2].Play();
-            dashIndicator.color = Color.red;
-            currentDashTime = startDashTime;
-            r2d.velocity = Vector3.zero;
-            immune = true;
-            Invoke("damageImmunity", 0.25f);
-            if (horizontalIn > 0)
-            {
-                dashDirection = 1;
-            }
-            else
-            {
-                dashDirection = (sprite.flipX ? -1 : 1);
-            }
-        }
-        Color tmp = sprite.color;
-        if (isDashing)
-        {
-            changeAnimationState(PLAYER_DASH);
-            r2d.velocity = transform.right * dashDirection * dashForce;
-            currentDashTime -= Time.deltaTime;
-            
-            tmp.a = dashAlpha;
-            sprite.color = tmp;
-            dashed = true;
-            if (currentDashTime <= 0)
-            {
-                isDashing = false;
-                tmp.a = 1;
-                sprite.color = tmp;
-            }
-        }
-        else
-        {
-            ghost.makeGhost = false;
-        }
-
-        if (dashed)
-        {
-            if(currentDashRecoveryTime <= 0)
-            {
-                dashed = false;
-                dashIndicator.color = Color.green;
-
-            }
-            else
-            {
-                currentDashRecoveryTime -= Time.deltaTime;
-            }
-        }
-
-        #endregion
-
-        //Wall Sliding functionality
-        #region Wall Sliding
-
-        isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, LayerMask.GetMask("Ground"));
-
-        if(isTouchingFront && !isGrounded && horizontalIn != 0)
-        {
-            wallSliding = true;
-            changeAnimationState(PLAYER_WALLSLIDE);
-        }
-        else
-        {
-            wallSliding = false;
-        }
-
-        if (wallSliding)
-        {
-            r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
-
-            /*if (wantsToJump)
-            {
-                if (frontCheck.position.x > transform.position.x)
-                {
-                    r2d.velocity = new Vector2(-100, r2d.velocity.y);
-                }
-                else
-                {
-                    r2d.velocity = new Vector2(100, r2d.velocity.y);
-                }
-                wallSliding = false;
-            }*/
-            //Aqui si funciones b� el velocity del rigidbody podriem fer salt de paret :(
-        }
-
-        #endregion
-
-        //Combat functionality
-        #region Combat
-        if (horizontalIn < 0)
-        {
-            attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
-        }
-        else if(horizontalIn > 0)
-        {
-            attackPoint.position = new Vector3(relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
-        }
-
-        if (Time.time >= nextAttackTime)
-        {
-            if (Input.GetButtonDown("Attack"))
-            {
-                isAttacking = true;
-                //Play attack animation
-                if (isGrounded)
-                {
-                    changeAnimationState(PLAYER_ATTACK);
-                }
-
-                if (!isGrounded && !isDashing && !wallSliding)
-                {   
-                    if (r2d.velocity.y > 0)
+                    hittedGround = false;
+                    if (r2d.velocity.y <= 0)
                     {
-                        changeAnimationState(PLAYER_ATTACKUP);
-                    }
-                    else if (r2d.velocity.y < 0)
-                    {
-
+                        Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+                        Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                        playerSounds[0].Play();
                     }
                 }
-                Invoke("stopAttack", attackAnimationDelay);
-
-                Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
-
-                foreach (Collider2D enemy in hitEnemies)
+                if (horizontalIn != 0)
                 {
-                    if (enemy.tag == "Enemy")
+                    if (timeTrail <= 0)
                     {
-                        float[] damageMessage = new float[3];
-                        damageMessage[0] = attackDamage;
-                        damageMessage[1] = transform.position.x;
-                        damageMessage[2] = transform.position.y;
-                        if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                        Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                        if (aux.GetComponent<SpriteRenderer>() != null)
                         {
-                            enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                            walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                        }
+                        Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
+                        timeTrail = startTimeTrail;
+                        playerSounds[1].Play();
+                    }
+                    else
+                    {
+                        timeTrail -= Time.deltaTime;
+                    }
+                }
+            }
+            else
+            {
+                hittedGround = true;
+            }
+
+
+            if (isGrounded && !Input.GetButton("Jump"))
+            {
+                availableJumps = maxJumps;
+            }
+
+            if (wantsToJump && availableJumps > 0)
+            {
+                //----------------------------------------------------------NO ENTENC EL HVELOCITY
+
+                float hVelocity = r2d.velocity.x;
+                r2d.velocity = new Vector2(hVelocity, jumpVelocity);
+                availableJumps--;
+                playerSounds[3].Play();
+                jumpParticle.Play();
+            }
+
+            if (horizontalIn != 0)
+            {
+                sprite.flipX = (horizontalIn < 0);
+            }
+
+            #endregion
+
+            //Dashing functionality
+            #region Dash
+            if ((Input.GetButtonDown("Dash") || Input.GetAxisRaw("Dash") != 0) && !dashed)
+            {
+                ghost.makeGhost = true;
+                currentDashRecoveryTime = dashRecoveryTime;
+                isDashing = true;
+                //dashParticle.Play();
+                playerSounds[2].Play();
+                dashIndicator.color = Color.red;
+                currentDashTime = startDashTime;
+                r2d.velocity = Vector3.zero;
+                immune = true;
+                Invoke("damageImmunity", 0.25f);
+                if (horizontalIn > 0)
+                {
+                    dashDirection = 1;
+                }
+                else
+                {
+                    dashDirection = (sprite.flipX ? -1 : 1);
+                }
+            }
+            Color tmp = sprite.color;
+            if (isDashing)
+            {
+                changeAnimationState(PLAYER_DASH);
+                r2d.velocity = transform.right * dashDirection * dashForce;
+                currentDashTime -= Time.deltaTime;
+
+                tmp.a = dashAlpha;
+                sprite.color = tmp;
+                dashed = true;
+                if (currentDashTime <= 0)
+                {
+                    isDashing = false;
+                    tmp.a = 1;
+                    sprite.color = tmp;
+                }
+            }
+            else
+            {
+                ghost.makeGhost = false;
+            }
+
+            if (dashed)
+            {
+                if (currentDashRecoveryTime <= 0)
+                {
+                    dashed = false;
+                    dashIndicator.color = Color.green;
+
+                }
+                else
+                {
+                    currentDashRecoveryTime -= Time.deltaTime;
+                }
+            }
+
+            #endregion
+
+            //Wall Sliding functionality
+            #region Wall Sliding
+
+            isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, LayerMask.GetMask("Ground"));
+
+            if (isTouchingFront && !isGrounded && horizontalIn != 0)
+            {
+                wallSliding = true;
+                changeAnimationState(PLAYER_WALLSLIDE);
+            }
+            else
+            {
+                wallSliding = false;
+            }
+
+            if (wallSliding)
+            {
+                r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
+
+                /*if (wantsToJump)
+                {
+                    if (frontCheck.position.x > transform.position.x)
+                    {
+                        r2d.velocity = new Vector2(-100, r2d.velocity.y);
+                    }
+                    else
+                    {
+                        r2d.velocity = new Vector2(100, r2d.velocity.y);
+                    }
+                    wallSliding = false;
+                }*/
+                //Aqui si funciones b� el velocity del rigidbody podriem fer salt de paret :(
+            }
+
+            #endregion
+
+            //Combat functionality
+            #region Combat
+            if (horizontalIn < 0)
+            {
+                attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+            }
+            else if (horizontalIn > 0)
+            {
+                attackPoint.position = new Vector3(relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+            }
+
+            if (Time.time >= nextAttackTime)
+            {
+                if (Input.GetButtonDown("Attack"))
+                {
+                    isAttacking = true;
+                    generalAudios.clip = bladeSound;
+                    generalAudios.Play();
+                    //Play attack animation
+                    if (isGrounded)
+                    {
+                        changeAnimationState(PLAYER_ATTACK);
+                    }
+
+                    if (!isGrounded && !isDashing && !wallSliding)
+                    {
+                        if (r2d.velocity.y > 0)
+                        {
+                            changeAnimationState(PLAYER_ATTACKUP);
+                        }
+                        else if (r2d.velocity.y < 0)
+                        {
+
                         }
                     }
-                    if (enemy.tag == "Healer")
+                    Invoke("stopAttack", attackAnimationDelay);
+
+                    Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
+
+                    foreach (Collider2D enemy in hitEnemies)
                     {
-                        enemy.GetComponentInParent<healer>().Damage(attackDamage);
+                        if (enemy.tag == "Enemy")
+                        {
+                            float[] damageMessage = new float[3];
+                            damageMessage[0] = attackDamage;
+                            damageMessage[1] = transform.position.x;
+                            damageMessage[2] = transform.position.y;
+                            if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                            {
+                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                            }
+                        }
+                        if (enemy.tag == "Healer")
+                        {
+                            enemy.GetComponentInParent<healer>().Damage(attackDamage);
+                        }
                     }
+                    nextAttackTime = Time.time + 1 / attackRate;
                 }
-                nextAttackTime = Time.time + 1 / attackRate;
             }
+
+            #endregion
         }
-
-        #endregion
-
         //Player Death functionality
         #region Player death
         if (playerLives <= 0)
         {
             updateLiveUI();
+            deadSoundObject.GetComponent<AudioSource>().clip = deadSound;
+            Instantiate(deadSoundObject, transform.position, transform.rotation);
             Invoke("die", 2f);
             (Instantiate(deathParticles, transform.position, Quaternion.identity) as ParticleSystem).Play();
             this.gameObject.GetComponent<playerController>().enabled = false;
@@ -596,6 +608,7 @@ public class playerController : MonoBehaviour
         #endregion
 
         shieldTimer.text = 10 - (Time.time - nextShield) + "s";
+        paused = GameManager.Instance.isPaused();
     }
 
     public void takeDamage()
@@ -954,7 +967,7 @@ public class playerController : MonoBehaviour
     {
         if(lostSouls.TryGetValue(value, out LostSouls ls))
         {
-            if (lostSoulsEquipped < maxLostSoulsEquipped)
+            if (lostSoulsEquipped <= maxLostSoulsEquipped)
             {
                 ls.isEquiped = !ls.isEquiped;
                 if (ls.isEquiped)

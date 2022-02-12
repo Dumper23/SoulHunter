@@ -1008,7 +1008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4556257231619769986
 Transform:
   m_ObjectHideFlags: 0
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.721
-  m_Color: {r: 0.7528236, g: 0.61960787, b: 1, a: 1}
+  m_Color: {r: 0.6415094, g: 0.47588384, b: 0.29957277, a: 1}
   m_Intensity: 1.14
   m_LightVolumeOpacity: 0
   m_ApplyToSortingLayers: 00000000

@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class AnyButton : MonoBehaviour
 {
-    
+
+    public string levelToLoad = "MainMenu";
+
     void Update()
     {
         if (Input.anyKey)
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene(levelToLoad);
         }
     }
 }

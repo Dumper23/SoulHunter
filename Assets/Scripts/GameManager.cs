@@ -60,9 +60,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void nextLevel(string nl)
+    public void nextLevel(string nl, playerController playerController)
     {
-        playerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<playerController>();
         playerController.setCurrentLevelName(nl);
         PlayerSave.SavePlayer(playerController);
         SceneManager.LoadScene(nl);

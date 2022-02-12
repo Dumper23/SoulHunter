@@ -14,7 +14,7 @@ public class healer : MonoBehaviour
     public float movementSpeed = 4f;
     public float detectionRange;
     public float timeToDie = 5f;
-    public float health = 30f;
+    public float health = 1f;
     public float jumpForce = 200f;
     public float wallDetectionDistance = 1f;
     public LayerMask whatIsGround;
@@ -79,7 +79,7 @@ public class healer : MonoBehaviour
         }
     }
 
-    public void Damage(float damage)
+    public void Damage(float damage, playerController p)
     {
         if(health - damage > 0)
         {
@@ -87,15 +87,15 @@ public class healer : MonoBehaviour
         }
         else
         {
-            die();
+            die(p);
         }
     }
 
-    private void die()
+    private void die(playerController p)
     {
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
         Instantiate(deadSoundObject, transform.position, transform.rotation);
-        GameObject.FindGameObjectWithTag("Player").GetComponent<playerController>().addLive();
+        p.addLive();
         Destroy(gameObject);
     }
 

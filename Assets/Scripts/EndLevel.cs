@@ -11,7 +11,7 @@ public class EndLevel : MonoBehaviour
     {
         if(collision.transform.tag == "Player")
         {
-            GameManager.Instance.nextLevel(nextLevelName);
+            GameManager.Instance.nextLevel(nextLevelName, collision.GetComponent<playerController>());
         }
     }
 }

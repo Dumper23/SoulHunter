@@ -49,7 +49,7 @@ public class mainMenu : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("Tutorial");
+            SceneManager.LoadScene("Intro");
         }
     }
 

@@ -500,7 +500,10 @@ public class playerController : MonoBehaviour
                         }
                         if (enemy.tag == "Healer")
                         {
-                            enemy.GetComponentInParent<healer>().Damage(attackDamage);
+                            if(enemy.GetComponent<healer>() != null)
+                            {
+                                enemy.GetComponent<healer>().Damage(attackDamage, this);
+                            }
                         }
                     }
                     nextAttackTime = Time.time + 1 / attackRate;

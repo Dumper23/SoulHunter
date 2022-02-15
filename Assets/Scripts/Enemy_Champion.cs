@@ -305,6 +305,7 @@ public class Enemy_Champion : FatherEnemy
     }
 
     #endregion
+
     //---------KNOCKBACK---------------
     #region KNOCKBACK
     private void EnterKnockbackState()

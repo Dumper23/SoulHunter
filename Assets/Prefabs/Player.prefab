@@ -315,7 +315,7 @@ MonoBehaviour:
     m_Bits: 64
   attackDamage: 10
   attackRate: 3
-  playerLives: 3
+  playerLives: 4
   relativeAttackPointPos: 0.704
   attackAnimationDelay: 0.25
   deathParticles: {fileID: 4667452001621715380, guid: bf4753790a6749346bf259581db78257, type: 3}
@@ -327,6 +327,7 @@ MonoBehaviour:
   live1: {fileID: 0}
   live2: {fileID: 0}
   live3: {fileID: 0}
+  live4: {fileID: 0}
   shield: {fileID: 0}
   attackIndicator: {fileID: 0}
   speedIndicator: {fileID: 0}
@@ -1008,7 +1009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4556257231619769986
 Transform:
   m_ObjectHideFlags: 0

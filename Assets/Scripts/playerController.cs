@@ -82,6 +82,7 @@ public class playerController : MonoBehaviour
     public RawImage live1;
     public RawImage live2;
     public RawImage live3;
+    public RawImage live4;
     public RawImage shield;
     public Text attackIndicator;
     public Text speedIndicator;
@@ -779,11 +780,21 @@ public class playerController : MonoBehaviour
         color.g = 255;
         color.b = 255;
         color.a = 1f;
-        if (playerLives == 3)
+        if(playerLives == 4)
         {
             live1.color = color;
             live2.color = color;
             live3.color = color;
+            live4.color = color;
+        }
+        else if (playerLives == 3)
+        {
+            color.a = 1f;
+            live1.color = color;
+            live2.color = color;
+            live3.color = color;
+            color.a = 0.2f;
+            live4.color = color;
         }
         else if (playerLives == 2)
         {
@@ -792,6 +803,7 @@ public class playerController : MonoBehaviour
             live2.color = color;
             color.a = 0.2f;
             live3.color = color;
+            live4.color = color;
         }
         else if(playerLives == 1)
         {
@@ -800,6 +812,7 @@ public class playerController : MonoBehaviour
             color.a = 0.2f;
             live2.color = color;
             live3.color = color;
+            live4.color = color;
         }
         else
         {
@@ -808,6 +821,7 @@ public class playerController : MonoBehaviour
             live1.color = color;
             live2.color = color;
             live3.color = color;
+            live4.color = color;
         }
     }
 

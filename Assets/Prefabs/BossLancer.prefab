@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 1457171829144815079}
   m_Layer: 0
   m_Name: Lancer
-  m_TagString: Untagged
+  m_TagString: Lancer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -295,7 +295,7 @@ MonoBehaviour:
   waitLancersParticlesDuration: 3
   downLancersAttackDuration: 1
   waitingForAttackDuration: 2
-  frontAttackDuration: 1.5
+  frontAttackDuration: 2
   summoningDuration: 3
   waitUntilNextSummon: 0.5
   percentageHealers: 0.15

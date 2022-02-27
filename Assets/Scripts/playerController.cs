@@ -695,7 +695,6 @@ public class playerController : MonoBehaviour
 
         if(collision.transform.tag == "Lancer")
         {
-            Debug.Log("EI");
             if (!isDashing)
             {
                 takeDamage();

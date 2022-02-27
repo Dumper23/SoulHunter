@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace TarodevController {
- 
     public struct FrameInput {
-        public float X,Y;
+        public float X;
         public bool JumpDown;
         public bool JumpUp;
     }
@@ -17,11 +16,6 @@ namespace TarodevController {
         public bool LandingThisFrame { get; }
         public Vector3 RawMovement { get; }
         public bool Grounded { get; }
-    }
-    
-    public interface IExtendedPlayerController : IPlayerController {
-        public bool DoubleJumpingThisFrame { get; set; }
-        public bool Dashing { get; set; }  
     }
 
     public struct RayRange {

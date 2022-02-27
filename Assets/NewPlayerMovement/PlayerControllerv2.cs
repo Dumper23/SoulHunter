@@ -10,7 +10,7 @@ namespace TarodevController {
     /// if there's enough interest. You can play and compete for best times here: https://tarodev.itch.io/
     /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/GqeHHnhHpz
     /// </summary>
-    public class PlayerController : MonoBehaviour, IPlayerController {
+    public class PlayerControllerv2 : MonoBehaviour, IPlayerController {
         // Public for external hooks
         public Vector3 Velocity { get; private set; }
         public FrameInput Input { get; private set; }
@@ -101,7 +101,7 @@ namespace TarodevController {
 
         private void CalculateRayRanged() {
             // This is crying out for some kind of refactor. 
-            var b = new Bounds(transform.position, _characterBounds.size);
+            var b = new Bounds(transform.position + _characterBounds.center, _characterBounds.size);
 
             _raysDown = new RayRange(b.min.x + _rayBuffer, b.min.y, b.max.x - _rayBuffer, b.min.y, Vector2.down);
             _raysUp = new RayRange(b.min.x + _rayBuffer, b.max.y, b.max.x - _rayBuffer, b.max.y, Vector2.up);
@@ -138,7 +138,7 @@ namespace TarodevController {
             // Draw the future position. Handy for visualizing gravity
             Gizmos.color = Color.red;
             var move = new Vector3(_currentHorizontalSpeed, _currentVerticalSpeed) * Time.deltaTime;
-            Gizmos.DrawWireCube(transform.position + move, _characterBounds.size);
+            Gizmos.DrawWireCube(transform.position + _characterBounds.center + move, _characterBounds.size);
         }
 
         #endregion
@@ -260,7 +260,7 @@ namespace TarodevController {
 
         // We cast our bounds before moving to avoid future collisions
         private void MoveCharacter() {
-            var pos = transform.position;
+            var pos = transform.position + _characterBounds.center;
             RawMovement = new Vector3(_currentHorizontalSpeed, _currentVerticalSpeed); // Used externally
             var move = RawMovement * Time.deltaTime;
             var furthestPoint = pos + move;

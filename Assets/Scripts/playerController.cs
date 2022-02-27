@@ -25,6 +25,7 @@ public class playerController : MonoBehaviour
     private int availableJumps;
     private bool hittedGround = true;
     private float timeTrail;
+    private bool facingRight = false;
     
 
     [Header("Dash settings")]
@@ -49,6 +50,7 @@ public class playerController : MonoBehaviour
 
     private bool isTouchingFront;
     private bool wallSliding;
+    private bool chargedJump = false;
 
     [Header("Combat settings")]
     public Transform attackPoint;
@@ -203,7 +205,6 @@ public class playerController : MonoBehaviour
         attackIndicator.text = "" + attackDamage;
         speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
 
-
         //Lost Souls functionality
         #region LostSouls
         //Lost souls inventory
@@ -236,6 +237,15 @@ public class playerController : MonoBehaviour
             bool wantsToJump = Input.GetButtonDown("Jump");
             bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
 
+            if (horizontalIn > 0)
+            {
+                facingRight = true;
+            }
+            else
+            {
+                facingRight = false;
+            }
+
             r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
 
             if (!isDashing && !wallSliding && !isAttacking)
@@ -267,22 +277,21 @@ public class playerController : MonoBehaviour
 
 
 
-            if (availableJumps < 2)
+            if (availableJumps == 0)
             {
                 jumpIndicator1.enabled = false;
-            }
-            if (availableJumps < 1)
-            {
                 jumpIndicator2.enabled = false;
             }
-            if (availableJumps >= 2)
+            if (availableJumps == 1)
+            {
+                jumpIndicator1.enabled = true;
+                jumpIndicator2.enabled = false;
+            }
+            if (availableJumps == 2)
             {
                 jumpIndicator1.enabled = true;
                 jumpIndicator2.enabled = true;
             }
-
-
-
 
             //After the jump we create effects as we hit the ground
             if (isGrounded)
@@ -332,10 +341,9 @@ public class playerController : MonoBehaviour
                 availableJumps = maxJumps;
             }
 
-            if (wantsToJump && availableJumps > 0)
+            if (wantsToJump && availableJumps > 0 && !wallSliding)
             {
                 //----------------------------------------------------------NO ENTENC EL HVELOCITY
-
                 float hVelocity = r2d.velocity.x;
                 r2d.velocity = new Vector2(hVelocity, jumpVelocity);
                 availableJumps--;
@@ -363,6 +371,7 @@ public class playerController : MonoBehaviour
                 currentDashTime = startDashTime;
                 r2d.velocity = Vector3.zero;
                 immune = true;
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
                 Invoke("damageImmunity", 0.25f);
                 if (horizontalIn > 0)
                 {
@@ -419,30 +428,25 @@ public class playerController : MonoBehaviour
             if (isTouchingFront && !isGrounded && horizontalIn != 0)
             {
                 wallSliding = true;
+                if (!chargedJump)
+                {
+                    if(availableJumps < 2)
+                    {
+                        availableJumps = 1;
+                        chargedJump = true;
+                    }
+                }
                 changeAnimationState(PLAYER_WALLSLIDE);
             }
             else
             {
                 wallSliding = false;
+                chargedJump = false;
             }
 
             if (wallSliding)
             {
                 r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
-
-                /*if (wantsToJump)
-                {
-                    if (frontCheck.position.x > transform.position.x)
-                    {
-                        r2d.velocity = new Vector2(-100, r2d.velocity.y);
-                    }
-                    else
-                    {
-                        r2d.velocity = new Vector2(100, r2d.velocity.y);
-                    }
-                    wallSliding = false;
-                }*/
-                //Aqui si funciones b� el velocity del rigidbody podriem fer salt de paret :(
             }
 
             #endregion
@@ -692,36 +696,6 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        #region Dash immunity
-
-
-        //Optimitzar no haver de comprovar cada cop si son enemic o enemic volador
-        if ((collision.transform.tag == "Enemy") && isDashing)
-        {
-            enemy[enemyCounter] = collision;
-            enemyCounter++;
-
-            collision.transform.GetComponentInChildren<Rigidbody2D>().isKinematic = true;
-
-            if (null != collision.transform.GetComponentInChildren<BoxCollider2D>())
-            {
-                collision.transform.GetComponentInChildren<BoxCollider2D>().isTrigger = true;
-            }
-            if (null != collision.transform.GetComponentInChildren<CapsuleCollider2D>())
-            {
-                collision.transform.GetComponentInChildren<CapsuleCollider2D>().isTrigger = true;
-            }
-            if (null != collision.transform.GetComponentInChildren<CircleCollider2D>())
-            {
-                collision.transform.GetComponentInChildren<CircleCollider2D>().isTrigger = true;
-            }
-            
-
-            Invoke("returnEnemyToCollision", 0.25f);
-        }
-
-        #endregion
-
         #region Damage to player
 
         if (collision.transform.tag == "Trap")
@@ -835,39 +809,6 @@ public class playerController : MonoBehaviour
         Gizmos.DrawWireSphere(ThornsPoint.position, ThornsRange);
     }
 
-    //Makes the enemy colidable after the player passed through it with a dash or immune
-    private void returnEnemyToCollision()
-    {
-        for (int i = 0; i < enemy.Length; i++)
-        {
-            if (enemy[i] != null)
-            {
-                enemy[i].transform.GetComponentInChildren<Rigidbody2D>().isKinematic = false;
-                if (enemy[i].transform.tag == "Enemy")
-                {
-                    if (null != enemy[i].transform.GetComponentInChildren<BoxCollider2D>())
-                    {
-                        enemy[i].transform.GetComponentInChildren<BoxCollider2D>().isTrigger = false;
-                    }
-                    if (null != enemy[i].transform.GetComponentInChildren<CapsuleCollider2D>())
-                    {
-                        enemy[i].transform.GetComponentInChildren<CapsuleCollider2D>().isTrigger = false;
-                    }
-                    if (null != enemy[i].transform.GetComponentInChildren<CircleCollider2D>())
-                    {
-                        enemy[i].transform.GetComponentInChildren<CircleCollider2D>().isTrigger = false;
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < enemy.Length; i++)
-        {
-            enemy[i] = null;
-        }
-
-        enemyCounter = 0;
-    }
-
     //Function that allows us to play any animation of the animator (Avoiding horrible web structures)
     private void changeAnimationState(string newState)
     {
@@ -876,7 +817,6 @@ public class playerController : MonoBehaviour
 
         //We play a determinated animation
         animator.Play(newState);
-
         currentState = newState;
     }
 
@@ -884,6 +824,7 @@ public class playerController : MonoBehaviour
     private void damageImmunity()
     {
         immune = false;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
     }
 
     private void lostSoulsFunctionality()

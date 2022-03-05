@@ -694,6 +694,18 @@ public class playerController : MonoBehaviour
                 Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>());
             }
         }
+
+        if(collision.transform.tag == "Lancer")
+        {
+            if (!isDashing)
+            {
+                takeDamage();
+            }
+            else
+            {
+                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

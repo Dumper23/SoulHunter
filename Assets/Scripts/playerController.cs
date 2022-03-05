@@ -621,32 +621,34 @@ public class playerController : MonoBehaviour
 
     public void takeDamage()
     {
-        if (!shielded)
+        if (!immune)
         {
-            playerSounds[4].Play();
-            playerLives--;
-            //Activate Thorns here
-            if (lostSouls.TryGetValue("Thorns", out LostSouls thorns))
+            if (!shielded)
             {
-                if (thorns.isEquiped)
+                playerSounds[4].Play();
+                playerLives--;
+                //Activate Thorns here
+                if (lostSouls.TryGetValue("Thorns", out LostSouls thorns))
                 {
-                    thorns.isActive = true;
+                    if (thorns.isEquiped)
+                    {
+                        thorns.isActive = true;
+                    }
                 }
             }
-        }
-        else
-        {
-            shield.color = new Color(0, 0, 0, 0);
-            shielded = false;
-            shieldTimer.enabled = true;
-            playerSounds[4].Play();
+            else
+            {
+                shield.color = new Color(0, 0, 0, 0);
+                shielded = false;
+                shieldTimer.enabled = true;
+                playerSounds[4].Play();
 
-        }
-
-        immune = true;
-        Invoke("damageImmunity", 1f);
-        r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
-        updateLiveUI();
+            }
+            immune = true;
+            Invoke("damageImmunity", 1f);
+            r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
+            updateLiveUI();
+        }        
     }
 
     private void die()
@@ -879,6 +881,31 @@ public class playerController : MonoBehaviour
                     enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
                 }
             }
+        }
+
+        if (lostSouls.ContainsKey("StoneBreaker"))
+        {
+
+        }
+        if (lostSouls.ContainsKey("OutBurst"))
+        {
+
+        }
+        if (lostSouls.ContainsKey("HardSkin"))
+        {
+
+        }
+        if (lostSouls.ContainsKey("SoulKeeper"))
+        {
+
+        }
+        if (lostSouls.ContainsKey("DeflectMissiles"))
+        {
+
+        }
+        if (lostSouls.ContainsKey("HolyWater"))
+        {
+
         }
     }
 

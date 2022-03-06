@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,8 +9,23 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(CapsuleCollider2D))]
 
+
 public class playerController : MonoBehaviour
 {
+    [Serializable]
+    public struct LostSoulsIcons
+    {
+        public string name;
+        public Sprite sprite;
+    }
+
+    [Serializable]
+    public struct LostSoulsPlaceHolderIcons
+    {
+        public string name;
+        public Image image;
+    }
+
     public bool loadPlayerData = true;
 
     [Header("Basic Movement settings")]
@@ -69,13 +85,12 @@ public class playerController : MonoBehaviour
     
     [Header("Boost settings")]
     public int soulBarSpeed = 3;
-    public float shieldRecoveryTime = 6f;
 
     private float originalPlayerSpeed;
     private int originalPlayerAttackDamage;
     private float startKillTime;
     private bool shielded = false;
-    private float nextShield = 3f;
+    private float nextShield = 0f;
 
     [Header("UI settings")]
     public RawImage dashIndicator;
@@ -90,6 +105,7 @@ public class playerController : MonoBehaviour
     public Text speedIndicator;
     public Text shieldTimer;
     public List<GameObject> lostSoulToggles = new List<GameObject>();
+    public LostSoulsPlaceHolderIcons[] lostSoulsEquippedIcons;
     public GameObject inventoryUI;
 
     [Header("Sound Settings")]
@@ -101,12 +117,20 @@ public class playerController : MonoBehaviour
 
     [Header("LostSouls Settings")]
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
+    public Sprite nothingEquipped;
+    public LostSoulsIcons[] lostSoulsIcons;
     public Transform ThornsPoint;
     public float ThornsRange = 0.5f;
     public GameObject light;
     private bool inventory = false;
     public int maxLostSoulsEquipped = 3;
+    public float hardSkinRecoveryTime = 6f;
+    public float stoneBreakerDamageMultiplier = 1.5f;
+    public float holyWaterDamageMultiplier = 1.5f;
+
     private int lostSoulsEquipped = 0;
+    private bool stoneBreaker = false;
+    private bool holyWater = false;
 
     //Other settings
     private Transform t;
@@ -495,6 +519,23 @@ public class playerController : MonoBehaviour
                         if (enemy.tag == "Enemy")
                         {
                             float[] damageMessage = new float[3];
+
+                            /*if(enemy.GetComponent<FatherEnemy>().hasShield && enemy.GetComponent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
+                            {
+                                damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
+                            }
+                            else if (enemy.GetComponent<FatherEnemy>().hasShield && stoneBreaker)
+                            {
+                                damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
+                            }else if(enemy.GetComponent<FatherEnemy>().isDemon && holyWater)
+                            {
+                                damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
+                            }
+                            else
+                            {
+                                damageMessage[0] = attackDamage;
+                            }*/
+
                             damageMessage[0] = attackDamage;
                             damageMessage[1] = transform.position.x;
                             damageMessage[2] = transform.position.y;
@@ -587,7 +628,7 @@ public class playerController : MonoBehaviour
         {
             if (!shielded)
             {
-                if (Time.time - nextShield > shieldRecoveryTime)
+                if (Time.time - nextShield > hardSkinRecoveryTime)
                 {
                     nextShield = Time.time;
                     shield.enabled = true;
@@ -615,7 +656,6 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-        shieldTimer.text = 10 - (Time.time - nextShield) + "s";
         paused = GameManager.Instance.isPaused();
     }
 
@@ -885,7 +925,6 @@ public class playerController : MonoBehaviour
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(ThornsPoint.position, ThornsRange, enemyLayer);
                 foreach (Collider2D enemy in hitEnemies)
                 {
-                    //Fer mal als enemics un cop hi hagi herencies
                     float[] damageMessage = new float[3];
                     damageMessage[0] = attackDamage;
                     damageMessage[1] = transform.position.x;
@@ -895,45 +934,116 @@ public class playerController : MonoBehaviour
             }
         }
 
-        if (lostSouls.ContainsKey("StoneBreaker"))
-        {
-
-        }
-        if (lostSouls.ContainsKey("OutBurst"))
-        {
-
-        }
         if (lostSouls.ContainsKey("HardSkin"))
         {
-
+            lostSouls.TryGetValue("HardSkin", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                if (!shielded)
+                {
+                    if (Time.time - nextShield > hardSkinRecoveryTime)
+                    {
+                        nextShield = Time.time;
+                        shield.gameObject.SetActive(true);
+                        shield.color = new Color(255, 255, 255, 255);
+                        shielded = true;
+                    }
+                    else
+                    {
+                        shieldTimer.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    shieldTimer.gameObject.SetActive(false);
+                    nextShield = Time.time;
+                }
+                shieldTimer.text = hardSkinRecoveryTime - (Time.time - nextShield) + "s";
+            }
+            else
+            {
+                shieldTimer.gameObject.SetActive(false);
+                shield.gameObject.SetActive(false);
+                shielded = false;
+            }
         }
-        if (lostSouls.ContainsKey("SoulKeeper"))
+
+        if (lostSouls.ContainsKey("StoneBreaker"))
         {
-
+            lostSouls.TryGetValue("StoneBreaker", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                stoneBreaker = true;
+            }
+            else
+            {
+                stoneBreaker = false;
+            }
         }
-        if (lostSouls.ContainsKey("DeflectMissiles"))
-        {
 
-        }
         if (lostSouls.ContainsKey("HolyWater"))
         {
-
+            lostSouls.TryGetValue("HolyWater", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                holyWater = true;
+            }
+            else
+            {
+                holyWater = false;
+            }
         }
+
+        if (lostSouls.ContainsKey("OutBurst"))
+        {
+            lostSouls.TryGetValue("OutBurst", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                //Fer mal amb el dash
+            }
+        }
+
+        if (lostSouls.ContainsKey("SoulKeeper"))
+        {
+            lostSouls.TryGetValue("SoulKeeper", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                //REWORK!
+            }
+        }
+
+        if (lostSouls.ContainsKey("DeflectMissiles"))
+        {
+            lostSouls.TryGetValue("DeflectMissiles", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                //Tornar o desviar projectils
+            }
+        }
+
+        
     }
 
     private void updateInventory()
     {
-        if (lostSoulToggles.Count >= 0) {
-            lostSoulToggles[0].GetComponent<Toggle>().Select();
-        }
         for (int i = 0; i < lostSoulToggles.Count; i++)
         {
+            
+
             if (lostSouls.TryGetValue(lostSoulToggles[i].name, out LostSouls ls))
             {
+                
                 Color c = lostSoulToggles[i].GetComponent<Image>().color;
                 c.a = 1f;
                 lostSoulToggles[i].GetComponent<Image>().color = c;
                 lostSoulToggles[i].GetComponent<Toggle>().interactable = true;
+                if (lostSoulsEquipped >= maxLostSoulsEquipped)
+                {
+                    if (!ls.isEquiped)
+                    {
+                        lostSoulToggles[i].GetComponent<Toggle>().interactable = false;
+                    }
+                }
             }
             else
             {
@@ -941,6 +1051,56 @@ public class playerController : MonoBehaviour
                 c.a = 0.1f;
                 lostSoulToggles[i].GetComponent<Image>().color = c;
                 lostSoulToggles[i].GetComponent<Toggle>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < lostSoulToggles.Count; i++)
+        {
+            if(lostSouls.TryGetValue(lostSoulToggles[i].name, out LostSouls ls))
+            {
+                if (ls.isEquiped)
+                {
+                    for (int j = 0; j < lostSoulsIcons.Length; j++)
+                    {
+                        if(lostSoulsIcons[j].name == lostSoulToggles[i].name)
+                        {
+                            bool alreadySet = false;
+                            for (int k = 0; k < lostSoulsEquippedIcons.Length; k++)
+                            { 
+                                if(lostSoulsEquippedIcons[k].name == lostSoulToggles[i].name)
+                                {
+                                    alreadySet = true;
+                                }
+                            }
+
+                            if (!alreadySet)
+                            {
+                                alreadySet = false;
+                                for (int k = 0; k < lostSoulsEquippedIcons.Length; k++)
+                                {
+                                    if (lostSoulsEquippedIcons[k].name == "")
+                                    {
+                                        lostSoulsEquippedIcons[k].image.sprite = lostSoulsIcons[j].sprite;
+                                        lostSoulsEquippedIcons[k].name = lostSoulsIcons[j].name;
+                                        alreadySet = true;
+                                    }
+                                    if(alreadySet) break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (int k = 0; k < lostSoulsEquippedIcons.Length; k++)
+                    {
+                        if (lostSoulsEquippedIcons[k].name == lostSoulToggles[i].name)
+                        {
+                            lostSoulsEquippedIcons[k].image.sprite = nothingEquipped;
+                            lostSoulsEquippedIcons[k].name = "";
+                        }
+                    }
+                }
             }
         }
     }
@@ -952,6 +1112,10 @@ public class playerController : MonoBehaviour
             Time.timeScale = 0f;
             GameManager.Instance.changeInventory(true);
             inventoryUI.SetActive(true);
+            if (lostSoulToggles.Count >= 0)
+            {
+                lostSoulToggles[0].GetComponent<Toggle>().Select();   
+            }
         }
         else{
             GameManager.Instance.changeInventory(false);
@@ -962,24 +1126,33 @@ public class playerController : MonoBehaviour
 
     public void toggleLostSoul(string value)
     {
-        if(lostSouls.TryGetValue(value, out LostSouls ls))
+        Debug.Log(lostSoulsEquipped);
+        if (lostSouls.TryGetValue(value, out LostSouls ls))
         {
             if (lostSoulsEquipped <= maxLostSoulsEquipped)
             {
                 ls.isEquiped = !ls.isEquiped;
                 if (ls.isEquiped)
                 {
-                    lostSoulsEquipped++;
+                    if (lostSoulsEquipped + 1 <= maxLostSoulsEquipped)
+                    {
+                        lostSoulsEquipped++;
+                    }
                 }
                 else
                 {
-                    lostSoulsEquipped--;
+                    if (lostSoulsEquipped - 1 >= 0)
+                    {
+                        lostSoulsEquipped--;
+                    }
                 }
             }
             else
             {
                 //No hi ha mes espai per a equipar lost souls maybe informar jugador
+                Debug.Log("Full!");
             }
         }
+        updateInventory();
     }
 }

@@ -10,9 +10,9 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
 
     public int playerPoints;
-    public Text pointText;
+    //public Text pointText;
     //public Slider soulBar;
-    public int maxPoints = 125;
+    //public int maxPoints = 125;
 
     [Header("Pause Menu")]
     public static bool GameIsPaused = false;
@@ -51,12 +51,12 @@ public class GameManager : MonoBehaviour
         if (playerPoints + points < 125)
         {
             playerPoints += points;
-            pointText.text = playerPoints.ToString();
+            //pointText.text = playerPoints.ToString();
         }
         else
         {
             playerPoints = 125;
-            pointText.text = playerPoints.ToString();
+            //pointText.text = playerPoints.ToString();
         }
     }
 
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     public void loadPoints(int p)
     {
         playerPoints = p;
-        pointText.text = playerPoints.ToString();
+        //pointText.text = playerPoints.ToString();
     }
 
     public int getPoints()
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
 
     public int getMaxPoints()
     {
-        return maxPoints;
+        return 0;
     }
 
     #region Pause Menu

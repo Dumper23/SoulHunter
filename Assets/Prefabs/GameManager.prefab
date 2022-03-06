@@ -44,9 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPoints: 0
-  pointText: {fileID: 0}
-  soulBar: {fileID: 0}
-  maxPoints: 125
   pauseMenuUI: {fileID: 0}
   mainMenuName: MainMenu
   buttonToSelect: {fileID: 0}

@@ -320,7 +320,6 @@ MonoBehaviour:
   attackAnimationDelay: 0.25
   deathParticles: {fileID: 4667452001621715380, guid: bf4753790a6749346bf259581db78257, type: 3}
   soulBarSpeed: 2
-  shieldRecoveryTime: 10
   dashIndicator: {fileID: 0}
   jumpIndicator1: {fileID: 0}
   jumpIndicator2: {fileID: 0}
@@ -336,6 +335,19 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  lostSoulsEquippedIcons:
+  - name: 
+    image: {fileID: 0}
+  - name: 
+    image: {fileID: 0}
+  - name: 
+    image: {fileID: 0}
   inventoryUI: {fileID: 0}
   playerSounds:
   - {fileID: 4556257231163928200}
@@ -347,10 +359,31 @@ MonoBehaviour:
   generalAudios: {fileID: 1598524100100205568}
   deadSound: {fileID: 8300000, guid: 8801e49ba85cce247b7d55cb71b44f8e, type: 3}
   bladeSound: {fileID: 8300000, guid: d7b8bdb9116e3734ebb911d8e672f87d, type: 3}
+  nothingEquipped: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  lostSoulsIcons:
+  - name: Light
+    sprite: {fileID: 21300000, guid: 588c453d912cfaa4489230991a26ef34, type: 3}
+  - name: Thorns
+    sprite: {fileID: 21300000, guid: bf0ed3a75edf3e44b8e78e699062d473, type: 3}
+  - name: Fireflies
+    sprite: {fileID: 21300000, guid: 05b3e1f796db11141a92311feee7c59b, type: 3}
+  - name: StoneBreaker
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - name: OutBurst
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - name: HardSkin
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - name: SoulKeeper
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - name: DeflectMissiles
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - name: HolyWater
+    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   ThornsPoint: {fileID: 868142690}
   ThornsRange: 2
   light: {fileID: 4556257231619769987}
   maxLostSoulsEquipped: 3
+  hardSkinRecoveryTime: 6
   currentLevel: Tutorial
 --- !u!95 &4556257231163928202
 Animator:

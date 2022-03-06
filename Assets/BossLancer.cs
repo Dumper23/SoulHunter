@@ -21,8 +21,12 @@ public class BossLancer : FatherEnemy
     private State currentState;
     private State[] statesToRandomize;
 
-    private Animator lancerAnimation;
-    private BoxCollider2D area;
+    private Animator 
+        lancerAnimation,
+        upperRangeCircleAnimation;
+
+    private BoxCollider2D area,
+        upperRange;
 
     [SerializeField]
     private GameObject
@@ -40,6 +44,8 @@ public class BossLancer : FatherEnemy
         frontAttackStartTime,
         summoningStartTime,
         nextSummonStartTime,
+        upperAttackStartTime,
+        inRangeStartTime,
         currentHealth;
 
     private int[] notSpawn,
@@ -48,7 +54,10 @@ public class BossLancer : FatherEnemy
     private bool isAttackDone,
         particlesEnded,
         particlesCreated,
-        isActivated = false;
+        isActivated = false,
+        inRange = false,
+        goUpper = false,
+        upperDone = false;
 
     [SerializeField]
     private float lineOfActivation,
@@ -58,6 +67,9 @@ public class BossLancer : FatherEnemy
         frontAttackDuration = 1.5f,
         summoningDuration = 3f,
         waitUntilNextSummon = 0.5f,
+        upperChargeDuration = 1f,
+        upperAttackDuration = 1f,
+        timeInRange = 2f,
         percentageHealers = 0.15f,
         maxHealth = 500;
 
@@ -67,13 +79,23 @@ public class BossLancer : FatherEnemy
         quantitySummoning,
         quantitySummoned;
 
+    public HealthBarBoss healthBar;
+
+    private UpperRangePlayerDetection upperAttackRange;
+
+    private GameObject upperRangeCircle;
+
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindObjectOfType<playerController>().gameObject.transform;
         GameObject lancer = transform.Find("Lancer").gameObject;
         lancerAnimation = lancer.GetComponent<Animator>();
         area = transform.Find("Area").gameObject.GetComponent<BoxCollider2D>();
+        upperRange = transform.Find("UpperRange").gameObject.GetComponent<BoxCollider2D>();
+        upperAttackRange = upperRange.GetComponent<UpperRangePlayerDetection>();
+        upperRangeCircle = transform.Find("UpperRangeCircle").gameObject;
+        upperRangeCircleAnimation = upperRangeCircle.GetComponent<Animator>();
 
         statesToRandomize = new State[4];
         statesToRandomize[0] = State.Waiting;
@@ -82,6 +104,7 @@ public class BossLancer : FatherEnemy
         statesToRandomize[3] = State.Summoning;
 
         currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
 
         SwitchState(State.Waiting);
 
@@ -90,6 +113,31 @@ public class BossLancer : FatherEnemy
     // Update is called once per frame
     void Update()
     {
+        if (!inRange)
+        {
+            if (upperAttackRange.IsInRange())
+            {
+                inRangeStartTime = Time.time;
+                inRange = true;
+            }
+        }
+        else
+        {
+
+            if (!upperAttackRange.IsInRange())
+            {
+                inRange = false;
+            }
+            else
+            {
+                if (!goUpper) {
+                    if (Time.time > inRangeStartTime + timeInRange)
+                    {
+                        goUpper = true;
+                    }
+                }
+            }
+        }
         switch (currentState)
         {
             case State.Waiting:
@@ -132,13 +180,21 @@ public class BossLancer : FatherEnemy
             {
                 isActivated = true;
                 waitingStartTime = Time.time;
+                healthBar.gameObject.SetActive(true);
             }
         }
         else
         {
             if(Time.time >= waitingStartTime + waitingForAttackDuration)
             {
-                SwitchState(randomBehaviour());
+                if (goUpper)
+                {
+                    SwitchState(State.UpperAttack);
+                }
+                else
+                {
+                    SwitchState(randomBehaviour());
+                }
             }
         }
     }
@@ -222,7 +278,14 @@ public class BossLancer : FatherEnemy
 
         if(Time.time >= summoningStartTime + summoningDuration)
         {
-            SwitchState(State.Waiting);
+            if (goUpper)
+            {
+                SwitchState(State.UpperAttack);
+            }
+            else
+            {
+                SwitchState(State.Waiting);
+            }
         }
         else
         {
@@ -366,7 +429,14 @@ public class BossLancer : FatherEnemy
 
         if (isAttackDone && Time.time >= downLancersAttackStartTime + downLancersAttackDuration)
         {
-            SwitchState(State.Waiting);
+            if (goUpper)
+            {
+                SwitchState(State.UpperAttack);
+            }
+            else
+            {
+                SwitchState(State.Waiting);
+            }
         }
     }
 
@@ -380,17 +450,33 @@ public class BossLancer : FatherEnemy
     #region UPPERATTACK
     private void EnterUpperAttackState()
     {
-
+        upperAttackStartTime = Time.time;
+        upperDone = false;
+        upperRangeCircle.SetActive(true);
+        upperRangeCircleAnimation.Play("UpperRangeAnimation");
     }
 
     private void UpdateUpperAttackState()
     {
+        if (!upperDone && Time.time >= upperAttackStartTime + upperChargeDuration)
+        {
+            upperDone = true;
+            lancerAnimation.Play("UpperLancerAnimation");
+            upperRangeCircle.SetActive(false);
+        }
 
+        if (Time.time >= upperAttackStartTime + upperAttackDuration + upperChargeDuration)
+        {
+            SwitchState(State.Waiting);
+        }
     }
 
     private void ExitUpperAttackState()
     {
-
+        lancerAnimation.Play("noLancerAnimation");
+        goUpper = false;
+        inRange = false;
+        
     }
     #endregion
 
@@ -398,6 +484,7 @@ public class BossLancer : FatherEnemy
     #region DEAD
     private void EnterDeadState()
     {
+        healthBar.gameObject.SetActive(false);
         Destroy(gameObject);
     }
 
@@ -478,6 +565,7 @@ public class BossLancer : FatherEnemy
     public override void Damage(float[] attackDetails)
     {
         currentHealth -= attackDetails[0];
+        healthBar.SetHealth(currentHealth);
 
         //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
         //particleDamage.Play();

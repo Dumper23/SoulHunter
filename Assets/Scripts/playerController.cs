@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -104,6 +106,8 @@ public class playerController : MonoBehaviour
     public Text attackIndicator;
     public Text speedIndicator;
     public Text shieldTimer;
+    public TextMeshProUGUI lostSoulName;
+    public TextMeshProUGUI lostSoulDescription;
     public List<GameObject> lostSoulToggles = new List<GameObject>();
     public LostSoulsPlaceHolderIcons[] lostSoulsEquippedIcons;
     public GameObject inventoryUI;
@@ -127,10 +131,13 @@ public class playerController : MonoBehaviour
     public float hardSkinRecoveryTime = 6f;
     public float stoneBreakerDamageMultiplier = 1.5f;
     public float holyWaterDamageMultiplier = 1.5f;
+    public float outBurstRange = 1f;
+    public float outBurstDamage = 1f;
 
     private int lostSoulsEquipped = 0;
     private bool stoneBreaker = false;
     private bool holyWater = false;
+    private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
     //Other settings
     private Transform t;
@@ -158,6 +165,7 @@ public class playerController : MonoBehaviour
 
     void Start()
     {
+        descriptions();
         if (loadPlayerData)
         {
             loadPlayer();
@@ -189,6 +197,38 @@ public class playerController : MonoBehaviour
 
         //We find the ground collider game object
         groundCollider = transform.Find("groundCollider");
+    }
+
+    private void descriptions()
+    {
+        lostSoulDescriptionDictionary.Add("Light", 
+            "Provides you with some light, it is said that it guides you to the deepest and darkest thoughts...");
+
+        lostSoulDescriptionDictionary.Add("Thorns",
+            "Returns the damage you recieve to all the enemies that are close to you, confidence sucks!");
+
+        lostSoulDescriptionDictionary.Add("Fireflies", 
+            "Makes more visible all the traps on the level. \n\nThese little flying creatures are creepier than what you think.");
+        //Si et pares a pensar pot ser que estiguin a les punxes perque hi ha sang i s'alimenten d'aquesta xd
+
+        lostSoulDescriptionDictionary.Add("StoneBreaker",
+            "You will deal more damage to enemies with shield.\n\nThe name is not self explanatory but thats why this section exists. :)");
+
+        lostSoulDescriptionDictionary.Add("OutBurst",
+            "You will damage the enemies if you hit them while dashing.\n\nShadow could have eaten something expired, causing him to leave a terible smell while dashing.");
+
+        lostSoulDescriptionDictionary.Add("HardSkin", 
+            "It Grants you with a shield that will protect you from 1 hit, it will be recharged in " + hardSkinRecoveryTime + "s.\n\nShadow told us that the shield is a table from Ikea, we still don't know if that's true or not.");
+
+        lostSoulDescriptionDictionary.Add("SoulKeeper", 
+            "REWORK NEEDED!!!!!!");
+
+        lostSoulDescriptionDictionary.Add("DeflectMissiles",
+            "With this Lost Soul you will be able to return projectiles to enemies.\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
+
+        lostSoulDescriptionDictionary.Add("HolyWater",
+            "You will deal more damage to Demonic enemies.\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
+
     }
 
     public void setCurrentLevelName(string levelName)
@@ -520,23 +560,22 @@ public class playerController : MonoBehaviour
                         {
                             float[] damageMessage = new float[3];
 
-                            /*if(enemy.GetComponent<FatherEnemy>().hasShield && enemy.GetComponent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
+                            if(enemy.GetComponentInParent<FatherEnemy>().hasShield && enemy.GetComponentInParent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
                             {
                                 damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
                             }
-                            else if (enemy.GetComponent<FatherEnemy>().hasShield && stoneBreaker)
+                            else if (enemy.GetComponentInParent<FatherEnemy>().hasShield && stoneBreaker)
                             {
                                 damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
-                            }else if(enemy.GetComponent<FatherEnemy>().isDemon && holyWater)
+                            }else if(enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
                             {
                                 damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
                             }
                             else
                             {
                                 damageMessage[0] = attackDamage;
-                            }*/
+                            }
 
-                            damageMessage[0] = attackDamage;
                             damageMessage[1] = transform.position.x;
                             damageMessage[2] = transform.position.y;
                             if (enemy.GetComponentInParent<FatherEnemy>() != null)
@@ -577,6 +616,7 @@ public class playerController : MonoBehaviour
 
         //Boost bar functionality
         #region Boost bar
+        /*
         int points = GameManager.Instance.getPoints();
         //Augmento de da�o, Dash recovery, Velocidad
         float t = 0f;
@@ -624,7 +664,7 @@ public class playerController : MonoBehaviour
             attackDamage = originalPlayerAttackDamage;
         }
 
-        if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.75)
+       /* if (GameManager.Instance.getPoints() >= GameManager.Instance.getMaxPoints() * 0.75)
         {
             if (!shielded)
             {
@@ -652,7 +692,7 @@ public class playerController : MonoBehaviour
             shield.enabled = false;
             shielded = false;
             shieldTimer.enabled = false;
-        }
+        }*/
 
         #endregion
 
@@ -861,6 +901,8 @@ public class playerController : MonoBehaviour
         }
         Gizmos.DrawWireCube(attackPoint.position, new Vector3(attackRange, attackRange, 0));
         Gizmos.DrawWireSphere(ThornsPoint.position, ThornsRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(ThornsPoint.position, outBurstRange);
     }
 
     //Function that allows us to play any animation of the animator (Avoiding horrible web structures)
@@ -999,7 +1041,26 @@ public class playerController : MonoBehaviour
             lostSouls.TryGetValue("OutBurst", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {
-                //Fer mal amb el dash
+                if (isDashing) {
+                    Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, outBurstRange);
+
+                    foreach(Collider2D enemy in enemies)
+                    {
+                        if(enemy.tag == "Enemy" && !enemy.GetComponentInParent<FatherEnemy>().outBursted)
+                        {
+                            StartCoroutine("endOutburstEnemy", enemy);
+                            enemy.GetComponentInParent<FatherEnemy>().outBursted = true;
+                            float[] damageMessage = new float[3];
+                            damageMessage[0] = outBurstDamage;
+                            damageMessage[1] = transform.position.x;
+                            damageMessage[2] = transform.position.y;
+                            if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                            {
+                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1020,8 +1081,16 @@ public class playerController : MonoBehaviour
                 //Tornar o desviar projectils
             }
         }
+    }
 
-        
+    IEnumerator endOutburstEnemy(Collider2D enemy)
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (enemy != null)
+        {
+            enemy.GetComponentInParent<FatherEnemy>().outBursted = false;
+        }
+        StopAllCoroutines();
     }
 
     private void updateInventory()
@@ -1154,5 +1223,20 @@ public class playerController : MonoBehaviour
             }
         }
         updateInventory();
+    }
+
+    public void showLostSoulInfo(string name)
+    {
+        
+        
+        if (lostSoulDescriptionDictionary.TryGetValue(name, out string description) && lostSouls.TryGetValue(name, out LostSouls ls)) {
+            lostSoulName.SetText(name);
+            lostSoulDescription.SetText(description);
+        }
+        else
+        {
+            lostSoulName.SetText("???");
+            lostSoulDescription.SetText("No information available...");
+        }
     }
 }

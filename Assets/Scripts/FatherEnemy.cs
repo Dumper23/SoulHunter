@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class FatherEnemy : MonoBehaviour
 {
+    public bool hasShield = false;
+    public bool isDemon = false;
+    public bool outBursted = false;
 
     public abstract void mostraMissatge();
     public abstract void applyKnockback(float[] position);

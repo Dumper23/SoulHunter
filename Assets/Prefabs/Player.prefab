@@ -331,6 +331,8 @@ MonoBehaviour:
   attackIndicator: {fileID: 0}
   speedIndicator: {fileID: 0}
   shieldTimer: {fileID: 0}
+  lostSoulName: {fileID: 0}
+  lostSoulDescription: {fileID: 0}
   lostSoulToggles:
   - {fileID: 0}
   - {fileID: 0}
@@ -368,22 +370,26 @@ MonoBehaviour:
   - name: Fireflies
     sprite: {fileID: 21300000, guid: 05b3e1f796db11141a92311feee7c59b, type: 3}
   - name: StoneBreaker
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: 51cb580f3dff3c6479b043ca433f6197, type: 3}
   - name: OutBurst
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: fd9f42da62f9b0441b875cf62112fd58, type: 3}
   - name: HardSkin
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: a262c8f01e319344598379b51e77477f, type: 3}
   - name: SoulKeeper
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: 37437f1732e524548b946002dc1b914c, type: 3}
   - name: DeflectMissiles
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: 076b6efe8e20fbf48be10dc5b20f95d9, type: 3}
   - name: HolyWater
-    sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    sprite: {fileID: 21300000, guid: 1790ab1207edd8f4eb67b888a28a8470, type: 3}
   ThornsPoint: {fileID: 868142690}
   ThornsRange: 2
   light: {fileID: 4556257231619769987}
   maxLostSoulsEquipped: 3
   hardSkinRecoveryTime: 6
+  stoneBreakerDamageMultiplier: 1.5
+  holyWaterDamageMultiplier: 1.5
+  outBurstRange: 0.5
+  outBurstDamage: 2
   currentLevel: Tutorial
 --- !u!95 &4556257231163928202
 Animator:

@@ -212,7 +212,7 @@ public class BasicEnemyController : FatherEnemy
 
     //----ALTRES----
 
-    public override void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails, bool wantKnockback)
     {
        
 
@@ -234,7 +234,10 @@ public class BasicEnemyController : FatherEnemy
 
         if (currentHealth > 0.0f)
         {
-            SwitchState(State.Knockback);
+            if (wantKnockback)
+            {
+                SwitchState(State.Knockback);
+            }
         }
         else if (currentHealth <= 0.0f)
         {

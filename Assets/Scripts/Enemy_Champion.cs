@@ -366,7 +366,7 @@ public class Enemy_Champion : FatherEnemy
         viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public override void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails, bool wantKnockback)
     {
         if (!isKnockingBack) {
             if (!inThorns)

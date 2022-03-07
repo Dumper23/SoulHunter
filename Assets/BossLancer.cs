@@ -562,7 +562,7 @@ public class BossLancer : FatherEnemy
     {
         //Nothing
     }
-    public override void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails, bool wantKnockback)
     {
         currentHealth -= attackDetails[0];
         healthBar.SetHealth(currentHealth);

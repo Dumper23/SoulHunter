@@ -580,7 +580,7 @@ public class playerController : MonoBehaviour
                             damageMessage[2] = transform.position.y;
                             if (enemy.GetComponentInParent<FatherEnemy>() != null)
                             {
-                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
                             }
                         }
                         if (enemy.tag == "Healer")
@@ -971,7 +971,7 @@ public class playerController : MonoBehaviour
                     damageMessage[0] = attackDamage;
                     damageMessage[1] = transform.position.x;
                     damageMessage[2] = transform.position.y;
-                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
                 }
             }
         }
@@ -1056,7 +1056,7 @@ public class playerController : MonoBehaviour
                             damageMessage[2] = transform.position.y;
                             if (enemy.GetComponentInParent<FatherEnemy>() != null)
                             {
-                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage);
+                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
                             }
                         }
                     }

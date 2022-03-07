@@ -188,7 +188,7 @@ public class Enemy_bush : FatherEnemy
         
     }
 
-    public override void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails, bool wantKnockback)
     {
         currentHealth -= attackDetails[0];
 

@@ -104,7 +104,7 @@ public class Enemy_shooter : FatherEnemy
             alreadySound = true;
         }
     }
-    public override void Damage(float[] attackDetails)
+    public override void Damage(float[] attackDetails, bool wantKnockback)
     {
 
         currentHealth -= attackDetails[0];
@@ -137,7 +137,10 @@ public class Enemy_shooter : FatherEnemy
 
         if (currentHealth > 0.0f)
         {
-            Knockback();
+            if (wantKnockback)
+            {
+                Knockback();
+            }
         }
         else if (currentHealth <= 0.0f)
         {

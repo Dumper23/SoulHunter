@@ -23,4 +23,9 @@ public class HealthBarBoss : MonoBehaviour
         slider.value = health;
         fill.color = gradient.Evaluate(slider.normalizedValue);
     }
+
+    public float GetPercentageOfHealth()
+    {
+        return slider.normalizedValue;
+    }
 }

@@ -143,4 +143,12 @@ public class downLancersPool : MonoBehaviour
             particle.SetActive(false);
         }
     }
+
+    public void DisableParticles()
+    {
+        foreach (GameObject particle in lancersParticles)
+        {
+            particle.SetActive(false);
+        }
+    }
 }

@@ -93,6 +93,8 @@ public class Enemy_Champion : FatherEnemy
         if (player.position.x > this.transform.position.x)
         {
             facingDirection = 1;
+            viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+            viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
 
         }
         else

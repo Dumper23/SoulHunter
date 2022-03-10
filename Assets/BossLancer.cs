@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class BossLancer : FatherEnemy
 {
@@ -11,6 +12,7 @@ public class BossLancer : FatherEnemy
         Summoning,
         DownLancers,
         UpperAttack,
+        SwitchFase,
         Dead
     }
 
@@ -23,7 +25,8 @@ public class BossLancer : FatherEnemy
 
     private Animator 
         lancerAnimation,
-        upperRangeCircleAnimation;
+        upperRangeCircleAnimation,
+        spriteAnimator;
 
     private BoxCollider2D area,
         upperRange;
@@ -37,38 +40,60 @@ public class BossLancer : FatherEnemy
     [SerializeField]
     private ParticleSystem lancerParticles;
 
+    [SerializeField]
+    private Light2D globalLight;
+
     private float quantity,
         lancersParticlesStartTime,
         downLancersAttackStartTime,
+        downLancersAttackStartTime2,
         waitingStartTime,
         frontAttackStartTime,
         summoningStartTime,
         nextSummonStartTime,
         upperAttackStartTime,
         inRangeStartTime,
+        switchFaseStartTime,
+        shadowingStartTime,
+        startIntensity,
+        endIntensity,
         currentHealth;
 
     private int[] notSpawn,
+        notSpawn2,
         summon;
 
     private bool isAttackDone,
         particlesEnded,
         particlesCreated,
         isActivated = false,
+        isAttackDone2,
+        particlesEnded2,
+        particlesCreated2,
+        isActivated2 = false,
         inRange = false,
         goUpper = false,
-        upperDone = false;
+        upperDone = false,
+        switchingFase = false,
+        firstLoop = true,
+        startShadowing = false;
 
     [SerializeField]
     private float lineOfActivation,
         waitLancersParticlesDuration = 3f,
+        waitLancersParticlesDuration2 = 2f,
         downLancersAttackDuration = 1f,
+        downLancers2AttackDelay = 0f,
         waitingForAttackDuration = 2f,
+        waitingForAttackDurationFase2 = 1f,
+        waitingForAttackDurationFase3 = 0.5f,
         frontAttackDuration = 1.5f,
         summoningDuration = 3f,
         waitUntilNextSummon = 0.5f,
         upperChargeDuration = 1f,
         upperAttackDuration = 1f,
+        switchFaseDuration = 2f,
+        shadowingTime = 2f,
         timeInRange = 2f,
         percentageHealers = 0.15f,
         maxHealth = 500;
@@ -77,7 +102,9 @@ public class BossLancer : FatherEnemy
 
     private int 
         quantitySummoning,
-        quantitySummoned;
+        quantitySummoned,
+        actualFase = 0,
+        previousFase = 0;
 
     public HealthBarBoss healthBar;
 
@@ -96,12 +123,18 @@ public class BossLancer : FatherEnemy
         upperAttackRange = upperRange.GetComponent<UpperRangePlayerDetection>();
         upperRangeCircle = transform.Find("UpperRangeCircle").gameObject;
         upperRangeCircleAnimation = upperRangeCircle.GetComponent<Animator>();
+        GameObject sprite = transform.Find("Capsule").gameObject;
+        spriteAnimator = sprite.GetComponent<Animator>();
 
-        statesToRandomize = new State[4];
-        statesToRandomize[0] = State.Waiting;
-        statesToRandomize[1] = State.DownLancers;
-        statesToRandomize[2] = State.FrontAttack;
-        statesToRandomize[3] = State.Summoning;
+        startIntensity = globalLight.intensity;
+        endIntensity = 0f;
+
+        statesToRandomize = new State[5];
+        statesToRandomize[0] = State.DownLancers;
+        statesToRandomize[1] = State.FrontAttack;        
+        statesToRandomize[2] = State.DownLancers;
+        statesToRandomize[3] = State.FrontAttack;
+        statesToRandomize[4] = State.Summoning;
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -113,12 +146,22 @@ public class BossLancer : FatherEnemy
     // Update is called once per frame
     void Update()
     {
+        if (startShadowing)
+        {
+            globalLight.intensity = Lerp(startIntensity, endIntensity, shadowingStartTime, shadowingTime);
+        }
+        if (Time.time >= shadowingStartTime + shadowingTime && startShadowing)
+        {
+            startShadowing = false;
+        }
         if (!inRange)
         {
             if (upperAttackRange.IsInRange())
             {
                 inRangeStartTime = Time.time;
                 inRange = true;
+
+
             }
         }
         else
@@ -138,6 +181,23 @@ public class BossLancer : FatherEnemy
                 }
             }
         }
+        Debug.Log(healthBar.GetPercentageOfHealth());
+        if(healthBar.GetPercentageOfHealth() <= 0.66 && actualFase == 1)
+        {            
+            actualFase = 2;
+            previousFase = 1;
+            SwitchState(State.SwitchFase);
+
+        }
+        if (healthBar.GetPercentageOfHealth() <= 0.33 && actualFase == 2)
+        {
+            Debug.Log("Entra");
+            actualFase = 3;
+            previousFase = 2;
+            SwitchState(State.SwitchFase);
+            //switchFase + foscor dins
+        }
+
         switch (currentState)
         {
             case State.Waiting:
@@ -154,6 +214,9 @@ public class BossLancer : FatherEnemy
                 break;
             case State.UpperAttack:
                 UpdateUpperAttackState();
+                break;
+            case State.SwitchFase:
+                UpdateSwuitchFaseState();
                 break;
             case State.Dead:
                 UpdateDeadState();
@@ -181,6 +244,8 @@ public class BossLancer : FatherEnemy
                 isActivated = true;
                 waitingStartTime = Time.time;
                 healthBar.gameObject.SetActive(true);
+                actualFase = 1;
+                SwitchState(State.SwitchFase);
             }
         }
         else
@@ -193,7 +258,7 @@ public class BossLancer : FatherEnemy
                 }
                 else
                 {
-                    SwitchState(randomBehaviour());
+                    SwitchState(RandomBehaviour());
                 }
             }
         }
@@ -330,6 +395,7 @@ public class BossLancer : FatherEnemy
     #region DOWNLANCERS
     private void EnterDownLancersState()
     {
+        firstLoop = true;
         lancersParticlesStartTime = Time.time;
         isAttackDone = false;
         particlesEnded = false;
@@ -373,11 +439,53 @@ public class BossLancer : FatherEnemy
 
             notSpawn[i] = attempt;
         }
+        if (actualFase != 1)
+        {
+            //lancersParticlesStartTime2 = Time.time;
+            isAttackDone2 = false;
+            particlesEnded2 = false;
+            particlesCreated2 = false;
+
+            //Debug.Log(areaSize);
+            //Debug.Log(positionStart);
+            //Debug.Log(quantity);
+            //Debug.Log(quantityEmpty);
+
+            notSpawn2 = new int[((int)(quantityEmpty))];
+
+            //Lancers where not to spawn
+            for (int i = 0; i < quantityEmpty; i++)
+            {
+                int attempt = 0;
+                isOK = false;
+                while (!isOK)
+                {
+                    bool found = false;
+                    attempt = Random.Range(0, (int)quantity);
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (notSpawn2[j] == attempt)
+                        {
+                            found = true;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        isOK = true;
+                    }
+                }
+
+                notSpawn2[i] = attempt;
+            }
+        }
         //Debug.Log(a[0] + " " + a[1]);
     }
 
     private void UpdateDownLancersState()
     {
+
         if(Time.time >= lancersParticlesStartTime + waitLancersParticlesDuration)
         {
             particlesEnded = true;
@@ -427,15 +535,90 @@ public class BossLancer : FatherEnemy
             particlesCreated = true;
         }
 
-        if (isAttackDone && Time.time >= downLancersAttackStartTime + downLancersAttackDuration)
+        if (actualFase == 1)
         {
-            if (goUpper)
+            if (isAttackDone && Time.time >= downLancersAttackStartTime + downLancersAttackDuration)
             {
-                SwitchState(State.UpperAttack);
+                if (goUpper)
+                {
+                    SwitchState(State.UpperAttack);
+                }
+                else
+                {
+                    SwitchState(State.Waiting);
+                }
             }
-            else
+        }
+
+        //2ndFase Addition
+        if (actualFase != 1 && Time.time >= lancersParticlesStartTime + waitLancersParticlesDuration + downLancers2AttackDelay)
+        {
+            if (firstLoop)
             {
-                SwitchState(State.Waiting);
+                downLancersPool.downLancersPoolInstance.DisableParticles();
+                firstLoop = false;
+            }
+            if (Time.time >= lancersParticlesStartTime + waitLancersParticlesDuration + downLancers2AttackDelay + waitLancersParticlesDuration)
+            {
+                particlesEnded2 = true;
+            }
+            if (!isAttackDone2)
+            {
+                Vector2 positionStart = area.transform.position;
+                positionStart.x = positionStart.x + (downLancer.transform.localScale.x / 2);
+                //Create Lancers in correct positions
+                for (int i = 0; i < quantity; i++)
+                {
+                    bool found = false;
+                    for (int j = 0; j < notSpawn2.Length; j++)
+                    {
+                        if (notSpawn2[j] == i)
+                        {
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                    {
+                        Vector3 lancerPosition = new Vector3(positionStart.x + i * (downLancer.transform.localScale.x), positionStart.y, 0);
+
+                        if (particlesEnded2)
+                        {
+                            GameObject lancer = downLancersPool.downLancersPoolInstance.GetLancer();
+                            lancer.transform.position = lancerPosition;
+                            lancer.SetActive(true);
+                        }
+                        if (!particlesCreated2)
+                        {
+                            GameObject particle = downLancersPool.downLancersPoolInstance.GetParticle();
+                            particle.transform.position = lancerPosition;
+                            particle.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+                            particle.SetActive(true);
+                            //Instantiate(lancerParticles, lancerPosition, Quaternion.Euler(-90f,0f,0f));
+                        }
+
+                    }
+                }
+                if (particlesEnded2)
+                {
+                    isAttackDone2 = true;
+                    downLancersAttackStartTime2 = Time.time;
+                }
+            }
+            if (!particlesCreated2)
+            {
+                particlesCreated2 = true;
+            }
+
+            if (isAttackDone && isAttackDone2 && Time.time >= downLancersAttackStartTime2 + downLancersAttackDuration)
+            {
+                if (goUpper)
+                {
+                    SwitchState(State.UpperAttack);
+                }
+                else
+                {
+                    SwitchState(State.Waiting);
+                }
             }
         }
     }
@@ -473,10 +656,55 @@ public class BossLancer : FatherEnemy
 
     private void ExitUpperAttackState()
     {
+        upperDone = true;
+        upperRangeCircle.SetActive(false);
         lancerAnimation.Play("noLancerAnimation");
         goUpper = false;
         inRange = false;
         
+    }
+    #endregion
+
+    //---------SWITCHFASE---------------
+    #region SWITCHFASE
+    private void EnterSwuitchFaseState()
+    {
+        switch (actualFase)
+        {
+            case 1:
+                spriteAnimator.Play("boss1SwitchFaseAnimation1");
+                break;
+            case 2:
+                spriteAnimator.Play("boss1SwitchFaseAnimation2");
+                waitingForAttackDuration = waitingForAttackDurationFase2;
+                waitLancersParticlesDuration = waitLancersParticlesDuration2;
+                break;
+            case 3:
+                spriteAnimator.Play("boss1SwitchFaseAnimation3");
+                waitingForAttackDuration = waitingForAttackDurationFase3;
+                shadowingStartTime = Time.time;
+                startShadowing = true;
+                break;
+        }
+
+        switchingFase = true;
+        switchFaseStartTime = Time.time;
+    }
+
+    private void UpdateSwuitchFaseState()
+    {
+
+
+        if (Time.time >= switchFaseStartTime + switchFaseDuration) 
+        {
+            SwitchState(State.Waiting);
+        }
+    }
+
+    private void ExitSwuitchFaseState()
+    {
+        spriteAnimator.Play("noBoss1Animation");
+        switchingFase = false;
     }
     #endregion
 
@@ -485,6 +713,7 @@ public class BossLancer : FatherEnemy
     private void EnterDeadState()
     {
         healthBar.gameObject.SetActive(false);
+        globalLight.intensity = startIntensity;
         Destroy(gameObject);
     }
 
@@ -518,6 +747,9 @@ public class BossLancer : FatherEnemy
             case State.UpperAttack:
                 ExitUpperAttackState();
                 break;
+            case State.SwitchFase:
+                ExitSwuitchFaseState();
+                break;
             case State.Dead:
                 ExitDeadState();
                 break;
@@ -540,6 +772,9 @@ public class BossLancer : FatherEnemy
             case State.UpperAttack:
                 EnterUpperAttackState();
                 break;
+            case State.SwitchFase:
+                EnterSwuitchFaseState();
+                break;
             case State.Dead:
                 EnterDeadState();
                 break;
@@ -547,11 +782,23 @@ public class BossLancer : FatherEnemy
 
         currentState = state;
     }
-    private State randomBehaviour()
+    private State RandomBehaviour()
     {
         int pos = Random.Range(0, (statesToRandomize.Length));
         return statesToRandomize[pos];
     }
+
+    private float Lerp(float start, float end, float timeStartedLerping, float lerpTime = 1)
+    {
+        float timeSinceStarted = Time.time - timeStartedLerping;
+
+        float percentageComplete = timeSinceStarted / lerpTime;
+
+        float result = Vector3.Lerp(new Vector3(start,0,0), new Vector3(end,0,0), percentageComplete).x;
+
+        return result;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -564,27 +811,30 @@ public class BossLancer : FatherEnemy
     }
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
-        currentHealth -= attackDetails[0];
-        healthBar.SetHealth(currentHealth);
-
-        //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
-        //particleDamage.Play();
-        /*
-        if (attackDetails[1] > alive.transform.position.x)
+        if (!switchingFase)
         {
-            damageDirection = -1;
-        }
-        else
-        {
-            damageDirection = 1;
-        }*/
+            currentHealth -= attackDetails[0];
+            healthBar.SetHealth(currentHealth);
 
-        //Hit particle
+            //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+            //particleDamage.Play();
+            /*
+            if (attackDetails[1] > alive.transform.position.x)
+            {
+                damageDirection = -1;
+            }
+            else
+            {
+                damageDirection = 1;
+            }*/
 
-        if (currentHealth <= 0.0f)
-        {
-            SwitchState(State.Dead);
-            GameManager.Instance.addPoints(pointsToGive);
+            //Hit particle
+
+            if (currentHealth <= 0.0f)
+            {
+                SwitchState(State.Dead);
+                GameManager.Instance.addPoints(pointsToGive);
+            }
         }
     }
 

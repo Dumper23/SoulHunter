@@ -1,5 +1,62 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &886766363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 886766364}
+  - component: {fileID: 886766365}
+  m_Layer: 0
+  m_Name: NoDashCollision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &886766364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886766363}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1457171829281863490}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &886766365
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886766363}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.7570019, y: 0.10814285}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.5364494, y: 10.064362}
+  m_EdgeRadius: 0
 --- !u!1 &1827094995
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +481,7 @@ Transform:
   - {fileID: 1457171829568096290}
   - {fileID: 1892076288}
   - {fileID: 1827094996}
+  - {fileID: 886766364}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -460,6 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99244acf17a51954b98dcb90e3ca869a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasShield: 0
+  isDemon: 0
+  outBursted: 0
   pointsToGive: 100
   downLancer: {fileID: 3248514948776810472, guid: e0f5b760ece80054eb654b0750ac8d57, type: 3}
   summoner: {fileID: 2041905316307224188, guid: 2f6a15f413439c44695338d2b919969d, type: 3}
@@ -474,6 +535,7 @@ MonoBehaviour:
   waitUntilNextSummon: 0.5
   upperChargeDuration: 1
   upperAttackDuration: 1
+  switchFaseDuration: 2
   timeInRange: 2
   percentageHealers: 0.15
   maxHealth: 500
@@ -490,6 +552,7 @@ GameObject:
   - component: {fileID: 1457171829568096290}
   - component: {fileID: 1457171829568096295}
   - component: {fileID: 1457171829568096292}
+  - component: {fileID: 1972050625}
   m_Layer: 6
   m_Name: Capsule
   m_TagString: Enemy
@@ -578,6 +641,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!95 &1972050625
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457171829568096291}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ac04c9831bac5314889c23b9fb68836f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &4381423972386430186
 PrefabInstance:
   m_ObjectHideFlags: 0

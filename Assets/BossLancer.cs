@@ -181,7 +181,7 @@ public class BossLancer : FatherEnemy
                 }
             }
         }
-        Debug.Log(healthBar.GetPercentageOfHealth());
+        //Debug.Log(healthBar.GetPercentageOfHealth());
         if(healthBar.GetPercentageOfHealth() <= 0.66 && actualFase == 1)
         {            
             actualFase = 2;

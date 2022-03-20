@@ -27,6 +27,12 @@ public class bullet : MonoBehaviour
         //targetPosition = FindObjectOfType<playerController>().transform.position;
     }
 
+    public void changeDirection()
+    {
+        Vector2 moveDir = (-target.transform.position + transform.position).normalized * speed;
+        bulletRB.velocity = new Vector2(moveDir.x, moveDir.y);
+    }
+
     // Update is called once per frame
     void Update()
     {

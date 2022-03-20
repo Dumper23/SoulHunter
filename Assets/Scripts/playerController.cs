@@ -74,6 +74,7 @@ public class playerController : MonoBehaviour
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayer;
+    public LayerMask bulletLayer;
     public int attackDamage = 10;
     public float attackRate = 2f;
     public int playerLives = 3;
@@ -103,8 +104,6 @@ public class playerController : MonoBehaviour
     public RawImage live3;
     public RawImage live4;
     public RawImage shield;
-    public Text attackIndicator;
-    public Text speedIndicator;
     public Text shieldTimer;
     public TextMeshProUGUI lostSoulName;
     public TextMeshProUGUI lostSoulDescription;
@@ -137,6 +136,7 @@ public class playerController : MonoBehaviour
     private int lostSoulsEquipped = 0;
     private bool stoneBreaker = false;
     private bool holyWater = false;
+    private bool deflectMissiles = false;
     private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
     //Other settings
@@ -224,7 +224,7 @@ public class playerController : MonoBehaviour
             "REWORK NEEDED!!!!!!");
 
         lostSoulDescriptionDictionary.Add("DeflectMissiles",
-            "With this Lost Soul you will be able to return projectiles to enemies.\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
+            "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
 
         lostSoulDescriptionDictionary.Add("HolyWater",
             "You will deal more damage to Demonic enemies.\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
@@ -266,8 +266,27 @@ public class playerController : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
-        attackIndicator.text = "" + attackDamage;
-        speedIndicator.text = "" + Mathf.RoundToInt(playerVelocity);
+        float verticalIn = 0;
+        //Camera Movement
+        if (Input.GetAxisRaw("RightJoystick") > 0)
+        {
+             verticalIn = -3f;
+        }
+        else if (Input.GetAxisRaw("RightJoystick") < 0)
+        {
+            verticalIn = 3f;
+        }
+        
+        if (verticalIn != 0)
+        {
+            Vector3 pos = Vector3.Lerp(Camera.main.transform.position, transform.position + new Vector3(0, verticalIn, 0), 7 * Time.deltaTime);
+            Camera.main.GetComponent<cameraMovement>().follow = false;
+            Camera.main.transform.position =  new Vector3(pos.x, pos.y, Camera.main.transform.position.z);
+        }
+        else
+        {
+            Camera.main.GetComponent<cameraMovement>().follow = true;
+        }
 
         //Lost Souls functionality
         #region LostSouls
@@ -552,6 +571,11 @@ public class playerController : MonoBehaviour
                     }
                     Invoke("stopAttack", attackAnimationDelay);
 
+                    if (deflectMissiles)
+                    {
+                        deflectMissilesFunction();
+                    }
+
                     Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
 
                     foreach (Collider2D enemy in hitEnemies)
@@ -697,6 +721,19 @@ public class playerController : MonoBehaviour
         #endregion
 
         paused = GameManager.Instance.isPaused();
+    }
+
+    private void deflectMissilesFunction()
+    {
+        Collider2D[] hitBullets = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), bulletLayer);
+
+        foreach(Collider2D bullet in hitBullets)
+        {
+            if (bullet.GetComponent<bullet>() != null)
+            {
+                bullet.GetComponent<bullet>().changeDirection();
+            }
+        }
     }
 
     public void takeDamage()
@@ -1078,7 +1115,7 @@ public class playerController : MonoBehaviour
             lostSouls.TryGetValue("DeflectMissiles", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {
-                //Tornar o desviar projectils
+                deflectMissiles = true;
             }
         }
     }

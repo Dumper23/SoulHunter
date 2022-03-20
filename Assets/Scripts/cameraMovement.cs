@@ -9,11 +9,14 @@ public class cameraMovement : MonoBehaviour
     [Range(1, 10)]
     public float smoothFactor;
     public GameObject target;
+    public bool follow = true;
 
     void FixedUpdate()
     {
-
-        cameraSmoothing();
+        if (follow)
+        {
+            cameraSmoothing();
+        }
 
     }
 

@@ -100,11 +100,11 @@ public class BossLancer : FatherEnemy
 
     public Transform spawnSummoner;
 
-    private int 
+    private int
         quantitySummoning,
         quantitySummoned,
-        actualFase = 0,
-        previousFase = 0;
+        actualFase = 0;
+        //previousFase = 0;
 
     public HealthBarBoss healthBar;
 
@@ -185,7 +185,7 @@ public class BossLancer : FatherEnemy
         if(healthBar.GetPercentageOfHealth() <= 0.66 && actualFase == 1)
         {            
             actualFase = 2;
-            previousFase = 1;
+            //previousFase = 1;
             SwitchState(State.SwitchFase);
 
         }
@@ -193,7 +193,7 @@ public class BossLancer : FatherEnemy
         {
             Debug.Log("Entra");
             actualFase = 3;
-            previousFase = 2;
+            //previousFase = 2;
             SwitchState(State.SwitchFase);
             //switchFase + foscor dins
         }
@@ -693,8 +693,6 @@ public class BossLancer : FatherEnemy
 
     private void UpdateSwuitchFaseState()
     {
-
-
         if (Time.time >= switchFaseStartTime + switchFaseDuration) 
         {
             SwitchState(State.Waiting);

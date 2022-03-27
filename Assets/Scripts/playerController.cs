@@ -151,6 +151,17 @@ public class playerController : MonoBehaviour
     private int enemyCounter = 0;
     public string currentLevel = "Tutorial";
     private bool paused = false;
+    
+    //Venom variables
+    private float distanceTraveled = 0;
+    private bool venomed = false;
+    private Vector3 lastPosition;
+    private float venomPositionCount = 0.5f;
+    private float venomPositionStart = 0;
+    private float venomStartTime;
+    private float venomAffectDuration = 6f;
+    private float distanceForVenom = 300f;
+    public VenomBar venomBar;
 
     //Animation States
     const string PLAYER_IDLE = "idle";
@@ -182,6 +193,8 @@ public class playerController : MonoBehaviour
         startKillTime = Time.time;
         originalPlayerSpeed = playerVelocity;
         originalPlayerAttackDamage = attackDamage;
+        venomBar.SetMaxVenom(distanceForVenom);
+        venomBar.SetMaxTime(venomAffectDuration);
 
         //We get all the components we need
         sprite = GetComponent<SpriteRenderer>();
@@ -696,6 +709,42 @@ public class playerController : MonoBehaviour
 
         #endregion
 
+        #region Venom functionality
+
+        if (venomed)
+        {
+            venomBar.SetTime(venomAffectDuration - Time.time + venomStartTime);
+            if (Time.time >= venomStartTime + venomAffectDuration)
+            {
+                //takedamage
+                playerSounds[4].Play();
+                playerLives--;
+                updateLiveUI();
+
+                venomBar.gameObject.SetActive(false);
+                venomed = false;
+                distanceTraveled = 0;
+            }
+            else
+            {
+                if (Time.time >= venomPositionStart + venomPositionCount)
+                {
+                    lastPosition = this.transform.position;
+                    venomPositionStart = Time.time;
+                }
+                distanceTraveled += Vector3.Distance(this.transform.position, lastPosition);
+                venomBar.SetVenom(distanceForVenom - distanceTraveled);
+                //Debug.Log(distanceTraveled);
+                if (distanceTraveled >= distanceForVenom)
+                {
+                    venomed = false;
+                    venomBar.gameObject.SetActive(false);
+                    distanceTraveled = 0;
+                }
+            }
+        }
+        #endregion
+
         paused = GameManager.Instance.isPaused();
     }
 
@@ -728,7 +777,23 @@ public class playerController : MonoBehaviour
             Invoke("damageImmunity", 1f);
             r2d.velocity = (new Vector2((sprite.flipX ? 1 : -1) * 2 * playerVelocity, jumpVelocity));
             updateLiveUI();
-        }        
+        }
+
+    }
+
+    public void takeVenom()
+    {
+        if (!venomed)
+        {
+            venomBar.gameObject.SetActive(true);
+            venomStartTime = Time.time;
+        }
+        venomBar.SetVenom(distanceForVenom);
+        venomBar.SetTime(venomAffectDuration);
+        venomed = true;
+        distanceTraveled = 0;
+        lastPosition = this.transform.position;
+        venomPositionStart = Time.time;
     }
 
     private void die()
@@ -817,6 +882,18 @@ public class playerController : MonoBehaviour
             }
         }
         #endregion
+
+        if (collision.transform.tag == "Meteor")
+        {
+            if (!isDashing)
+            {
+                takeDamage();
+            }
+            else
+            {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            }
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)

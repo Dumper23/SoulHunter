@@ -88,10 +88,11 @@ public class BossLancer : FatherEnemy
         waitingForAttackDurationFase2 = 1f,
         waitingForAttackDurationFase3 = 0.5f,
         frontAttackDuration = 1.5f,
+        waitForSummon = 1f,
         summoningDuration = 3f,
         waitUntilNextSummon = 0.5f,
         upperChargeDuration = 1f,
-        upperAttackDuration = 1f,
+        upperAttackDuration = 0.5f,
         switchFaseDuration = 2f,
         shadowingTime = 2f,
         timeInRange = 2f,
@@ -112,19 +113,22 @@ public class BossLancer : FatherEnemy
 
     private GameObject upperRangeCircle;
 
+    private GameObject sprite;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindObjectOfType<playerController>().gameObject.transform;
-        GameObject lancer = transform.Find("Lancer").gameObject;
-        lancerAnimation = lancer.GetComponent<Animator>();
+        GameObject lancer = transform.Find("LancerCollider").gameObject;
+        //lancerAnimation = lancer.GetComponent<Animator>();
         area = transform.Find("Area").gameObject.GetComponent<BoxCollider2D>();
         upperRange = transform.Find("UpperRange").gameObject.GetComponent<BoxCollider2D>();
         upperAttackRange = upperRange.GetComponent<UpperRangePlayerDetection>();
         upperRangeCircle = transform.Find("UpperRangeCircle").gameObject;
         upperRangeCircleAnimation = upperRangeCircle.GetComponent<Animator>();
-        GameObject sprite = transform.Find("Capsule").gameObject;
-        spriteAnimator = sprite.GetComponent<Animator>();
+        //GameObject sprite = transform.Find("Capsule").gameObject;
+        sprite = transform.Find("Sprite").gameObject;
+        spriteAnimator = gameObject.GetComponent<Animator>();
 
         startIntensity = globalLight.intensity;
         endIntensity = 0f;
@@ -191,7 +195,6 @@ public class BossLancer : FatherEnemy
         }
         if (healthBar.GetPercentageOfHealth() <= 0.33 && actualFase == 2)
         {
-            Debug.Log("Entra");
             actualFase = 3;
             //previousFase = 2;
             SwitchState(State.SwitchFase);
@@ -274,8 +277,9 @@ public class BossLancer : FatherEnemy
     #region FRONTATTACK
     private void EnterFrontAttackState()
     {
+        spriteAnimator.Play("LancerFrontAttack");
         frontAttackStartTime = Time.time;
-        lancerAnimation.Play("LancerAnimation");
+        //lancerAnimation.Play("LancerAnimation");
     }
 
     private void UpdateFrontAttackState()
@@ -289,7 +293,8 @@ public class BossLancer : FatherEnemy
 
     private void ExitFrontAttackState()
     {
-        lancerAnimation.Play("noLancerAnimation");
+        spriteAnimator.Play("LancerIdle");
+        //lancerAnimation.Play("noLancerAnimation");
     }
     #endregion
 
@@ -297,6 +302,7 @@ public class BossLancer : FatherEnemy
     #region SUMMONING
     private void EnterSummoningState()
     {
+        spriteAnimator.Play("LancerSummon");
         summoningStartTime = Time.time;
         nextSummonStartTime = Time.time;
         quantitySummoned = 0;
@@ -339,9 +345,12 @@ public class BossLancer : FatherEnemy
 
     private void UpdateSummoningState()
     {
+        if (Time.time >= summoningStartTime + waitForSummon)
+        {
 
+        }
 
-        if(Time.time >= summoningStartTime + summoningDuration)
+        if(Time.time >= summoningStartTime + waitForSummon + summoningDuration)
         {
             if (goUpper)
             {
@@ -387,7 +396,7 @@ public class BossLancer : FatherEnemy
 
     private void ExitSummoningState()
     {
-
+        spriteAnimator.Play("LancerIdle");
     }
     #endregion
 
@@ -441,6 +450,7 @@ public class BossLancer : FatherEnemy
         }
         if (actualFase != 1)
         {
+            spriteAnimator.Play("LancerDownLancersV2");
             //lancersParticlesStartTime2 = Time.time;
             isAttackDone2 = false;
             particlesEnded2 = false;
@@ -479,6 +489,10 @@ public class BossLancer : FatherEnemy
 
                 notSpawn2[i] = attempt;
             }
+        }
+        else
+        {
+            spriteAnimator.Play("LancerDownLancers");
         }
         //Debug.Log(a[0] + " " + a[1]);
     }
@@ -555,6 +569,7 @@ public class BossLancer : FatherEnemy
         {
             if (firstLoop)
             {
+
                 downLancersPool.downLancersPoolInstance.DisableParticles();
                 firstLoop = false;
             }
@@ -611,6 +626,7 @@ public class BossLancer : FatherEnemy
 
             if (isAttackDone && isAttackDone2 && Time.time >= downLancersAttackStartTime2 + downLancersAttackDuration)
             {
+
                 if (goUpper)
                 {
                     SwitchState(State.UpperAttack);
@@ -626,6 +642,7 @@ public class BossLancer : FatherEnemy
     private void ExitDownLancersState()
     {
         downLancersPool.downLancersPoolInstance.DisableAll();
+        spriteAnimator.Play("LancerIdle");
     }
     #endregion
 
@@ -644,7 +661,7 @@ public class BossLancer : FatherEnemy
         if (!upperDone && Time.time >= upperAttackStartTime + upperChargeDuration)
         {
             upperDone = true;
-            lancerAnimation.Play("UpperLancerAnimation");
+            spriteAnimator.Play("LancerUpperAttack");
             upperRangeCircle.SetActive(false);
         }
 
@@ -658,7 +675,7 @@ public class BossLancer : FatherEnemy
     {
         upperDone = true;
         upperRangeCircle.SetActive(false);
-        lancerAnimation.Play("noLancerAnimation");
+        //lancerAnimation.Play("noLancerAnimation");
         goUpper = false;
         inRange = false;
         
@@ -672,15 +689,15 @@ public class BossLancer : FatherEnemy
         switch (actualFase)
         {
             case 1:
-                spriteAnimator.Play("boss1SwitchFaseAnimation1");
+                //spriteAnimator.Play("boss1SwitchFaseAnimation1");
                 break;
             case 2:
-                spriteAnimator.Play("boss1SwitchFaseAnimation2");
+                //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 waitingForAttackDuration = waitingForAttackDurationFase2;
                 waitLancersParticlesDuration = waitLancersParticlesDuration2;
                 break;
             case 3:
-                spriteAnimator.Play("boss1SwitchFaseAnimation3");
+                //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 waitingForAttackDuration = waitingForAttackDurationFase3;
                 shadowingStartTime = Time.time;
                 startShadowing = true;
@@ -701,7 +718,7 @@ public class BossLancer : FatherEnemy
 
     private void ExitSwuitchFaseState()
     {
-        spriteAnimator.Play("noBoss1Animation");
+        //spriteAnimator.Play("noBoss1Animation");
         switchingFase = false;
     }
     #endregion

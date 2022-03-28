@@ -45,6 +45,7 @@ public class BossShield : FatherEnemy
         venomPreAnimationDuration = 1f,
         venomAnimationDuration = 5f,
         venomDuration = 10f,
+        frontAttackDuration = 1f,
         meteorsAnimationDuration = 2.5f,
         switchFaseDuration = 2f;
 
@@ -56,6 +57,7 @@ public class BossShield : FatherEnemy
         meteorsStartTime,
         venomStartTime,
         venomAnimationStartTime,
+        frontAttackStartTime,
         meteorsAnimationStartTime,
         switchFaseStartTime;
 
@@ -105,7 +107,7 @@ public class BossShield : FatherEnemy
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
 
-        SwitchState(State.Waiting);
+        SwitchState(State.FrontAttack);
 
         if(player.position.x >= rb.transform.position.x)
         {
@@ -346,12 +348,15 @@ public class BossShield : FatherEnemy
     #region FRONTATTACK
     private void EnterFrontAttackState()
     {
-
+        frontAttackStartTime = Time.time;
     }
 
     private void UpdateFrontAttackState()
     {
-
+        if (Time.time >= frontAttackStartTime + frontAttackDuration) 
+        {
+            Debug.Log("ended");
+        }
     }
 
     private void ExitFrontAttackState()

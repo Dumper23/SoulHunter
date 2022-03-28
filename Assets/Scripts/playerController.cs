@@ -136,6 +136,7 @@ public class playerController : MonoBehaviour
     private int lostSoulsEquipped = 0;
     private bool stoneBreaker = false;
     private bool holyWater = false;
+    private bool soulKeeperActive = false;
     private bool deflectMissiles = false;
     private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
@@ -161,8 +162,10 @@ public class playerController : MonoBehaviour
     const string PLAYER_JUMP = "jump";
     const string PLAYER_WALLSLIDE = "wallSlide";
     const string PLAYER_ATTACKUP = "attackUp";
-    
 
+
+    public float wallJumpTime = 0.2f;
+    private float wallJumpCounter;
     void Start()
     {
         descriptions();
@@ -221,7 +224,7 @@ public class playerController : MonoBehaviour
             "It Grants you with a shield that will protect you from 1 hit, it will be recharged in " + hardSkinRecoveryTime + "s.\n\nShadow told us that the shield is a table from Ikea, we still don't know if that's true or not.");
 
         lostSoulDescriptionDictionary.Add("SoulKeeper", 
-            "REWORK NEEDED!!!!!!");
+            "When you kill one healer, instead of 1hp you will recieve 2hp. \n\n");
 
         lostSoulDescriptionDictionary.Add("DeflectMissiles",
             "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
@@ -315,199 +318,15 @@ public class playerController : MonoBehaviour
         // Movement controlls
         if (!inventory && !paused)
         {
-            #region Movement
             float horizontalIn = Input.GetAxis("Horizontal");
             bool wantsToJump = Input.GetButtonDown("Jump");
             bool isGrounded = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-
-            if (horizontalIn > 0)
-            {
-                facingRight = true;
-            }
-            else
-            {
-                facingRight = false;
-            }
-
-            r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
-
-            if (!isDashing && !wallSliding && !isAttacking)
-            {
-                if (isGrounded)
-                {
-                    if (horizontalIn != 0)
-                    {
-                        changeAnimationState(PLAYER_RUN);
-                    }
-                    else
-                    {
-                        changeAnimationState(PLAYER_IDLE);
-                    }
-                }
-                else
-                {
-                    if (r2d.velocity.y > 0)
-                    {
-                        changeAnimationState(PLAYER_JUMP);
-                    }
-                    else if (r2d.velocity.y < 0)
-                    {
-                        changeAnimationState(PLAYER_FALL);
-                    }
-
-                }
-            }
-
-
-
-            if (availableJumps == 0)
-            {
-                jumpIndicator1.enabled = false;
-                jumpIndicator2.enabled = false;
-            }
-            if (availableJumps == 1)
-            {
-                jumpIndicator1.enabled = true;
-                jumpIndicator2.enabled = false;
-            }
-            if (availableJumps == 2)
-            {
-                jumpIndicator1.enabled = true;
-                jumpIndicator2.enabled = true;
-            }
-
-            //After the jump we create effects as we hit the ground
-            if (isGrounded)
-            {
-                if (hittedGround)
-                {
-                    Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                    if (aux.GetComponent<SpriteRenderer>() != null)
-                    {
-                        groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
-                    }
-                    hittedGround = false;
-                    if (r2d.velocity.y <= 0)
-                    {
-                        Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
-                        Camera.main.GetComponent<Animator>().SetTrigger("shake");
-                        playerSounds[0].Play();
-                    }
-                }
-                if (horizontalIn != 0)
-                {
-                    if (timeTrail <= 0)
-                    {
-                        Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                        if (aux.GetComponent<SpriteRenderer>() != null)
-                        {
-                            walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
-                        }
-                        Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
-                        timeTrail = startTimeTrail;
-                        playerSounds[1].Play();
-                    }
-                    else
-                    {
-                        timeTrail -= Time.deltaTime;
-                    }
-                }
-            }
-            else
-            {
-                hittedGround = true;
-            }
-
-
-            if (isGrounded && !Input.GetButton("Jump"))
-            {
-                availableJumps = maxJumps;
-            }
-
-            if (wantsToJump && availableJumps > 0 && !wallSliding)
-            {
-                //----------------------------------------------------------NO ENTENC EL HVELOCITY
-                float hVelocity = r2d.velocity.x;
-                r2d.velocity = new Vector2(hVelocity, jumpVelocity);
-                availableJumps--;
-                playerSounds[3].Play();
-                jumpParticle.Play();
-            }
-
-            if (horizontalIn != 0)
-            {
-                sprite.flipX = (horizontalIn < 0);
-            }
-
-            #endregion
-
-            //Dashing functionality
-            #region Dash
-            if ((Input.GetButtonDown("Dash") || Input.GetAxisRaw("Dash") != 0) && !dashed)
-            {
-                ghost.makeGhost = true;
-                currentDashRecoveryTime = dashRecoveryTime;
-                isDashing = true;
-                //dashParticle.Play();
-                playerSounds[2].Play();
-                dashIndicator.color = Color.red;
-                currentDashTime = startDashTime;
-                r2d.velocity = Vector3.zero;
-                immune = true;
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
-                Invoke("damageImmunity", 0.25f);
-                if (horizontalIn > 0)
-                {
-                    dashDirection = 1;
-                }
-                else
-                {
-                    dashDirection = (sprite.flipX ? -1 : 1);
-                }
-            }
-            Color tmp = sprite.color;
-            if (isDashing)
-            {
-                changeAnimationState(PLAYER_DASH);
-                r2d.velocity = transform.right * dashDirection * dashForce;
-                currentDashTime -= Time.deltaTime;
-
-                tmp.a = dashAlpha;
-                sprite.color = tmp;
-                dashed = true;
-                if (currentDashTime <= 0)
-                {
-                    isDashing = false;
-                    tmp.a = 1;
-                    sprite.color = tmp;
-                }
-            }
-            else
-            {
-                ghost.makeGhost = false;
-            }
-
-            if (dashed)
-            {
-                if (currentDashRecoveryTime <= 0)
-                {
-                    dashed = false;
-                    dashIndicator.color = Color.green;
-
-                }
-                else
-                {
-                    currentDashRecoveryTime -= Time.deltaTime;
-                }
-            }
-
-            #endregion
 
             //Wall Sliding functionality
             #region Wall Sliding
 
             isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, LayerMask.GetMask("Ground"));
-
+            /*
             if (isTouchingFront && !isGrounded && horizontalIn != 0)
             {
                 wallSliding = true;
@@ -530,96 +349,312 @@ public class playerController : MonoBehaviour
             if (wallSliding)
             {
                 r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
-            }
+            }*/
 
-            #endregion
-
-            //Combat functionality
-            #region Combat
-            if (horizontalIn < 0)
+            wallSliding = false;
+            if (isTouchingFront && !isGrounded)
             {
-                attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
-            }
-            else if (horizontalIn > 0)
-            {
-                attackPoint.position = new Vector3(relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
-            }
-
-            if (Time.time >= nextAttackTime)
-            {
-                if (Input.GetButtonDown("Attack"))
+                if ((facingRight && horizontalIn > 0) || (!facingRight && horizontalIn < 0))
                 {
-                    isAttacking = true;
-                    generalAudios.clip = bladeSound;
-                    generalAudios.Play();
-                    //Play attack animation
-                    if (isGrounded)
-                    {
-                        changeAnimationState(PLAYER_ATTACK);
-                    }
+                    wallSliding = true;
+                }
+            }
 
-                    if (!isGrounded && !isDashing && !wallSliding)
-                    {
-                        if (r2d.velocity.y > 0)
-                        {
-                            changeAnimationState(PLAYER_ATTACKUP);
-                        }
-                        else if (r2d.velocity.y < 0)
-                        {
+            if (wallSliding)
+            {
+                changeAnimationState(PLAYER_WALLSLIDE);
+                r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
+                if (Input.GetButtonDown("Jump"))
+                {
+                    wallJumpCounter = wallJumpTime;
 
-                        }
-                    }
-                    Invoke("stopAttack", attackAnimationDelay);
-
-                    if (deflectMissiles)
-                    {
-                        deflectMissilesFunction();
-                    }
-
-                    Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
-
-                    foreach (Collider2D enemy in hitEnemies)
-                    {
-                        if (enemy.tag == "Enemy")
-                        {
-                            float[] damageMessage = new float[3];
-
-                            if(enemy.GetComponentInParent<FatherEnemy>().hasShield && enemy.GetComponentInParent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
-                            {
-                                damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
-                            }
-                            else if (enemy.GetComponentInParent<FatherEnemy>().hasShield && stoneBreaker)
-                            {
-                                damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
-                            }else if(enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
-                            {
-                                damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
-                            }
-                            else
-                            {
-                                damageMessage[0] = attackDamage;
-                            }
-
-                            damageMessage[1] = transform.position.x;
-                            damageMessage[2] = transform.position.y;
-                            if (enemy.GetComponentInParent<FatherEnemy>() != null)
-                            {
-                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
-                            }
-                        }
-                        if (enemy.tag == "Healer")
-                        {
-                            if(enemy.GetComponent<healer>() != null)
-                            {
-                                enemy.GetComponent<healer>().Damage(attackDamage, this);
-                            }
-                        }
-                    }
-                    nextAttackTime = Time.time + 1 / attackRate;
+                    r2d.velocity = new Vector2(-horizontalIn * originalPlayerSpeed, jumpVelocity);
+                    
                 }
             }
 
             #endregion
+
+            if (wallJumpCounter <= 0)
+            {
+                #region Movement
+                
+                if (horizontalIn > 0)
+                {
+                    facingRight = true;
+                }
+                else
+                {
+                    facingRight = false;
+                }
+
+                r2d.velocity = new Vector2(horizontalIn * playerVelocity, r2d.velocity.y);
+
+                if (!isDashing && !wallSliding && !isAttacking)
+                {
+                    if (isGrounded)
+                    {
+                        if (horizontalIn != 0)
+                        {
+                            changeAnimationState(PLAYER_RUN);
+                        }
+                        else
+                        {
+                            changeAnimationState(PLAYER_IDLE);
+                        }
+                    }
+                    else
+                    {
+                        if (r2d.velocity.y > 0)
+                        {
+                            changeAnimationState(PLAYER_JUMP);
+                        }
+                        else if (r2d.velocity.y < 0)
+                        {
+                            changeAnimationState(PLAYER_FALL);
+                        }
+
+                    }
+                }
+
+
+
+                if (availableJumps == 0)
+                {
+                    jumpIndicator1.enabled = false;
+                    jumpIndicator2.enabled = false;
+                }
+                if (availableJumps == 1)
+                {
+                    jumpIndicator1.enabled = true;
+                    jumpIndicator2.enabled = false;
+                }
+                if (availableJumps == 2)
+                {
+                    jumpIndicator1.enabled = true;
+                    jumpIndicator2.enabled = true;
+                }
+
+                //After the jump we create effects as we hit the ground
+                if (isGrounded)
+                {
+                    if (hittedGround)
+                    {
+                        Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                        if (aux.GetComponent<SpriteRenderer>() != null)
+                        {
+                            groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                        }
+                        hittedGround = false;
+                        if (r2d.velocity.y <= 0)
+                        {
+                            Instantiate(groundImpactParticles, groundCollider.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+                            Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                            playerSounds[0].Play();
+                        }
+                    }
+                    if (horizontalIn != 0)
+                    {
+                        if (timeTrail <= 0)
+                        {
+                            Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
+                            if (aux.GetComponent<SpriteRenderer>() != null)
+                            {
+                                walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
+                            }
+                            Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
+                            timeTrail = startTimeTrail;
+                            playerSounds[1].Play();
+                        }
+                        else
+                        {
+                            timeTrail -= Time.deltaTime;
+                        }
+                    }
+                }
+                else
+                {
+                    hittedGround = true;
+                }
+
+
+                if (isGrounded && !Input.GetButton("Jump"))
+                {
+                    availableJumps = maxJumps;
+                }
+
+                if (wantsToJump && availableJumps > 0 && !wallSliding)
+                {
+                    //----------------------------------------------------------NO ENTENC EL HVELOCITY
+                    float hVelocity = r2d.velocity.x;
+                    r2d.velocity = new Vector2(hVelocity, jumpVelocity);
+                    availableJumps--;
+                    playerSounds[3].Play();
+                    jumpParticle.Play();
+                }
+
+                if (horizontalIn != 0)
+                {
+                    sprite.flipX = (horizontalIn < 0);
+                }
+
+                #endregion
+
+                //Dashing functionality
+                #region Dash
+                if ((Input.GetButtonDown("Dash") || Input.GetAxisRaw("Dash") != 0) && !dashed)
+                {
+                    ghost.makeGhost = true;
+                    currentDashRecoveryTime = dashRecoveryTime;
+                    isDashing = true;
+                    //dashParticle.Play();
+                    playerSounds[2].Play();
+                    dashIndicator.color = Color.red;
+                    currentDashTime = startDashTime;
+                    r2d.velocity = Vector3.zero;
+                    immune = true;
+                    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+                    Invoke("damageImmunity", 0.25f);
+                    if (horizontalIn > 0)
+                    {
+                        dashDirection = 1;
+                    }
+                    else
+                    {
+                        dashDirection = (sprite.flipX ? -1 : 1);
+                    }
+                }
+                Color tmp = sprite.color;
+                if (isDashing)
+                {
+                    changeAnimationState(PLAYER_DASH);
+                    r2d.velocity = transform.right * dashDirection * dashForce;
+                    currentDashTime -= Time.deltaTime;
+
+                    tmp.a = dashAlpha;
+                    sprite.color = tmp;
+                    dashed = true;
+                    if (currentDashTime <= 0)
+                    {
+                        isDashing = false;
+                        tmp.a = 1;
+                        sprite.color = tmp;
+                    }
+                }
+                else
+                {
+                    ghost.makeGhost = false;
+                }
+
+                if (dashed)
+                {
+                    if (currentDashRecoveryTime <= 0)
+                    {
+                        dashed = false;
+                        dashIndicator.color = Color.green;
+
+                    }
+                    else
+                    {
+                        currentDashRecoveryTime -= Time.deltaTime;
+                    }
+                }
+
+                #endregion
+
+            //Combat functionality
+            
+                #region Combat
+                if (horizontalIn < 0)
+                {
+                    attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+                }
+                else if (horizontalIn > 0)
+                {
+                    attackPoint.position = new Vector3(relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
+                }
+
+                if (Time.time >= nextAttackTime)
+                {
+                    if (Input.GetButtonDown("Attack"))
+                    {
+                        isAttacking = true;
+                        generalAudios.clip = bladeSound;
+                        generalAudios.Play();
+                        //Play attack animation
+                        if (isGrounded)
+                        {
+                            changeAnimationState(PLAYER_ATTACK);
+                        }
+
+                        if (!isGrounded && !isDashing && !wallSliding)
+                        {
+                            if (r2d.velocity.y > 0)
+                            {
+                                changeAnimationState(PLAYER_ATTACKUP);
+                            }
+                            else if (r2d.velocity.y < 0)
+                            {
+
+                            }
+                        }
+                        Invoke("stopAttack", attackAnimationDelay);
+
+                        if (deflectMissiles)
+                        {
+                            deflectMissilesFunction();
+                        }
+
+                        Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), enemyLayer);
+
+                        foreach (Collider2D enemy in hitEnemies)
+                        {
+                            if (enemy.tag == "Enemy")
+                            {
+                                float[] damageMessage = new float[3];
+
+                                if (enemy.GetComponentInParent<FatherEnemy>().hasShield && enemy.GetComponentInParent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
+                                {
+                                    damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
+                                }
+                                else if (enemy.GetComponentInParent<FatherEnemy>().hasShield && stoneBreaker)
+                                {
+                                    damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
+                                }
+                                else if (enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
+                                {
+                                    damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
+                                }
+                                else
+                                {
+                                    damageMessage[0] = attackDamage;
+                                }
+
+                                damageMessage[1] = transform.position.x;
+                                damageMessage[2] = transform.position.y;
+                                if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                                {
+                                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                                }
+                            }
+                            if (enemy.tag == "Healer")
+                            {
+                                if (enemy.GetComponent<healer>() != null)
+                                {
+                                    enemy.GetComponent<healer>().Damage(attackDamage, this);
+                                }
+                            }
+                        }
+                        nextAttackTime = Time.time + 1 / attackRate;
+                    }
+                }
+
+                #endregion
+            }
+            else
+            {
+                wallJumpCounter -= Time.deltaTime;
+            }
         }
         //Player Death functionality
         #region Player death
@@ -777,7 +812,14 @@ public class playerController : MonoBehaviour
     {
         if (playerLives + 1 <= maxLives)
         {
-            playerLives++;
+            if (soulKeeperActive)
+            {
+                playerLives = playerLives + 2;
+            }else
+            {
+                playerLives++;
+            }
+            
             updateLiveUI();
         }
     }
@@ -1106,7 +1148,11 @@ public class playerController : MonoBehaviour
             lostSouls.TryGetValue("SoulKeeper", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {
-                //REWORK!
+                soulKeeperActive = true;
+            }
+            else
+            {
+                soulKeeperActive = false;
             }
         }
 
@@ -1114,6 +1160,10 @@ public class playerController : MonoBehaviour
         {
             lostSouls.TryGetValue("DeflectMissiles", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
+            {
+                deflectMissiles = true;
+            }
+            else
             {
                 deflectMissiles = true;
             }

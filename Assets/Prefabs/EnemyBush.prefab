@@ -47,7 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32e69c3f85c2da40a2c61c19452d975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineOfSite: 9
+  hasShield: 0
+  isDemon: 0
+  outBursted: 0
+  lineOfSite: 15
   maxHealth: 20
   fireRate: 1
   pointsToGive: 10

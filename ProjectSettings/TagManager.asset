@@ -15,6 +15,8 @@ TagManager:
   - Lancer
   - Bullet
   - Meteor
+  - Limit
+  - BossIgnore
   layers:
   - Default
   - TransparentFX
@@ -26,8 +28,8 @@ TagManager:
   - Bullet
   - Player
   - Trap
-  - 
-  - 
+  - BossIgnore
+  - Boss
   - 
   - 
   - 

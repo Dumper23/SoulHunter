@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class bulletSeeker : MonoBehaviour
+public class bulletSeeker : FatherBullet
 {
     private Vector2 moveDirection;
     [SerializeField]
@@ -78,5 +78,10 @@ public class bulletSeeker : MonoBehaviour
     private void OnDisable()
     {
         CancelInvoke();
+    }
+
+    public override void ChangeDirection()
+    {
+        moveDirection = (-player.transform.position + transform.position).normalized * moveSpeed;
     }
 }

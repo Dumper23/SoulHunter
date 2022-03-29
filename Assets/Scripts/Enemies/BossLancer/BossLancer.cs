@@ -141,7 +141,7 @@ public class BossLancer : FatherEnemy
         statesToRandomize[4] = State.Summoning;
 
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+
 
         SwitchState(State.Waiting);
 
@@ -246,6 +246,7 @@ public class BossLancer : FatherEnemy
             {
                 isActivated = true;
                 waitingStartTime = Time.time;
+                healthBar.SetMaxHealth(maxHealth);
                 healthBar.gameObject.SetActive(true);
                 actualFase = 1;
                 SwitchState(State.SwitchFase);

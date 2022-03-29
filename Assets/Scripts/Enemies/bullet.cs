@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class bullet : MonoBehaviour
+public class bullet : FatherBullet
 {
     private GameObject target;
     public float speed;
@@ -52,4 +52,9 @@ public class bullet : MonoBehaviour
         }
     }
 
+    public override void ChangeDirection()
+    {
+        Vector2 moveDir = (-target.transform.position + transform.position).normalized * speed;
+        bulletRB.velocity = new Vector2(moveDir.x, moveDir.y);
+    }
 }

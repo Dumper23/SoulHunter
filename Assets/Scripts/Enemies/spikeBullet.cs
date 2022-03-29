@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class spikeBullet : MonoBehaviour
+public class spikeBullet : FatherBullet
 {
     private Vector2 moveDirection;
     [SerializeField]
@@ -53,5 +53,10 @@ public class spikeBullet : MonoBehaviour
     private void OnDisable()
     {
         CancelInvoke();
+    }
+
+    public override void ChangeDirection()
+    {
+        moveDirection *= (-1);
     }
 }

@@ -19,7 +19,8 @@ public class BossShield : FatherEnemy
 
     [SerializeField]
     private GameObject meteor,
-        meteorsParticles;
+        meteorsParticles,
+        pointSpawnFront;
 
     private Transform player;
 
@@ -31,22 +32,48 @@ public class BossShield : FatherEnemy
     private State[] statesToRandomize;
 
     [SerializeField]
-    private int quantityMeteors;
+    private int quantityMeteors = 20,
+        quantityMeteorsV2 = 30,
+        quantityMeteorsV3 = 50;
 
     private int previousValue;
 
     [SerializeField]
-    private float speed,
+    private float speed = 2,
+        speedV2 = 3,
+        speedV3 = 4,
+        frontAttackSpeed = 10f,
+        frontAttackSpeedV2 = 20f,
+        frontAttackSpeedV3 = 30f,
         maxHealth = 200f,
         waitingDuration = 2f,
         walkingDuration = 3f,
+        walkingDurationV2 = 3f,
+        walkingDurationV3 = 1.5f,
         flippingDuration = 2.5f,
+        flippingDurationV3 = 1.5f,
         meteorsDuration = 5f,
+        meteorsDurationV2 = 8f,
+        meteorsDurationV3 = 8f,
         venomPreAnimationDuration = 1f,
         venomAnimationDuration = 5f,
+        venomAnimationDurationV2 = 4f,
+        venomAnimationDurationV3 = 2f,
         venomDuration = 10f,
-        frontAttackDuration = 1f,
+        frontAttackStep1 = 0.5f,
+        frontAttackStep2 = 0.5f,
+        frontAttackStep3 = 0.5f,
+        frontAttackDuration = 1.5f,
         meteorsAnimationDuration = 2.5f,
+        meteorsAnimationDurationV2 = 2f,
+        meteorsAnimationDurationV3 = 1.5f,
+        jumpAttackDuration = 5f,
+        jumpDuration = 0.5f,
+        jumpLevitationDuration = 3f,
+        jumpDownDuration = 0.25f,
+        maxHeight = 5f,
+        sismicWaitDuration = 1.5f,
+        sismicDuration = 1,
         switchFaseDuration = 2f;
 
     private float
@@ -59,6 +86,8 @@ public class BossShield : FatherEnemy
         venomAnimationStartTime,
         frontAttackStartTime,
         meteorsAnimationStartTime,
+        jumpAttackStartTime,
+        sismicStartTime,
         switchFaseStartTime;
 
     private bool isRight,
@@ -67,7 +96,10 @@ public class BossShield : FatherEnemy
         goFlip = false,
         resetWalking = true,
         venoming = false,
-        switchingFase = false;
+        switchingFase = false,
+        isRightForFront,
+        isFrontAttack = false,
+        sismic = false;
 
     private int actualFase = 0;
 
@@ -78,9 +110,23 @@ public class BossShield : FatherEnemy
     private BoxCollider2D area;
 
     private GameObject sprite,
-        meteorsParticlesGO;
+        meteorsParticlesGO,
+        wallGO;
 
     public HealthBarBoss healthBar;
+
+    [SerializeField]
+    private ParticleSystem wallMovement,
+        jumpImpact;
+
+    [SerializeField]
+    private GameObject
+        jumpDamageArea,
+        sismicEffect;
+
+    private Vector3 startPosition,
+        newPosition, 
+        newPosition2;
 
     // Start is called before the first frame update
     void Start()
@@ -92,22 +138,26 @@ public class BossShield : FatherEnemy
 
         area = transform.Find("Area").gameObject.GetComponent<BoxCollider2D>();
 
+
         meteorsParticlesGO = Instantiate(meteorsParticles);
         meteorsParticlesGO.transform.position = new Vector3(area.transform.position.x + area.offset.x, area.transform.position.y - 10, area.transform.position.z);
         meteorsParticlesGO.SetActive(false);
 
         sprite = transform.Find("Sprite").gameObject;
-        rb = sprite.GetComponent<Rigidbody2D>();
 
-        statesToRandomize = new State[2];
+        rb = sprite.GetComponent<Rigidbody2D>();
+        wallGO = sprite.transform.Find("Wall").gameObject;
+
+        statesToRandomize = new State[3];
 
         statesToRandomize[0] = State.Meteors;
         statesToRandomize[1] = State.Venom;
+        statesToRandomize[2] = State.FrontAttack;
 
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
 
-        SwitchState(State.FrontAttack);
+
+        SwitchState(State.Waiting);
 
         if(player.position.x >= rb.transform.position.x)
         {
@@ -195,6 +245,43 @@ public class BossShield : FatherEnemy
         }
         #endregion
 
+        #region Front atack
+        if (!wallGO.activeInHierarchy) {
+            isFrontAttack = false;
+            wallMovement.Stop();
+        }
+
+        if (isFrontAttack)
+        {
+            if (isRightForFront)
+            {
+                wallGO.transform.position = new Vector3(wallGO.transform.position.x + frontAttackSpeed * Time.deltaTime, wallGO.transform.position.y, 0);
+            }
+            else
+            {
+                wallGO.transform.position = new Vector3(wallGO.transform.position.x - frontAttackSpeed * Time.deltaTime, wallGO.transform.position.y, 0);
+            }
+            
+        }
+        #endregion
+
+        #region Sismic
+        if (sismic)
+        {
+            if(Time.time >= sismicStartTime + sismicWaitDuration)
+            {
+                sismicEffect.transform.position = new Vector3(sprite.transform.position.x, sismicEffect.transform.position.y, sismicEffect.transform.position.z);
+                sismicEffect.SetActive(true);
+                Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                if (Time.time >= sismicStartTime + sismicWaitDuration + sismicDuration)
+                {
+                    sismicEffect.SetActive(false);
+                    sismic = false;
+                }
+            }
+        }
+        #endregion
+
         #region Switch fase
         if (healthBar.GetPercentageOfHealth() <= 0.66 && actualFase == 1)
         {
@@ -262,6 +349,7 @@ public class BossShield : FatherEnemy
             if (rangeOfActivation.inRange())
             {
                 waitingStartTime = Time.time;
+                healthBar.SetMaxHealth(maxHealth);
                 healthBar.gameObject.SetActive(true);
                 isActivated = true;
                 actualFase = 1;
@@ -272,7 +360,14 @@ public class BossShield : FatherEnemy
         {
             if (Time.time >= waitingStartTime + waitingDuration)
             {
-                SwitchState(State.Walking);
+                if (!goFlip)
+                {
+                    SwitchState(State.Walking);
+                }
+                else
+                {
+                    SwitchState(State.Flipping);
+                }
             }
         }
     }
@@ -349,13 +444,51 @@ public class BossShield : FatherEnemy
     private void EnterFrontAttackState()
     {
         frontAttackStartTime = Time.time;
+        isRightForFront = isRight;
     }
 
     private void UpdateFrontAttackState()
     {
-        if (Time.time >= frontAttackStartTime + frontAttackDuration) 
+
+        if (Time.time >= frontAttackStartTime + frontAttackStep1)
         {
-            Debug.Log("ended");
+            if (Time.time >= frontAttackStartTime + frontAttackStep1 + frontAttackStep2)
+            {
+                if (Time.time >= frontAttackStartTime + frontAttackStep1 + frontAttackStep2 + frontAttackStep3)
+                {
+                    if (Time.time >= frontAttackStartTime + frontAttackStep1 + frontAttackStep2 + frontAttackStep3 + frontAttackDuration)
+                    {
+                        if (!goFlip)
+                        {
+                            SwitchState(State.Walking);
+                        }
+                        else
+                        {
+                            SwitchState(State.Flipping);
+                        }
+                    }
+                    else
+                    {
+                        //"moure"
+                        wallMovement.Play();
+                        isFrontAttack = true;
+                    }
+                }
+                else
+                {
+                    //animacio cop a paret
+                }
+            }
+            else
+            {
+                //puja paret + animacio cop
+                wallGO.transform.position = pointSpawnFront.transform.position;
+                wallGO.SetActive(true);
+            }
+        }
+        else
+        {
+            //animacio cop
         }
     }
 
@@ -442,17 +575,63 @@ public class BossShield : FatherEnemy
     #region JUMPATTACK
     private void EnterJumpAttackState()
     {
-
+        jumpAttackStartTime = Time.time;
+        startPosition = sprite.transform.position;
+        rb.gravityScale = 0;
     }
 
     private void UpdateJumpAttackState()
     {
+        
+        if (Time.time >= jumpAttackStartTime + jumpDuration)
+        {
 
+            if (Time.time >= jumpAttackStartTime + jumpDuration + jumpLevitationDuration)
+            {
+                //caient
+                float height = Lerp(newPosition2.y, startPosition.y, jumpAttackStartTime + jumpDuration + jumpLevitationDuration, jumpDownDuration);
+                sprite.transform.position = new Vector3(newPosition2.x, height, newPosition2.z);
+                if (Time.time >= jumpAttackStartTime + jumpDuration + jumpLevitationDuration + jumpDownDuration)
+                {
+                    sismicStartTime = Time.time;
+                    sismic = true;
+                    jumpImpact.Play();
+                    if (!goFlip)
+                    {
+                        SwitchState(State.Walking);
+                    }
+                    else
+                    {
+                        SwitchState(State.Flipping);
+                    }
+                }
+            }
+            else
+            {
+                if ((!isRight && sprite.transform.localRotation.y >= 0) || (isRight && sprite.transform.localRotation.y < 0))
+                {
+                    sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
+                }
+                //levitant
+                float pos = Lerp(newPosition.x, player.position.x, jumpAttackStartTime + jumpDuration, jumpLevitationDuration);
+                sprite.transform.position = new Vector3(pos, newPosition.y, newPosition.z);
+                newPosition2 = sprite.transform.position;
+                jumpDamageArea.SetActive(true);
+            }
+        }
+        else
+        {
+            //pujant
+            float height = Lerp(startPosition.y, startPosition.y + maxHeight, jumpAttackStartTime, jumpDuration);
+            sprite.transform.position = new Vector3(startPosition.x, height, startPosition.z);
+            newPosition = sprite.transform.position;
+        }
     }
 
     private void ExitJumpAttackState()
     {
-
+        jumpDamageArea.SetActive(false);
+        rb.gravityScale = 10;
     }
     #endregion
 
@@ -464,13 +643,48 @@ public class BossShield : FatherEnemy
         {
             case 1:
                 //spriteAnimator.Play("boss1SwitchFaseAnimation1");
+
+                Debug.Log(actualFase);
                 break;
             case 2:
+                Debug.Log(actualFase);
+                meteorsAnimationDuration = meteorsAnimationDurationV2;
+                meteorsDuration = meteorsDurationV2;
+                quantityMeteors = quantityMeteorsV2;
+                speed = speedV2;
+                venomAnimationDuration = venomAnimationDurationV2;
+                walkingDuration = walkingDurationV2;
+                frontAttackSpeed = frontAttackSpeedV2;
+
+                statesToRandomize = new State[7];
+
+                statesToRandomize[0] = State.Meteors;
+                statesToRandomize[1] = State.Venom;
+                statesToRandomize[2] = State.FrontAttack;
+                statesToRandomize[3] = State.Meteors;
+                statesToRandomize[4] = State.Venom;
+                statesToRandomize[5] = State.FrontAttack;
+                statesToRandomize[6] = State.JumpAttack;
+                
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
+                Debug.Log(actualFase);
+                meteorsAnimationDuration = meteorsAnimationDurationV3;
+                meteorsDuration = meteorsDurationV3;
+                quantityMeteors = quantityMeteorsV3;
+                speed = speedV3;
+                venomAnimationDuration = venomAnimationDurationV3;
+                walkingDuration = walkingDurationV3;
+                frontAttackSpeed = frontAttackSpeedV3;
+                flippingDuration = flippingDurationV3;
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
+        }
+
+        if ((!isRight && sprite.transform.localRotation.y >= 0) || (isRight && sprite.transform.localRotation.y < 0))
+        {
+            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
 
         switchingFase = true;
@@ -481,12 +695,30 @@ public class BossShield : FatherEnemy
     {
         if (Time.time >= switchFaseStartTime + switchFaseDuration)
         {
-            SwitchState(State.Waiting);
+            if (actualFase == 2 || actualFase == 3)
+            {
+                SwitchState(State.JumpAttack);
+            }
+            else
+            {
+                if (!goFlip)
+                {
+                    SwitchState(State.Walking);
+                }
+                else
+                {
+                    SwitchState(State.Flipping);
+                }
+            }
         }
     }
 
     private void ExitSwitchFaseState()
     {
+        if ((!isRight && sprite.transform.localRotation.y >= 0) || (isRight && sprite.transform.localRotation.y < 0))
+        {
+            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
+        }
         //spriteAnimator.Play("noBoss1Animation");
         switchingFase = false;
     }
@@ -579,6 +811,7 @@ public class BossShield : FatherEnemy
 
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
+
         if (!switchingFase)
         {
             if (!((isRight && sprite.transform.localRotation.y >= 0) || (!isRight && sprite.transform.localRotation.y < 0))) {
@@ -627,17 +860,24 @@ public class BossShield : FatherEnemy
 
     private State RandomBehaviour()
     {
-        //TMP
-        if (meteoring && venoming)
+
+        if (meteoring && venoming && isFrontAttack)
         {
-            return State.Walking;
+            if (actualFase == 3)
+            {
+                return State.JumpAttack;
+            }
+            else
+            {
+                return State.Walking;
+            }
         }
 
         bool isOk = false;
         while (!isOk)
         {
             int pos = Random.Range(0, (statesToRandomize.Length));
-            if (!(statesToRandomize[pos] == State.Meteors && meteoring) && !(statesToRandomize[pos] == State.Venom && venoming))
+            if (!(statesToRandomize[pos] == State.Meteors && meteoring) && !(statesToRandomize[pos] == State.Venom && venoming) && !(statesToRandomize[pos] == State.FrontAttack && isFrontAttack))
             {
                 return statesToRandomize[pos];
             }
@@ -660,4 +900,5 @@ public class BossShield : FatherEnemy
     {
         Debug.Log("Im a BOSS");
     }
+
 }

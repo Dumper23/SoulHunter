@@ -13,4 +13,9 @@ public class Traps : MonoBehaviour
         fireflies.gameObject.SetActive(b);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collision.transform.GetComponent<Collider2D>());
+    }
+
 }

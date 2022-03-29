@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4932624734452684506}
   - component: {fileID: 4932624734452684507}
   - component: {fileID: 4932624734452684505}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyBush
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4932624734452684508}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.68, y: 7.84, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 8383826291030871382}
   - {fileID: 4932624734542823667}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 4932624734542823667}
   - component: {fileID: 4932624734542823664}
   - component: {fileID: 4932624734542823665}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ Transform:
   m_GameObject: {fileID: 4932624734542823668}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2961, y: 1.4431679, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4932624734452684506}
   m_RootOrder: 1
@@ -151,8 +151,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_SortingOrder: 12
+  m_Sprite: {fileID: -3850695484508678334, guid: c04c18e18ea5d6c42bc5ba064ac4f36c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -176,7 +176,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.015576243, y: -0.119420916}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -187,7 +187,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5050087, y: 0.76115817}
   m_EdgeRadius: 0
 --- !u!1001 &2802777984217461635
 PrefabInstance:
@@ -244,6 +244,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: damage
       objectReference: {fileID: 0}
+    - target: {fileID: 4667452001360329845, guid: bf4753790a6749346bf259581db78257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf4753790a6749346bf259581db78257, type: 3}
 --- !u!4 &7359842109442081860 stripped
@@ -266,6 +270,10 @@ PrefabInstance:
     - target: {fileID: 3471538194326709626, guid: 03536a62169f6964da1ab471c55276cd, type: 3}
       propertyPath: m_Name
       value: BulletPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 3471538194326709626, guid: 03536a62169f6964da1ab471c55276cd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3471538194326709628, guid: 03536a62169f6964da1ab471c55276cd, type: 3}
       propertyPath: m_RootOrder

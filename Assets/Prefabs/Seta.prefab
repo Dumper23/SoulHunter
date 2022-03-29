@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 9
   m_Sprite: {fileID: 21300000, guid: ea76b69b094d37e4383b34be9bcd0946, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioToPlay: {fileID: 8300000, guid: 0758e8c21f6438741af4ce00f5baa4c1, type: 3}
   bounceForce: 1000
+  directionToBounce: {x: 0, y: 1}
 --- !u!61 &6135871449785715564
 BoxCollider2D:
   m_ObjectHideFlags: 0

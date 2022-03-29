@@ -1,0 +1,900 @@
+fileFormatVersion: 2
+guid: 9783cde6f49a9e544a752738865a4d8d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8377231016308211411
+    second: PC_Computer_-_Planet_Centauri_-_Hell_0
+  - first:
+      213: -9076577744835004024
+    second: PC_Computer_-_Planet_Centauri_-_Hell_1
+  - first:
+      213: -3609873281436472278
+    second: PC_Computer_-_Planet_Centauri_-_Hell_2
+  - first:
+      213: 7320368797642065791
+    second: PC_Computer_-_Planet_Centauri_-_Hell_3
+  - first:
+      213: 4205106208365940577
+    second: PC_Computer_-_Planet_Centauri_-_Hell_4
+  - first:
+      213: 3973784836597252854
+    second: PC_Computer_-_Planet_Centauri_-_Hell_5
+  - first:
+      213: 5546969113762560553
+    second: PC_Computer_-_Planet_Centauri_-_Hell_6
+  - first:
+      213: 5068077323405844346
+    second: PC_Computer_-_Planet_Centauri_-_Hell_7
+  - first:
+      213: -5926736667435915656
+    second: PC_Computer_-_Planet_Centauri_-_Hell_8
+  - first:
+      213: 1990098969848255003
+    second: PC_Computer_-_Planet_Centauri_-_Hell_9
+  - first:
+      213: -5278019761691792397
+    second: PC_Computer_-_Planet_Centauri_-_Hell_10
+  - first:
+      213: 5028033643689516546
+    second: PC_Computer_-_Planet_Centauri_-_Hell_11
+  - first:
+      213: 9012806172957961437
+    second: PC_Computer_-_Planet_Centauri_-_Hell_12
+  - first:
+      213: -7318272675355101642
+    second: PC_Computer_-_Planet_Centauri_-_Hell_13
+  - first:
+      213: -5124008098940552685
+    second: PC_Computer_-_Planet_Centauri_-_Hell_14
+  - first:
+      213: -2986982564150718475
+    second: PC_Computer_-_Planet_Centauri_-_Hell_15
+  - first:
+      213: -2097578861003679817
+    second: PC_Computer_-_Planet_Centauri_-_Hell_16
+  - first:
+      213: 7765093592882850406
+    second: PC_Computer_-_Planet_Centauri_-_Hell_17
+  - first:
+      213: 6578154709435921818
+    second: PC_Computer_-_Planet_Centauri_-_Hell_18
+  - first:
+      213: -4228080034388861038
+    second: PC_Computer_-_Planet_Centauri_-_Hell_19
+  - first:
+      213: -1232791571126659971
+    second: PC_Computer_-_Planet_Centauri_-_Hell_20
+  - first:
+      213: 5820182947276999618
+    second: PC_Computer_-_Planet_Centauri_-_Hell_21
+  - first:
+      213: -9116534237891504382
+    second: PC_Computer_-_Planet_Centauri_-_Hell_22
+  - first:
+      213: 8006808418504572328
+    second: PC_Computer_-_Planet_Centauri_-_Hell_23
+  - first:
+      213: 2401941225728485482
+    second: PC_Computer_-_Planet_Centauri_-_Hell_24
+  - first:
+      213: 4185579395969693854
+    second: PC_Computer_-_Planet_Centauri_-_Hell_25
+  - first:
+      213: 6808664017281700884
+    second: PC_Computer_-_Planet_Centauri_-_Hell_26
+  - first:
+      213: 3441148118199037405
+    second: PC_Computer_-_Planet_Centauri_-_Hell_27
+  - first:
+      213: -4266648869523867209
+    second: PC_Computer_-_Planet_Centauri_-_Hell_28
+  - first:
+      213: 6389160068733545961
+    second: PC_Computer_-_Planet_Centauri_-_Hell_29
+  - first:
+      213: 1475398032871821066
+    second: PC_Computer_-_Planet_Centauri_-_Hell_30
+  - first:
+      213: -200463180892155912
+    second: PC_Computer_-_Planet_Centauri_-_Hell_31
+  - first:
+      213: 1981157514255638255
+    second: PC_Computer_-_Planet_Centauri_-_Hell_32
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 828
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3de7f609937e14470800000000000000
+      internalID: 8377231016308211411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 172
+        width: 675
+        height: 357
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 889b4ee71a4890280800000000000000
+      internalID: -9076577744835004024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 624
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2c2ecf506727edc0800000000000000
+      internalID: -3609873281436472278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_3
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 259
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f770f40f2ac279560800000000000000
+      internalID: 7320368797642065791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_4
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 259
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16f017021d98b5a30800000000000000
+      internalID: 4205106208365940577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_5
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 259
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f2863f3148b52730800000000000000
+      internalID: 3973784836597252854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_6
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 259
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92a71e5150bcafc40800000000000000
+      internalID: 5546969113762560553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_7
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 259
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f51db497d655640800000000000000
+      internalID: 5068077323405844346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_8
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 395
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8762334f66000cda0800000000000000
+      internalID: -5926736667435915656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_9
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 395
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b121da518704e9b10800000000000000
+      internalID: 1990098969848255003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_10
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 125
+        width: 11
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fb6edaadf4b0c6b0800000000000000
+      internalID: -5278019761691792397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_11
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20e93d295f927c540800000000000000
+      internalID: 5028033643689516546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_12
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddc6b90667be31d70800000000000000
+      internalID: 9012806172957961437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_13
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 636f20096c5407a90800000000000000
+      internalID: -7318272675355101642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_14
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31a7c6c38cdd3e8b0800000000000000
+      internalID: -5124008098940552685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_15
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ffc2810f2b1c86d0800000000000000
+      internalID: -2986982564150718475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_16
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b7d18da327e3e2e0800000000000000
+      internalID: -2097578861003679817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_17
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66aa1734b7723cb60800000000000000
+      internalID: 7765093592882850406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_18
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 394
+        width: 5
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a95bd7d0bdc4a4b50800000000000000
+      internalID: 6578154709435921818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_19
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 202
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29f945c2c97d255c0800000000000000
+      internalID: -4228080034388861038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_20
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 202
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7456e0099e34eee0800000000000000
+      internalID: -1232791571126659971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_21
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 202
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cb4b3ccd8175c050800000000000000
+      internalID: 5820182947276999618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_22
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 202
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2075acf79609b7180800000000000000
+      internalID: -9116534237891504382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_23
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 145
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ad7291b5d5ed1f60800000000000000
+      internalID: 8006808418504572328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_24
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 145
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a68a9ea91d8655120800000000000000
+      internalID: 2401941225728485482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_25
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 145
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e98b7f3d84a261a30800000000000000
+      internalID: 4185579395969693854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_26
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 145
+        width: 11
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4145f0199db3d7e50800000000000000
+      internalID: 6808664017281700884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_27
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 137
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddde1c44bf961cf20800000000000000
+      internalID: 3441148118199037405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_28
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 133
+        width: 10
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b935b67571d9c4c0800000000000000
+      internalID: -4266648869523867209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_29
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 141
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ed29f53b3bdaa850800000000000000
+      internalID: 6389160068733545961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_30
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 135
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0f82a3a1baa97410800000000000000
+      internalID: 1475398032871821066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_31
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 128
+        width: 14
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ffc0609ccfc73df0800000000000000
+      internalID: -200463180892155912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC_Computer_-_Planet_Centauri_-_Hell_32
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 138
+        width: 13
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fee9d49334c7e7b10800000000000000
+      internalID: 1981157514255638255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 1fdeed58788bea94db2dd8e7ebe2ff44
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

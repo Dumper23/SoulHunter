@@ -391,6 +391,7 @@ MonoBehaviour:
   outBurstRange: 0.5
   outBurstDamage: 2
   currentLevel: Tutorial
+  venomBar: {fileID: 0}
 --- !u!95 &4556257231163928202
 Animator:
   serializedVersion: 3

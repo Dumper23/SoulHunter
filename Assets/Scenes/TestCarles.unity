@@ -4461,6 +4461,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bg_hell
       objectReference: {fileID: 0}
+    - target: {fileID: 2927895574296886552, guid: 30187bdde63cd30439ee45d1e0b2ec35, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3090085956439088661, guid: 30187bdde63cd30439ee45d1e0b2ec35, type: 3}
       propertyPath: m_RootOrder
       value: 1

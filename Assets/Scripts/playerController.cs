@@ -172,6 +172,7 @@ public class playerController : MonoBehaviour
         if (loadPlayerData)
         {
             loadPlayer();
+            updateInventory();
             GameObject startPos = GameObject.FindGameObjectWithTag("Start");
             if (startPos != null) {
                 transform.position = startPos.transform.position;
@@ -258,6 +259,22 @@ public class playerController : MonoBehaviour
                     ls.lostSoulName = temp.lostSouls[i];
                     ls.isActive = true;
                     ls.isEquiped = false;
+                    for (int j = 0; j < temp.equippedLostSouls.Length; j++)
+                    {
+                        if (!ls.isEquiped)
+                        {
+                            if (temp.equippedLostSouls[j] == temp.lostSouls[i])
+                            {
+                                ls.isEquiped = true;
+                                break;
+                            }
+                            else
+                            {
+                                ls.isEquiped = false;
+                            }
+                        }
+                    }
+                    
                     lostSouls.Add(temp.lostSouls[i], ls);
                 }
             }
@@ -835,7 +852,10 @@ public class playerController : MonoBehaviour
         
         if (collision.transform.tag == "LostSoul")
         {
-            lostSouls.Add(collision.transform.GetComponent<LostSouls>().lostSoulName, collision.transform.GetComponent<LostSouls>());
+            if (!lostSouls.TryGetValue(collision.GetComponent<LostSouls>().lostSoulName, out LostSouls ls))
+            {
+                lostSouls.Add(collision.transform.GetComponent<LostSouls>().lostSoulName, collision.transform.GetComponent<LostSouls>());
+            }
             Destroy(collision.gameObject);
         }
 
@@ -1184,11 +1204,13 @@ public class playerController : MonoBehaviour
     {
         for (int i = 0; i < lostSoulToggles.Count; i++)
         {
-            
-
             if (lostSouls.TryGetValue(lostSoulToggles[i].name, out LostSouls ls))
             {
-                
+                if (ls.isEquiped)
+                {
+                    lostSoulToggles[i].GetComponent<Toggle>().SetIsOnWithoutNotify(true);
+                }
+
                 Color c = lostSoulToggles[i].GetComponent<Image>().color;
                 c.a = 1f;
                 lostSoulToggles[i].GetComponent<Image>().color = c;
@@ -1282,7 +1304,6 @@ public class playerController : MonoBehaviour
 
     public void toggleLostSoul(string value)
     {
-        Debug.Log(lostSoulsEquipped);
         if (lostSouls.TryGetValue(value, out LostSouls ls))
         {
             if (lostSoulsEquipped <= maxLostSoulsEquipped)

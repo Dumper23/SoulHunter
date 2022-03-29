@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class PlayerSave{
     private static string path = Application.persistentDataPath + "/player.shs";
-
+    
     public static void SavePlayer(playerController player)
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -22,8 +22,12 @@ public static class PlayerSave{
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
-            PlayerData data = formatter.Deserialize(stream) as PlayerData;
-            stream.Close();
+            PlayerData data = null;
+            if (stream.Length > 0)
+            {
+                data = formatter.Deserialize(stream) as PlayerData;
+                stream.Close();
+            }
             return data;
         }
         else

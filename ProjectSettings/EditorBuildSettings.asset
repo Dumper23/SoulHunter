@@ -15,15 +15,42 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial.unity
     guid: cff725c2505b9d144a480222ad06d1b0
   - enabled: 1
-    path: Assets/Scenes/Old/World1Level1.unity
-    guid: 6dfd6308ebefbed4cbe059d8e69f066a
+    path: Assets/Scenes/World1/L1W1.unity
+    guid: 42e10aba130fcc14db9d75a811ac6f9f
   - enabled: 1
-    path: Assets/Scenes/Old/World1Level2.unity
-    guid: d8c682ae6b907cd44bfedac7730ae8db
+    path: Assets/Scenes/World1/L2W1.unity
+    guid: fcbf216cfd8c5c7458f21755c69c1b29
   - enabled: 1
-    path: Assets/Scenes/Old/World1Level3.unity
-    guid: 88779900165e70649bd385debb2f5999
+    path: Assets/Scenes/World1/L3W1.unity
+    guid: 3a60921f2df69e54e899c7c0cbec7dcc
   - enabled: 1
-    path: Assets/Scenes/DemoEnd.unity
-    guid: fd5cd76cd5e84e144a5b50a00e23dc65
+    path: Assets/Scenes/World1/L4W1.unity
+    guid: 29d7845e6947c2e4c88bce684a5a70e9
+  - enabled: 1
+    path: Assets/Scenes/World1/L5W1.unity
+    guid: dfcaf011c8ab4be41a965bf4e96b71a4
+  - enabled: 1
+    path: Assets/Scenes/World1/L6W1.unity
+    guid: 54e90efef698f6740bafd8e434add245
+  - enabled: 1
+    path: Assets/Scenes/World1/L7W1.unity
+    guid: 9e7674a86ac872840ab80536f49a4553
+  - enabled: 1
+    path: Assets/Scenes/World1/Bossw1.unity
+    guid: 8e8c6a76f933e9a40ad13e8b01ae7330
+  - enabled: 1
+    path: Assets/Scenes/World2/L1W2.unity
+    guid: ea48d9bb3d24f5446ace396729b501f2
+  - enabled: 1
+    path: Assets/Scenes/World2/L2W2.unity
+    guid: 0e7c0687a1cb21d4d9efefd3fd0e4f21
+  - enabled: 1
+    path: Assets/Scenes/World2/L3W2.unity
+    guid: 476000a16f4607a4a82dbbc5080633c7
+  - enabled: 1
+    path: Assets/Scenes/World2/L4W2.unity
+    guid: 3ce1c0cfe32c08043963ef2107a8ff3f
+  - enabled: 1
+    path: Assets/Scenes/World2/BossW2.unity
+    guid: e199b318b7cdc9e44b4842a8b588474f
   m_configObjects: {}

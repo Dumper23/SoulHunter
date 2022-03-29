@@ -14,6 +14,7 @@ public class PlayerData{
     public float speed;
     public int jumpAmount;
     public string currentLevel;
+    public string[] equippedLostSouls;
 
     public PlayerData(playerController player)
     {
@@ -29,26 +30,110 @@ public class PlayerData{
         currentLevel = player.currentLevel;
 
         int i = 0;
+        int j = 0;
         LostSouls ls;
+        equippedLostSouls = new string[3];
         lostSouls = new string[12];
 
         if (player.lostSouls.TryGetValue("Light", out ls))
         {
             lostSouls[i] = "Light";
+            if (ls.isEquiped) {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
             i++;
         }
 
         if (player.lostSouls.TryGetValue("Thorns", out ls))
         {
             lostSouls[i] = "Thorns";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
             i++;
         }
 
         if (player.lostSouls.TryGetValue("Fireflies", out ls))
         {
             lostSouls[i] = "Fireflies";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
             i++;
         }
+
+        if (player.lostSouls.TryGetValue("StoneBreaker", out ls))
+        {
+            lostSouls[i] = "StoneBreaker";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("OutBurst", out ls))
+        {
+            lostSouls[i] = "OutBurst";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("HardSkin", out ls))
+        {
+            lostSouls[i] = "HardSkin";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("SoulKeeper", out ls))
+        {
+            lostSouls[i] = "SoulKeeper";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("DeflectMissiles", out ls))
+        {
+            lostSouls[i] = "DeflectMissiles";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("HolyWater", out ls))
+        {
+            lostSouls[i] = "HolyWater";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+
 
         speed = player.playerVelocity;
         jumpAmount = player.maxJumps;

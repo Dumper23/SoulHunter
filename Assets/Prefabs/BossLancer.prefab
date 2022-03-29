@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457171828721783354}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.8899975, y: -8.056, z: 0}
+  m_LocalPosition: {x: -12.16, y: -8.056, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1457171829281863490}
@@ -501,7 +501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2932851596736761993}
   - component: {fileID: 8390316127650355213}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LancerCollider
   m_TagString: Lancer
   m_Icon: {fileID: 0}

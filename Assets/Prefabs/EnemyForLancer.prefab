@@ -53,6 +53,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850e59ad1744a0b4a8ed5e8c69741084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasShield: 0
+  isDemon: 0
+  outBursted: 0
   damageToPlayer: 1
   pointsToGive: 10
   audios:

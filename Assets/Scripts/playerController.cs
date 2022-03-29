@@ -296,6 +296,45 @@ public class playerController : MonoBehaviour
 
     //-----------TODO: FixedUpdate (All the physics calculation and Update All the imput recievement)
 
+    private void FixedUpdate()
+    {
+        #region Venom functionality
+
+        if (venomed)
+        {
+            venomBar.SetTime(venomAffectDuration - Time.time + venomStartTime);
+            if (Time.time >= venomStartTime + venomAffectDuration)
+            {
+                //takedamage
+                playerSounds[4].Play();
+                playerLives--;
+                updateLiveUI();
+
+                venomBar.gameObject.SetActive(false);
+                venomed = false;
+                distanceTraveled = 0;
+            }
+            else
+            {
+                if (Time.time >= venomPositionStart + venomPositionCount)
+                {
+                    lastPosition = this.transform.position;
+                    venomPositionStart = Time.time;
+                }
+                distanceTraveled += Vector3.Distance(this.transform.position, lastPosition);
+                venomBar.SetVenom(distanceForVenom - distanceTraveled);
+                //Debug.Log(distanceTraveled);
+                if (distanceTraveled >= distanceForVenom)
+                {
+                    venomed = false;
+                    venomBar.gameObject.SetActive(false);
+                    distanceTraveled = 0;
+                }
+            }
+        }
+        #endregion
+    }
+
     [System.Obsolete]
     void Update()
     {
@@ -785,41 +824,7 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-        #region Venom functionality
-
-        if (venomed)
-        {
-            venomBar.SetTime(venomAffectDuration - Time.time + venomStartTime);
-            if (Time.time >= venomStartTime + venomAffectDuration)
-            {
-                //takedamage
-                playerSounds[4].Play();
-                playerLives--;
-                updateLiveUI();
-
-                venomBar.gameObject.SetActive(false);
-                venomed = false;
-                distanceTraveled = 0;
-            }
-            else
-            {
-                if (Time.time >= venomPositionStart + venomPositionCount)
-                {
-                    lastPosition = this.transform.position;
-                    venomPositionStart = Time.time;
-                }
-                distanceTraveled += Vector3.Distance(this.transform.position, lastPosition);
-                venomBar.SetVenom(distanceForVenom - distanceTraveled);
-                //Debug.Log(distanceTraveled);
-                if (distanceTraveled >= distanceForVenom)
-                {
-                    venomed = false;
-                    venomBar.gameObject.SetActive(false);
-                    distanceTraveled = 0;
-                }
-            }
-        }
-        #endregion
+        
 
         paused = GameManager.Instance.isPaused();
     }

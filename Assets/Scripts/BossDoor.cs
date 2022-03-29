@@ -16,7 +16,7 @@ public class BossDoor : MonoBehaviour
     {
         if(entityToEliminate == null && barriers != null)
         {
-            Destroy(barriers);
+            Destroy(this.gameObject);
         }
     }
 

@@ -2113,6 +2113,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 129f24075848f6d4ca06447874993329, type: 3}
+--- !u!114 &532561632 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3097075079902439313, guid: 9838d8b0aa67cbf499c50fe3ae93e07e, type: 3}
+  m_PrefabInstance: {fileID: 1789166696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e01a88c8d2d9646803de7ce90d8e48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &685033246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3885,6 +3896,10 @@ PrefabInstance:
       propertyPath: shield
       value: 
       objectReference: {fileID: 1789166700}
+    - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
+      propertyPath: venomBar
+      value: 
+      objectReference: {fileID: 532561632}
     - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
       propertyPath: inventoryUI
       value: 

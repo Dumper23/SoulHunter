@@ -170,7 +170,7 @@ public class BossShield : FatherEnemy
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         #region Flip
         if (isRight && player.position.x <= rb.transform.position.x)

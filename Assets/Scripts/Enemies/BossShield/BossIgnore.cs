@@ -9,7 +9,10 @@ public class BossIgnore : MonoBehaviour
     {
         if (collision.transform.tag == "BossIgnore")
         {
-            Physics2D.IgnoreCollision(transform.GetComponent<Collider2D>(), collision.transform.GetComponent<Collider2D>());
+            foreach (Collider2D c in transform.GetComponents<Collider2D>())
+            {
+                Physics2D.IgnoreCollision(c, collision.transform.GetComponent<Collider2D>());
+            }
         }
     }
 }

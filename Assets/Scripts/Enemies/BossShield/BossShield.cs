@@ -45,12 +45,13 @@ public class BossShield : FatherEnemy
         frontAttackSpeed = 10f,
         frontAttackSpeedV2 = 20f,
         frontAttackSpeedV3 = 30f,
-        maxHealth = 200f,
+        maxHealth = 500f,
         waitingDuration = 2f,
         walkingDuration = 3f,
         walkingDurationV2 = 3f,
         walkingDurationV3 = 1.5f,
         flippingDuration = 2.5f,
+        flippingDurationV2 = 2f,
         flippingDurationV3 = 1.5f,
         meteorsDuration = 5f,
         meteorsDurationV2 = 8f,
@@ -60,19 +61,22 @@ public class BossShield : FatherEnemy
         venomAnimationDurationV2 = 4f,
         venomAnimationDurationV3 = 2f,
         venomDuration = 10f,
-        frontAttackStep1 = 0.5f,
-        frontAttackStep2 = 0.5f,
+        frontAttackStep1 = 0.75f,
+        frontAttackStep2 = 0.25f,
         frontAttackStep3 = 0.5f,
-        frontAttackDuration = 1.5f,
+        frontAttackDuration = 1f,
+        frontAttackDurationV2 = 0.2f,
         meteorsAnimationDuration = 2.5f,
         meteorsAnimationDurationV2 = 2f,
         meteorsAnimationDurationV3 = 1.5f,
-        jumpAttackDuration = 5f,
+       // jumpAttackDuration = 5f,
         jumpDuration = 0.5f,
+        jumpDurationV3 = 0.25f,
         jumpLevitationDuration = 3f,
-        jumpDownDuration = 0.25f,
-        maxHeight = 5f,
-        sismicWaitDuration = 1.5f,
+        jumpLevitationDurationV3 = 2f,
+        jumpDownDuration = 0.1f,
+        maxHeight = 8f,
+        sismicWaitDuration = 0.25f,
         sismicDuration = 1,
         switchFaseDuration = 2f;
 
@@ -122,11 +126,19 @@ public class BossShield : FatherEnemy
     [SerializeField]
     private GameObject
         jumpDamageArea,
-        sismicEffect;
+        sismicEffect,
+        shield,
+        hardSkinSoul, 
+        portal;
 
     private Vector3 startPosition,
         newPosition, 
         newPosition2;
+
+    private Animator spriteAnimator;
+
+    private string venomAnimation = "ShieldVenom",
+        jumpAnimation = "ShieldJump";
 
     // Start is called before the first frame update
     void Start()
@@ -140,13 +152,14 @@ public class BossShield : FatherEnemy
 
 
         meteorsParticlesGO = Instantiate(meteorsParticles);
-        meteorsParticlesGO.transform.position = new Vector3(area.transform.position.x + area.offset.x, area.transform.position.y - 10, area.transform.position.z);
+        meteorsParticlesGO.transform.position = new Vector3(area.transform.position.x + area.offset.x, area.transform.position.y - 5, area.transform.position.z);
         meteorsParticlesGO.SetActive(false);
 
         sprite = transform.Find("Sprite").gameObject;
+        spriteAnimator = sprite.GetComponent<Animator>();
 
         rb = sprite.GetComponent<Rigidbody2D>();
-        wallGO = sprite.transform.Find("Wall").gameObject;
+        wallGO = sprite.transform.Find("Pivot").gameObject.transform.Find("Wall").gameObject;
 
         statesToRandomize = new State[3];
 
@@ -270,6 +283,7 @@ public class BossShield : FatherEnemy
         {
             if(Time.time >= sismicStartTime + sismicWaitDuration)
             {
+                shield.SetActive(true);
                 sismicEffect.transform.position = new Vector3(sprite.transform.position.x, sismicEffect.transform.position.y, sismicEffect.transform.position.z);
                 sismicEffect.SetActive(true);
                 Camera.main.GetComponent<Animator>().SetTrigger("shake");
@@ -277,6 +291,7 @@ public class BossShield : FatherEnemy
                 {
                     sismicEffect.SetActive(false);
                     sismic = false;
+                    spriteAnimator.Play("ShieldIdle");
                 }
             }
         }
@@ -445,6 +460,7 @@ public class BossShield : FatherEnemy
     {
         frontAttackStartTime = Time.time;
         isRightForFront = isRight;
+        spriteAnimator.Play("ShieldFront");
     }
 
     private void UpdateFrontAttackState()
@@ -494,7 +510,7 @@ public class BossShield : FatherEnemy
 
     private void ExitFrontAttackState()
     {
-
+        spriteAnimator.Play("ShieldIdle");
     }
     #endregion
 
@@ -505,6 +521,7 @@ public class BossShield : FatherEnemy
         meteorsParticlesGO.SetActive(false);
         meteorsAnimationStartTime = Time.time;
         previousValue = 0;
+        spriteAnimator.Play("ShieldMeteors");
     }
 
     private void UpdateMeteorsState()
@@ -528,7 +545,7 @@ public class BossShield : FatherEnemy
 
     private void ExitMeteorsState()
     {
-
+        spriteAnimator.Play("ShieldIdle");
     }
     #endregion
 
@@ -538,6 +555,7 @@ public class BossShield : FatherEnemy
     {
         venomAnimationStartTime = Time.time;
         //play animation
+        spriteAnimator.Play(venomAnimation);
     }
 
     private void UpdateVenomState()
@@ -567,7 +585,7 @@ public class BossShield : FatherEnemy
 
     private void ExitVenomState()
     {
-
+        spriteAnimator.Play("ShieldIdle");
     }
     #endregion
 
@@ -578,6 +596,7 @@ public class BossShield : FatherEnemy
         jumpAttackStartTime = Time.time;
         startPosition = sprite.transform.position;
         rb.gravityScale = 0;
+        spriteAnimator.Play(jumpAnimation);
     }
 
     private void UpdateJumpAttackState()
@@ -591,14 +610,16 @@ public class BossShield : FatherEnemy
                 //caient
                 float height = Lerp(newPosition2.y, startPosition.y, jumpAttackStartTime + jumpDuration + jumpLevitationDuration, jumpDownDuration);
                 sprite.transform.position = new Vector3(newPosition2.x, height, newPosition2.z);
+                shield.SetActive(false);
                 if (Time.time >= jumpAttackStartTime + jumpDuration + jumpLevitationDuration + jumpDownDuration)
                 {
                     sismicStartTime = Time.time;
                     sismic = true;
+                    Camera.main.GetComponent<Animator>().SetTrigger("shake");
                     jumpImpact.Play();
                     if (!goFlip)
                     {
-                        SwitchState(State.Walking);
+                        SwitchState(RandomBehaviour());
                     }
                     else
                     {
@@ -644,10 +665,9 @@ public class BossShield : FatherEnemy
             case 1:
                 //spriteAnimator.Play("boss1SwitchFaseAnimation1");
 
-                Debug.Log(actualFase);
                 break;
             case 2:
-                Debug.Log(actualFase);
+
                 meteorsAnimationDuration = meteorsAnimationDurationV2;
                 meteorsDuration = meteorsDurationV2;
                 quantityMeteors = quantityMeteorsV2;
@@ -655,7 +675,9 @@ public class BossShield : FatherEnemy
                 venomAnimationDuration = venomAnimationDurationV2;
                 walkingDuration = walkingDurationV2;
                 frontAttackSpeed = frontAttackSpeedV2;
-
+                flippingDuration = flippingDurationV2;
+                frontAttackDuration = frontAttackDurationV2;
+                
                 statesToRandomize = new State[7];
 
                 statesToRandomize[0] = State.Meteors;
@@ -665,11 +687,12 @@ public class BossShield : FatherEnemy
                 statesToRandomize[4] = State.Venom;
                 statesToRandomize[5] = State.FrontAttack;
                 statesToRandomize[6] = State.JumpAttack;
-                
+
+                venomAnimation = "ShieldVenomV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
-                Debug.Log(actualFase);
+
                 meteorsAnimationDuration = meteorsAnimationDurationV3;
                 meteorsDuration = meteorsDurationV3;
                 quantityMeteors = quantityMeteorsV3;
@@ -678,6 +701,11 @@ public class BossShield : FatherEnemy
                 walkingDuration = walkingDurationV3;
                 frontAttackSpeed = frontAttackSpeedV3;
                 flippingDuration = flippingDurationV3;
+                jumpDuration = jumpDurationV3;
+                jumpLevitationDuration = jumpLevitationDurationV3;
+
+                venomAnimation = "ShieldVenomV3";
+                jumpAnimation = "ShieldVenomV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }
@@ -729,6 +757,8 @@ public class BossShield : FatherEnemy
     private void EnterDeadState()
     {
         healthBar.gameObject.SetActive(false);
+        Instantiate(hardSkinSoul, sprite.transform.position, hardSkinSoul.transform.rotation);
+        Instantiate(portal, sprite.transform.position + new Vector3(3,0,0), portal.transform.rotation);
         Destroy(gameObject);
     }
 
@@ -742,6 +772,7 @@ public class BossShield : FatherEnemy
 
     }
     #endregion
+
     private void SwitchState(State state)
     {
         switch (currentState)
@@ -877,7 +908,10 @@ public class BossShield : FatherEnemy
         while (!isOk)
         {
             int pos = Random.Range(0, (statesToRandomize.Length));
-            if (!(statesToRandomize[pos] == State.Meteors && meteoring) && !(statesToRandomize[pos] == State.Venom && venoming) && !(statesToRandomize[pos] == State.FrontAttack && isFrontAttack))
+            if (!(statesToRandomize[pos] == State.Meteors && meteoring) 
+                && !(statesToRandomize[pos] == State.Venom && venoming) 
+                && !(statesToRandomize[pos] == State.FrontAttack && isFrontAttack) 
+                && !(statesToRandomize[pos] == State.JumpAttack && sismic))
             {
                 return statesToRandomize[pos];
             }

@@ -21,6 +21,10 @@ public class VenomArea : MonoBehaviour
     public void StopVenoming()
     {
         venomed = false;
+    }
+
+    public void StopParticles()
+    {
         venomParticles.Stop();
     }
 

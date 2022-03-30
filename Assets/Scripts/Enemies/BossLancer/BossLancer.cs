@@ -35,7 +35,9 @@ public class BossLancer : FatherEnemy
     private GameObject
         downLancer,
         summoner,
-        healer;
+        healer,
+        outBurstSoul, 
+        portal;
 
     [SerializeField]
     private ParticleSystem lancerParticles;
@@ -730,6 +732,8 @@ public class BossLancer : FatherEnemy
     {
         healthBar.gameObject.SetActive(false);
         globalLight.intensity = startIntensity;
+        Instantiate(outBurstSoul, new Vector3(sprite.transform.position.x, sprite.transform.position.y - 5, sprite.transform.position.z), outBurstSoul.transform.rotation);
+        Instantiate(portal, new Vector3(sprite.transform.position.x + 5, sprite.transform.position.y - 5, sprite.transform.position.z), portal.transform.rotation);
         Destroy(gameObject);
     }
 

@@ -881,9 +881,9 @@ public class playerController : MonoBehaviour
         {
             venomBar.gameObject.SetActive(true);
             venomStartTime = Time.time;
+            venomBar.SetTime(venomAffectDuration);
         }
         venomBar.SetVenom(distanceForVenom);
-        venomBar.SetTime(venomAffectDuration);
         venomed = true;
         distanceTraveled = 0;
         lastPosition = this.transform.position;

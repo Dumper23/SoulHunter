@@ -582,7 +582,7 @@ Transform:
   - {fileID: 2082202683}
   - {fileID: 294240253}
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &200871099
 PrefabInstance:
@@ -91388,6 +91388,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3097075078844782983, guid: 9838d8b0aa67cbf499c50fe3ae93e07e, type: 3}
   m_PrefabInstance: {fileID: 1230119974}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1230120001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3097075079902439313, guid: 9838d8b0aa67cbf499c50fe3ae93e07e, type: 3}
+  m_PrefabInstance: {fileID: 1230119974}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e01a88c8d2d9646803de7ce90d8e48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1234500054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92046,6 +92057,10 @@ PrefabInstance:
       propertyPath: shield
       value: 
       objectReference: {fileID: 1230119992}
+    - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
+      propertyPath: venomBar
+      value: 
+      objectReference: {fileID: 1230120001}
     - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
       propertyPath: inventoryUI
       value: 
@@ -108705,7 +108720,7 @@ Transform:
   - {fileID: 7600381423090113888}
   - {fileID: 4801285716284116268}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3181703632270394856
 GameObject:

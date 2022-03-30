@@ -60,6 +60,7 @@ public class BossShield : FatherEnemy
         venomAnimationDuration = 5f,
         venomAnimationDurationV2 = 4f,
         venomAnimationDurationV3 = 2f,
+        venomAffectDuration = 7f,
         venomDuration = 10f,
         frontAttackStep1 = 0.75f,
         frontAttackStep2 = 0.25f,
@@ -246,10 +247,14 @@ public class BossShield : FatherEnemy
         #region Venom
         if (venoming)
         {
+            if (Time.time >= venomStartTime + venomAffectDuration)
+            {
+                venomArea.StopVenoming();
+            }
             if (Time.time >= venomStartTime + venomDuration)
             {
+                venomArea.StopParticles();
                 venoming = false;
-                venomArea.StopVenoming();
             }
             if (venomArea.IsVenomed())
             {
@@ -660,6 +665,7 @@ public class BossShield : FatherEnemy
     #region SWITCHFASE
     private void EnterSwitchFaseState()
     {
+        spriteAnimator.Play("ShieldIdle");
         switch (actualFase)
         {
             case 1:
@@ -678,7 +684,7 @@ public class BossShield : FatherEnemy
                 flippingDuration = flippingDurationV2;
                 frontAttackDuration = frontAttackDurationV2;
                 
-                statesToRandomize = new State[7];
+                statesToRandomize = new State[13];
 
                 statesToRandomize[0] = State.Meteors;
                 statesToRandomize[1] = State.Venom;
@@ -686,7 +692,13 @@ public class BossShield : FatherEnemy
                 statesToRandomize[3] = State.Meteors;
                 statesToRandomize[4] = State.Venom;
                 statesToRandomize[5] = State.FrontAttack;
-                statesToRandomize[6] = State.JumpAttack;
+                statesToRandomize[6] = State.Meteors;
+                statesToRandomize[7] = State.Venom;
+                statesToRandomize[8] = State.FrontAttack;
+                statesToRandomize[9] = State.Meteors;
+                statesToRandomize[10] = State.Venom;
+                statesToRandomize[11] = State.FrontAttack;
+                statesToRandomize[12] = State.JumpAttack;
 
                 venomAnimation = "ShieldVenomV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");

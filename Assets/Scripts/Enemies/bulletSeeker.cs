@@ -8,6 +8,7 @@ public class bulletSeeker : FatherBullet
     [SerializeField]
     private float moveSpeed = 3f;
     private float rotateSpeed = 100f;
+    public bool isSeeking = true;
 
     private Transform player;
 
@@ -28,19 +29,26 @@ public class bulletSeeker : FatherBullet
     void Update()
     {
         //transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-        
+
         //transform.position = Vector2.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
         //transform.up = (player.transform.position - transform.position);
 
-        Vector2 direction = (Vector2)player.position - rb.position;
+        if (isSeeking)
+        {
+            Vector2 direction = (Vector2)player.position - rb.position;
 
-        direction.Normalize();
+            direction.Normalize();
 
-        float rotateAmount = Vector3.Cross(direction, transform.up).z;
+            float rotateAmount = Vector3.Cross(direction, transform.up).z;
 
-        rb.angularVelocity = -rotateAmount * rotateSpeed;
+            rb.angularVelocity = -rotateAmount * rotateSpeed;
 
-        rb.velocity = transform.up * moveSpeed;
+            rb.velocity = transform.up * moveSpeed;
+        }
+        else
+        {
+            rb.velocity = moveDirection;
+        }
         
     }
 
@@ -82,6 +90,7 @@ public class bulletSeeker : FatherBullet
 
     public override void ChangeDirection()
     {
+        isSeeking = false;
         moveDirection = (-player.transform.position + transform.position).normalized * moveSpeed;
     }
 }

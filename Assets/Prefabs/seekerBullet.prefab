@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8526116596975294771}
   - component: {fileID: 4487229432316337185}
   - component: {fileID: 1339890721083192098}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: seekerBullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 583858585394399946}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.117, y: -0.034, z: 0}
   m_LocalScale: {x: 0.2114, y: 0.2114, z: 0.2114}
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 25
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.73333335, g: 0.627451, b: 0.4039216, a: 1}
+  m_Color: {r: 0.2702734, g: 0.5377358, b: 0.027901389, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -135,3 +135,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  isSeeking: 1

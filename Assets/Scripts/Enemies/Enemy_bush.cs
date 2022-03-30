@@ -116,6 +116,7 @@ public class Enemy_bush : FatherEnemy
                 bul.transform.position = transform.position;
                 bul.transform.rotation = transform.rotation;
                 bul.SetActive(true);
+                bul.GetComponent<bulletSeeker>().isSeeking = true;
                 bul.GetComponent<bulletSeeker>().SetMoveDirection(dist);
                 bul.GetComponent<bulletSeeker>().SetTarget(player);
                 bul.GetComponent<bulletSeeker>().SetMoveSpeed(moveSpeedBullet);

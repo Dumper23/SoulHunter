@@ -835,9 +835,9 @@ public class playerController : MonoBehaviour
 
         foreach(Collider2D bullet in hitBullets)
         {
-            if (bullet.GetComponent<bullet>() != null)
+            if (bullet.GetComponent<FatherBullet>() != null)
             {
-                bullet.GetComponent<bullet>().changeDirection();
+                bullet.GetComponent<FatherBullet>().ChangeDirection();
             }
         }
     }

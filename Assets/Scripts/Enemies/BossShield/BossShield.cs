@@ -122,7 +122,8 @@ public class BossShield : FatherEnemy
 
     [SerializeField]
     private ParticleSystem wallMovement,
-        jumpImpact;
+        jumpImpact,
+        fallParticles;
 
     [SerializeField]
     private GameObject
@@ -181,6 +182,7 @@ public class BossShield : FatherEnemy
         {
             isRight = false;
         }
+
     }
 
     // Update is called once per frame
@@ -373,6 +375,10 @@ public class BossShield : FatherEnemy
                 healthBar.gameObject.SetActive(true);
                 isActivated = true;
                 actualFase = 1;
+                if (Time.time >= flippingStartTime + flippingDuration && ((!isRight && sprite.transform.localRotation.y >= 0) || (isRight && sprite.transform.localRotation.y < 0)))
+                {
+                    sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
+                }
             }
 
         }
@@ -643,6 +649,7 @@ public class BossShield : FatherEnemy
                 sprite.transform.position = new Vector3(pos, newPosition.y, newPosition.z);
                 newPosition2 = sprite.transform.position;
                 jumpDamageArea.SetActive(true);
+                Invoke("activateFallParticles", jumpLevitationDuration - 0.3f);
             }
         }
         else
@@ -652,6 +659,11 @@ public class BossShield : FatherEnemy
             sprite.transform.position = new Vector3(startPosition.x, height, startPosition.z);
             newPosition = sprite.transform.position;
         }
+    }
+
+    private void activateFallParticles()
+    {
+        fallParticles.Play();
     }
 
     private void ExitJumpAttackState()
@@ -769,8 +781,9 @@ public class BossShield : FatherEnemy
     private void EnterDeadState()
     {
         healthBar.gameObject.SetActive(false);
-        Instantiate(hardSkinSoul, sprite.transform.position, hardSkinSoul.transform.rotation);
-        Instantiate(portal, sprite.transform.position + new Vector3(3,0,0), portal.transform.rotation);
+        Instantiate(hardSkinSoul, sprite.transform.position + new Vector3(0, 1, 0), hardSkinSoul.transform.rotation);
+        GameObject p = Instantiate(portal, sprite.transform.position + new Vector3(0,5,0), portal.transform.rotation) as GameObject;
+        p.GetComponent<EndLevel>().nextLevelName = "L1W3";
         Destroy(gameObject);
     }
 

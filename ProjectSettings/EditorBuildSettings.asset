@@ -51,6 +51,30 @@ EditorBuildSettings:
     path: Assets/Scenes/World2/L4W2.unity
     guid: 3ce1c0cfe32c08043963ef2107a8ff3f
   - enabled: 1
+    path: Assets/Scenes/World2/L5W2.unity
+    guid: 8092119ec1700bc4b81a13800f7a0987
+  - enabled: 1
     path: Assets/Scenes/World2/BossW2.unity
     guid: e199b318b7cdc9e44b4842a8b588474f
+  - enabled: 1
+    path: Assets/Scenes/World3/L1W3.unity
+    guid: 563dfa2bd776f5b43b45886a241ec5c1
+  - enabled: 1
+    path: Assets/Scenes/World3/L2W3.unity
+    guid: b07be7732191e26499f596d45ae33299
+  - enabled: 1
+    path: Assets/Scenes/World3/L3W3.unity
+    guid: 90fdd898741d9d843b0f88c088c29f57
+  - enabled: 1
+    path: Assets/Scenes/World3/L4W3.unity
+    guid: 8c2cc0cb22cbf97439de3d5597cab2aa
+  - enabled: 1
+    path: Assets/Scenes/World3/L5W3.unity
+    guid: 96965c1ca8d0280479f2eeba876dda99
+  - enabled: 1
+    path: Assets/Scenes/World4/L1W4.unity
+    guid: e169ef2c0aeae6449b9a6a755f11a6ed
+  - enabled: 1
+    path: Assets/Scenes/World4/L4W4.unity
+    guid: 6c742032be0216341bf3220560fe052b
   m_configObjects: {}

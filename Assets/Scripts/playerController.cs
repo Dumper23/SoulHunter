@@ -259,7 +259,7 @@ public class playerController : MonoBehaviour
         if (temp != null)
         {
 
-            attackDamage = temp.attackDamage;
+            //attackDamage = temp.attackDamage;
             attackRate = temp.attackRate;
             playerVelocity = temp.speed;
             transform.position = new Vector3(temp.position[0], temp.position[1]);

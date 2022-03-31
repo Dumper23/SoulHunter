@@ -279,6 +279,7 @@ public class playerController : MonoBehaviour
                             if (temp.equippedLostSouls[j] == temp.lostSouls[i])
                             {
                                 ls.isEquiped = true;
+                                lostSoulsEquipped++;
                                 break;
                             }
                             else
@@ -901,7 +902,9 @@ public class playerController : MonoBehaviour
         {
             if (soulKeeperActive)
             {
-                playerLives = playerLives + 2;
+                if (playerLives + 2 <= 4) {
+                    playerLives = playerLives + 2;
+                }
             }else
             {
                 playerLives++;
@@ -1164,6 +1167,7 @@ public class playerController : MonoBehaviour
             {
                 if (!shielded)
                 {
+                    shieldTimer.gameObject.SetActive(true);
                     if (Time.time - nextShield > hardSkinRecoveryTime)
                     {
                         nextShield = Time.time;

@@ -55277,7 +55277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3097075080213438492, guid: 9838d8b0aa67cbf499c50fe3ae93e07e, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3097075080213438492, guid: 9838d8b0aa67cbf499c50fe3ae93e07e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -55824,7 +55824,7 @@ PrefabInstance:
       objectReference: {fileID: 1230119991}
     - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
       propertyPath: attackDamage
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
       propertyPath: lostSoulName
@@ -65556,7 +65556,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2114541935
 GameObject:

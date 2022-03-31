@@ -72,6 +72,9 @@ EditorBuildSettings:
     path: Assets/Scenes/World3/L5W3.unity
     guid: 96965c1ca8d0280479f2eeba876dda99
   - enabled: 1
+    path: Assets/Scenes/World3/BossW3.unity
+    guid: f770b4c968804114b959c3e255a69870
+  - enabled: 1
     path: Assets/Scenes/World4/L1W4.unity
     guid: e169ef2c0aeae6449b9a6a755f11a6ed
   - enabled: 1

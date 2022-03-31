@@ -1124,18 +1124,18 @@ public class playerController : MonoBehaviour
             lostSouls.TryGetValue("Fireflies", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {
-                GameObject[] traps = GameObject.FindGameObjectsWithTag("Trap");
-                foreach (GameObject trap in traps)
+                Traps[] traps = GameObject.FindObjectsOfType<Traps>();
+                foreach (Traps trap in traps)
                 {
-                    trap.GetComponent<Traps>().setFireflies(true);
+                    trap.setFireflies(true);
                 }
             }
             else
             {
-                GameObject[] traps = GameObject.FindGameObjectsWithTag("Trap");
-                foreach (GameObject trap in traps)
+                Traps[] traps = GameObject.FindObjectsOfType<Traps>();
+                foreach (Traps trap in traps)
                 {
-                    trap.GetComponent<Traps>().setFireflies(false);
+                    trap.setFireflies(false);
                 }
             }
         }

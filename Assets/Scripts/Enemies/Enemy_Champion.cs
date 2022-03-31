@@ -20,7 +20,8 @@ public class Enemy_Champion : FatherEnemy
     private Transform player;
     private Rigidbody2D rb;
 
-    public GameObject viewA;
+    //public GameObject viewA;
+    public GameObject sprite;
     public GameObject viewB;
 
     [SerializeField]
@@ -82,7 +83,7 @@ public class Enemy_Champion : FatherEnemy
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindObjectOfType<playerController>().transform;
         statesToRandomize = new State[5];
         statesToRandomize[0] = State.Defense;
         statesToRandomize[1] = State.AttackRoll;
@@ -93,13 +94,13 @@ public class Enemy_Champion : FatherEnemy
         if (player.position.x > this.transform.position.x)
         {
             facingDirection = 1;
-            viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
             viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
 
         }
         else
         {
-            viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
             viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
@@ -110,12 +111,12 @@ public class Enemy_Champion : FatherEnemy
 
         if (swicher)
         {
-            viewA.SetActive(true);
+            sprite.SetActive(true);
             viewB.SetActive(false);
         }
         else
         {
-            viewA.SetActive(false);
+            sprite.SetActive(false);
             viewB.SetActive(true);
         }
         
@@ -194,7 +195,7 @@ public class Enemy_Champion : FatherEnemy
         }
         if(ansFacingDirection != facingDirection)
         {
-            viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
             viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
@@ -286,7 +287,7 @@ public class Enemy_Champion : FatherEnemy
         SpikesStartTime = Time.time;
         swicher = false;
         inThorns = true;
-        viewA.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
+        sprite.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
         viewB.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
     }
 
@@ -302,7 +303,7 @@ public class Enemy_Champion : FatherEnemy
     {
         GetComponent<fireSpikes>().Shoot();
         inThorns = false;
-        viewA.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
+        sprite.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
         viewB.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
     }
 
@@ -313,7 +314,7 @@ public class Enemy_Champion : FatherEnemy
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
-        viewA.transform.localScale -= new Vector3(0.0f,0.5f,0.0f);
+        sprite.transform.localScale -= new Vector3(0.0f,0.5f,0.0f);
         viewB.transform.localScale -= new Vector3(0.0f, 0.5f, 0.0f);
         isKnockingBack = true;
     }
@@ -328,7 +329,7 @@ public class Enemy_Champion : FatherEnemy
 
     private void ExitKnockbackState()
     {
-        viewA.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
+        sprite.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
         viewB.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
         isKnockingBack = false;
     }
@@ -364,7 +365,7 @@ public class Enemy_Champion : FatherEnemy
     private void Flip()
     {
         facingDirection *= -1;
-        viewA.transform.Rotate(0.0f, 180.0f, 0.0f);
+        sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
         viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 

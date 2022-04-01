@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2528573451278852734
+--- !u!1 &662972512306445164
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2823905570860215977}
-  - component: {fileID: 1118385767254112861}
-  - component: {fileID: 1195284640945871934}
-  - component: {fileID: 1750996670451298696}
+  - component: {fileID: 942539795516929979}
+  - component: {fileID: 2711545460662903631}
+  - component: {fileID: 4229606658191721772}
+  - component: {fileID: 3632399275139147930}
   m_Layer: 0
-  m_Name: MeteorsChunks
+  m_Name: DeathChunkForMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2823905570860215977
+--- !u!4 &942539795516929979
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2528573451278852734}
+  m_GameObject: {fileID: 662972512306445164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 18.42, y: 3.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!198 &1118385767254112861
+--- !u!198 &2711545460662903631
 ParticleSystem:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2528573451278852734}
+  m_GameObject: {fileID: 662972512306445164}
   serializedVersion: 7
   lengthInSec: 5
   simulationSpeed: 1
@@ -106,7 +106,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -286,7 +286,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.2
-      minScalar: 0.05
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -747,7 +747,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.2
+      value: 0.23
       mode: 0
       spread: 0
       speed:
@@ -1479,8 +1479,8 @@ ParticleSystem:
         m_RotationOrder: 4
     startFrame:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0
+      minMaxState: 3
+      scalar: 0.9999
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1539,7 +1539,11 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 825248124866583331, guid: b4fe597ed03eb4047b375a70342cbd7c, type: 3}
+    - sprite: {fileID: 1770597372503227449, guid: e60eba3b6a99a0e42851ae7d5bb63ecc, type: 3}
+    - sprite: {fileID: -7147218199974320721, guid: e60eba3b6a99a0e42851ae7d5bb63ecc, type: 3}
+    - sprite: {fileID: 1450606733871393103, guid: e60eba3b6a99a0e42851ae7d5bb63ecc, type: 3}
+    - sprite: {fileID: 8220814669973364137, guid: e60eba3b6a99a0e42851ae7d5bb63ecc, type: 3}
+    - sprite: {fileID: 7087436203113677717, guid: e60eba3b6a99a0e42851ae7d5bb63ecc, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -4809,14 +4813,14 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &1195284640945871934
+--- !u!199 &4229606658191721772
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2528573451278852734}
+  m_GameObject: {fileID: 662972512306445164}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -4875,16 +4879,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &1750996670451298696
+--- !u!114 &3632399275139147930
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2528573451278852734}
+  m_GameObject: {fileID: 662972512306445164}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f66c9460a976c54eb103ca0fefa0f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToDestroy: 4
+  timeToDestroy: 2

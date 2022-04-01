@@ -151,7 +151,7 @@ MonoBehaviour:
   bullet: {fileID: 8069326041670184453, guid: bbf888167fbe9ed45a71b1ad18e5e3a5, type: 3}
   bulletParent: {fileID: 5668566061518866024}
   hitParticle: {fileID: 567905754595511172}
-  deathChunkParticle: {fileID: 4011056946076971215, guid: 4d205629c7094b44995ec74a4b2c60e6, type: 3}
+  deathChunkParticle: {fileID: 8628415834718608388, guid: a47c7c8a1a2da7e4e9f1b5a2369ccea8, type: 3}
   deathBloodParticle: {fileID: 5640961278513363789, guid: 41a827ce79efc01498a12343a29550ad, type: 3}
   particleDamage: {fileID: 567905753261497925}
 --- !u!58 &5668566062277139048

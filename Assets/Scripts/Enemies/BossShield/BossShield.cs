@@ -729,7 +729,7 @@ public class BossShield : FatherEnemy
                 jumpLevitationDuration = jumpLevitationDurationV3;
 
                 venomAnimation = "ShieldVenomV3";
-                jumpAnimation = "ShieldVenomV2";
+                jumpAnimation = "ShieldJumpV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }

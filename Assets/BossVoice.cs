@@ -53,12 +53,18 @@ public class BossVoice : FatherEnemy
     public List<AltarBehaviour> altars = new List<AltarBehaviour>();
 
     [SerializeField]
-    private GameObject shield;
+    private GameObject shield,
+        sprite,
+        portal,
+        portalSpawnPoint;
+
+    private Animator spriteAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
         rangeOfActivation = transform.Find("Range").gameObject.GetComponent<BoxCollider2D>().GetComponent<BossRangeOfActivation>();
+        spriteAnimator = sprite.GetComponent<Animator>();
 
         currentHealth = maxHealth;
         SwitchState(State.Waiting);
@@ -245,6 +251,14 @@ public class BossVoice : FatherEnemy
                 firstLoop = false;
                 activateAltars = new int[numAltars];
                 bool isOK;
+                if (isStarting)
+                {
+                    spriteAnimator.Play("VoiceSwitchFase");
+                }
+                else 
+                {
+                    spriteAnimator.Play("VoiceAltars");
+                }
 
                 //Altars to activate
                 for (int i = 0; i < numAltars; i++)
@@ -297,6 +311,7 @@ public class BossVoice : FatherEnemy
     private void ExitAltarsState()
     {
         isStarting = false;
+        spriteAnimator.Play("VoiceIdle");
     }
     #endregion
 
@@ -331,7 +346,7 @@ public class BossVoice : FatherEnemy
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
-
+                numAltars = numAltarsV3;
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }
@@ -361,8 +376,8 @@ public class BossVoice : FatherEnemy
     {
         healthBar.gameObject.SetActive(false);
         //Instantiate(hardSkinSoul, sprite.transform.position + new Vector3(0, 1, 0), hardSkinSoul.transform.rotation);
-        //GameObject p = Instantiate(portal, sprite.transform.position + new Vector3(0, 5, 0), portal.transform.rotation) as GameObject;
-        //p.GetComponent<EndLevel>().nextLevelName = "L1W3";
+        GameObject p = Instantiate(portal, portalSpawnPoint.transform.position, portal.transform.rotation) as GameObject;
+        p.GetComponent<EndLevel>().nextLevelName = "L1W4";
         Destroy(gameObject);
     }
     private void UpdateDeadState()

@@ -21,26 +21,26 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300000, guid: 30894771139b2a94d91836754c372237, type: 3}
-    - time: 0.083333336
+    - time: 0.1
       value: {fileID: 21300000, guid: 7b76255e7bb181e4ba49322671a1b433, type: 3}
-    - time: 0.23333333
+    - time: 0.21666667
       value: {fileID: 21300000, guid: 3e47b5e95bd53894cab09b24da713da8, type: 3}
     - time: 0.31666666
       value: {fileID: 21300000, guid: aaa50239e05432d4292396a7eff4bc48, type: 3}
-    - time: 0.45
+    - time: 0.41666666
       value: {fileID: 21300000, guid: 6e594f9de6e2c6146a54fa8a19e8c46f, type: 3}
-    - time: 0.55
+    - time: 0.5833333
       value: {fileID: 21300000, guid: fe1fd6b082584aa4d955d8223ff59bf3, type: 3}
     - time: 0.68333334
       value: {fileID: 21300000, guid: d29885160a9f8a949bf5cadb551b26d5, type: 3}
-    - time: 0.76666665
+    - time: 0.78333336
       value: {fileID: 21300000, guid: 94628bf20ff039e46b43e2f9b01521d4, type: 3}
-    - time: 0.9166667
+    - time: 0.9
       value: {fileID: 21300000, guid: c68e3b9bf33f8ce40afcc43925cc3fdc, type: 3}
     - time: 1
       value: {fileID: 21300000, guid: 70da11446ed099e48a3e48bd60afdce6, type: 3}
     attribute: m_Sprite
-    path: Sprite
+    path: Pivot/Sprite
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -51,7 +51,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 850496168
+      path: 2250666592
       attribute: 0
       script: {fileID: 0}
       typeID: 212

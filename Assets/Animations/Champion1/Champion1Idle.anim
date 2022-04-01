@@ -23,20 +23,20 @@ AnimationClip:
       value: {fileID: 21300000, guid: 5f3602ab4f25d6a4cb980c3cf7327704, type: 3}
     - time: 0.13333334
       value: {fileID: 21300000, guid: 44eac9cebfb6473459b4c34c4bb0fbfa, type: 3}
-    - time: 0.28333333
+    - time: 0.3
       value: {fileID: 21300000, guid: 05f5a14803f68ab4ab4f5b75a0c3e455, type: 3}
-    - time: 0.41666666
+    - time: 0.43333334
       value: {fileID: 21300000, guid: 2c8f89ccb0a3c5b46a497a158dd98625, type: 3}
-    - time: 0.5833333
+    - time: 0.56666666
       value: {fileID: 21300000, guid: 54d9b5b16349f9f448d1aa0b8d6b8811, type: 3}
-    - time: 0.71666664
+    - time: 0.7
       value: {fileID: 21300000, guid: 708630acf88d4eb4d93a3da134120d9d, type: 3}
     - time: 0.8666667
       value: {fileID: 21300000, guid: 41086fcecb4f801499ebda01bf96e081, type: 3}
     - time: 1
       value: {fileID: 21300000, guid: ab553575083c4f6419189ee5f591c8e9, type: 3}
     attribute: m_Sprite
-    path: Sprite
+    path: Pivot/Sprite
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -47,7 +47,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 850496168
+      path: 2250666592
       attribute: 0
       script: {fileID: 0}
       typeID: 212

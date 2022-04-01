@@ -17,7 +17,7 @@ public class bullet : FatherBullet
     {
         timeCreated = Time.time;
         bulletRB = GetComponent<Rigidbody2D>();
-        target = GameObject.FindGameObjectWithTag("Player");
+        target = GameObject.FindObjectOfType<playerController>().gameObject;
         if (null != target)
         {
             Vector2 moveDir = (target.transform.position - transform.position).normalized * speed;

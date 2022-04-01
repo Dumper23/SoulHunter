@@ -76,7 +76,7 @@ public class Enemy_fly_melee : FatherEnemy
 
         rb = GetComponent<Rigidbody2D>();
         aiPath = GetComponent<AIPath>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindObjectOfType<playerController>().transform;
         audioSource = GetComponent<AudioSource>();
 
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);

@@ -22,12 +22,14 @@ public class Enemy_Champion : FatherEnemy
 
     //public GameObject viewA;
     public GameObject sprite;
-    public GameObject viewB;
+    public GameObject sprite2;
+    //public GameObject viewB;
 
     [SerializeField]
     private GameObject
         deathChunkParticle,
-        deathBloodParticle;
+        deathBloodParticle,
+        portal;
 
     public float speed = 2f,
                 speedRoll = 8f;
@@ -40,12 +42,14 @@ public class Enemy_Champion : FatherEnemy
         maxAttackRollDuration = 12f,
         DefenseDuration = 2f,
         SpikesDuration = 1f,
-        wallCheckDistance;
+        wallCheckDistance,
+        waitingDuration = 2f;
 
     private bool inRange,
         wallDetected,
         inThorns,
-        isKnockingBack = false;
+        isKnockingBack = false,
+        isActivated = false;
 
     private int facingDirection,
         ansFacingDirection;
@@ -58,7 +62,8 @@ public class Enemy_Champion : FatherEnemy
         SpikesStartTime,
         walkingStartTime,
         attackRollDuration,
-        walkingDuration;
+        walkingDuration,
+        waitingStartTime;
 
     private State currentState;
     private State[] statesToRandomize;
@@ -78,12 +83,15 @@ public class Enemy_Champion : FatherEnemy
     [SerializeField]
     private GameObject thornsSoul;
 
+    private Animator spriteAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindObjectOfType<playerController>().transform;
+        spriteAnimator = gameObject.GetComponent<Animator>();
         statesToRandomize = new State[5];
         statesToRandomize[0] = State.Defense;
         statesToRandomize[1] = State.AttackRoll;
@@ -95,13 +103,13 @@ public class Enemy_Champion : FatherEnemy
         {
             facingDirection = 1;
             sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
-            viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite2.transform.Rotate(0.0f, 180.0f, 0.0f);
 
         }
         else
         {
             sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
-            viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite2.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
 
@@ -112,12 +120,12 @@ public class Enemy_Champion : FatherEnemy
         if (swicher)
         {
             sprite.SetActive(true);
-            viewB.SetActive(false);
+            sprite2.SetActive(false);
         }
         else
         {
             sprite.SetActive(false);
-            viewB.SetActive(true);
+            sprite2.SetActive(true);
         }
         
         switch (currentState)
@@ -152,15 +160,31 @@ public class Enemy_Champion : FatherEnemy
     private void EnterWaitingState()
     {
         swicher = true;
+        if (isActivated)
+        {
+            waitingStartTime = Time.time;
+        }
     }
 
     private void UpdateWaitingState()
     {
-        float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
-        if (distanceFromPlayer < lineOfSite)
+        if (!isActivated)
         {
-            inRange = true;
-            SwitchState(State.Walking);
+            float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+            if (distanceFromPlayer < lineOfSite)
+            {
+                isActivated = true;
+                inRange = true;
+                SwitchState(State.Walking);
+            }
+        }
+        else
+        {
+            if (Time.time >= waitingStartTime + waitingDuration)
+            {
+                Debug.Log("EEEEEEEI");
+                SwitchState(State.Walking);
+            }
         }
     }
 
@@ -178,6 +202,7 @@ public class Enemy_Champion : FatherEnemy
         swicher = true;
         inThorns = false;
         walkingDuration = Random.Range(maxWalkingSwitchStateDuration / 3, maxWalkingSwitchStateDuration + 1);
+        spriteAnimator.Play("Champion1Walk");
     }
 
     private void UpdateWalkingState()
@@ -196,7 +221,7 @@ public class Enemy_Champion : FatherEnemy
         if(ansFacingDirection != facingDirection)
         {
             sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
-            viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
+            sprite2.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if (distanceFromPlayer > lineOfSite)
@@ -220,7 +245,7 @@ public class Enemy_Champion : FatherEnemy
 
     private void ExitWalkingState()
     {
-
+        spriteAnimator.Play("Champion1Idle");
     }
     #endregion
 
@@ -288,7 +313,7 @@ public class Enemy_Champion : FatherEnemy
         swicher = false;
         inThorns = true;
         sprite.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
-        viewB.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
+        sprite2.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
     }
 
     private void UpdateSpikesState()
@@ -304,7 +329,7 @@ public class Enemy_Champion : FatherEnemy
         GetComponent<fireSpikes>().Shoot();
         inThorns = false;
         sprite.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
-        viewB.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
+        sprite2.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
     }
 
     #endregion
@@ -315,7 +340,7 @@ public class Enemy_Champion : FatherEnemy
     {
         knockbackStartTime = Time.time;
         sprite.transform.localScale -= new Vector3(0.0f,0.5f,0.0f);
-        viewB.transform.localScale -= new Vector3(0.0f, 0.5f, 0.0f);
+        sprite2.transform.localScale -= new Vector3(0.0f, 0.5f, 0.0f);
         isKnockingBack = true;
     }
 
@@ -330,7 +355,7 @@ public class Enemy_Champion : FatherEnemy
     private void ExitKnockbackState()
     {
         sprite.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
-        viewB.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
+        sprite2.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
         isKnockingBack = false;
     }
     #endregion
@@ -342,7 +367,9 @@ public class Enemy_Champion : FatherEnemy
         //Spawn chunks and blood
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
-        Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
+        //Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
+        GameObject p = Instantiate(portal, new Vector3(sprite.transform.position.x, sprite.transform.position.y + 3, sprite.transform.position.z), portal.transform.rotation);
+        p.GetComponent<EndLevel>().nextLevelName = "DemoEnd";
         Destroy(gameObject);
     }
 
@@ -366,7 +393,7 @@ public class Enemy_Champion : FatherEnemy
     {
         facingDirection *= -1;
         sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
-        viewB.transform.Rotate(0.0f, 180.0f, 0.0f);
+        sprite2.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     public override void Damage(float[] attackDetails, bool wantKnockback)

@@ -80,4 +80,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/World4/L4W4.unity
     guid: 6c742032be0216341bf3220560fe052b
+  - enabled: 1
+    path: Assets/Scenes/World4/BossW4.unity
+    guid: 52d6cbf27359f294d8c766e45fe3a4e1
+  - enabled: 1
+    path: Assets/Scenes/DemoEnd.unity
+    guid: fd5cd76cd5e84e144a5b50a00e23dc65
   m_configObjects: {}

@@ -45,7 +45,7 @@ public class Enemy_bush : FatherEnemy
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindObjectOfType<playerController>().transform;
     }
 
     // Update is called once per frame

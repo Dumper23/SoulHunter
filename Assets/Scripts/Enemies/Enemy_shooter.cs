@@ -60,7 +60,7 @@ public class Enemy_shooter : FatherEnemy
     void Start()
     {
         
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindObjectOfType<playerController>().transform;
         currentHealth = maxHealth;
         audioSource = GetComponent<AudioSource>();
 

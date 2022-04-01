@@ -6,9 +6,16 @@ public class BossDoor : MonoBehaviour
 {
     public GameObject barriers;
     public GameObject entityToEliminate;
+    public GameObject ambientMusic;
+    private AudioSource bossMusic;
+    public GameObject endBossMusic;
 
     private void Start()
     {
+        if(GetComponent<AudioSource>() != null)
+        {
+            bossMusic = GetComponent<AudioSource>();
+        }
         barriers.SetActive(false);
     }
 
@@ -16,6 +23,10 @@ public class BossDoor : MonoBehaviour
     {
         if(entityToEliminate == null && barriers != null)
         {
+            if (endBossMusic != null)
+            {
+                Instantiate(endBossMusic);
+            }
             Destroy(this.gameObject);
         }
     }
@@ -25,6 +36,14 @@ public class BossDoor : MonoBehaviour
         if(collision.tag == "Player")
         {
             barriers.SetActive(true);
+            if (ambientMusic != null)
+            {
+                Destroy(ambientMusic);
+            }
+            if (bossMusic != null)
+            {
+                bossMusic.Play();
+            }
         }
     }
 

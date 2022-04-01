@@ -56,7 +56,12 @@ public class healer : MonoBehaviour
         }
         else 
         {
-            GameObject player = GameObject.FindObjectOfType<playerController>().gameObject;
+            GameObject player = null;
+            if (GameObject.FindObjectOfType<playerController>() != null)
+            {
+                player = GameObject.FindObjectOfType<playerController>().gameObject;
+            }
+
             if (player != null)
             {
                 playerPos = player.transform.position;

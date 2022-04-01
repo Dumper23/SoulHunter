@@ -36,18 +36,27 @@ public class BossVoice : FatherEnemy
         numAltarsV2 = 4,
         numAltarsV3 = 8;
 
+    [SerializeField]
+    private int ammountBullets = 4,
+        ammountBulletsV2 = 5,
+        ammountBulletsV3 = 6;
+
     private int[] activateAltars;
 
     [SerializeField]
-    private float maxHealth = 500f, 
-        waitingDuration = 2f,
-        altarsPreDuration = 5f,
+    private float maxHealth = 500f,
+        rateBullets = 2f,
+        rateBulletsV3 = 1.5f,
+        waitingDuration = 4f,
+        altarsPreDuration = 8f,
         altarsDuration = 2f,
+        projectilesDuration = 6f,
         switchFaseDuration = 2f;
 
     private float currentHealth, 
         waitingStartTime,
         altarsStartTime,
+        projectilesStartTime,
         switchFaseStartTime;
 
     public List<AltarBehaviour> altars = new List<AltarBehaviour>();
@@ -60,12 +69,18 @@ public class BossVoice : FatherEnemy
 
     private Animator spriteAnimator;
 
+    [SerializeField]
+    private AudioClip clip;
+
+    [SerializeField]
+    private AudioSource audio;
+
     // Start is called before the first frame update
     void Start()
     {
         rangeOfActivation = transform.Find("Range").gameObject.GetComponent<BoxCollider2D>().GetComponent<BossRangeOfActivation>();
         spriteAnimator = sprite.GetComponent<Animator>();
-
+        GetComponent<FireVoiceBullets>().SetAmmount(ammountBullets);
         currentHealth = maxHealth;
         SwitchState(State.Waiting);
     }
@@ -73,7 +88,7 @@ public class BossVoice : FatherEnemy
     // Update is called once per frame
     void Update()
     {
-
+        //GetComponent<FireVoiceBullets>().Shoot();
         if (!isStarting)
         {
             bool found = false;
@@ -107,6 +122,8 @@ public class BossVoice : FatherEnemy
                 if (!hasInmunity)
                 {
                     shield.SetActive(false);
+                    audio.clip = clip;
+                    audio.Play();
                     SwitchState(State.Altars);
                 }
                 else
@@ -192,6 +209,10 @@ public class BossVoice : FatherEnemy
                 if (!hasAltars) {
                     SwitchState(State.Altars);
                 }
+                else
+                {
+                    SwitchState(State.Projectiles);
+                }
             }
         }
     }
@@ -206,15 +227,27 @@ public class BossVoice : FatherEnemy
     #region PROJECTILES
     private void EnterProjectilesState()
     {
-
+        projectilesStartTime = Time.time;
+        firstLoop = true;
     }
     private void UpdateProjectilesState()
     {
 
+        if (Time.time >= projectilesStartTime + projectilesDuration){
+            SwitchState(State.Waiting);
+        }
+        else
+        {
+            if (firstLoop)
+            {
+                firstLoop = false;
+                GetComponent<FireVoiceBullets>().Shoot();
+            }
+        }
     }
     private void ExitProjectilesState()
     {
-
+        GetComponent<FireVoiceBullets>().StopShoot();
     }
     #endregion
 
@@ -296,7 +329,7 @@ public class BossVoice : FatherEnemy
             }
             if (Time.time >= altarsStartTime + altarsPreDuration + altarsDuration)
             {
-                SwitchState(State.Waiting);
+                SwitchState(State.Projectiles);
             }
             else
             {
@@ -343,10 +376,14 @@ public class BossVoice : FatherEnemy
                 break;
             case 2:
                 numAltars = numAltarsV2;
+                GetComponent<FireVoiceBullets>().SetAmmount(ammountBulletsV2);
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
                 numAltars = numAltarsV3;
+                GetComponent<FireVoiceBullets>().SetAmmount(ammountBulletsV3);
+                GetComponent<FireVoiceBullets>().SetFireRate(rateBulletsV3);
+                
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }

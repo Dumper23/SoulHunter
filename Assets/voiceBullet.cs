@@ -6,11 +6,16 @@ public class voiceBullet : MonoBehaviour
 {
     private Vector2 moveDirection;
     [SerializeField]
-    private float moveSpeed = 3f;
+    private float moveSpeed = 4f;
+    private int bounceCount = 0;
+
+    [SerializeField]
+    private int bounceMax = 3;
 
     private void OnEnable()
     {
-        Invoke("Destroy", 2f);
+        Invoke("Destroy", 20f);
+        bounceCount = 0;
     }
 
     // Start is called before the first frame update
@@ -39,10 +44,25 @@ public class voiceBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.tag == "ground")
+
+        if (collision.transform.tag == "Limit")
         {
             gameObject.SetActive(false);
         }
+
+        if (collision.transform.tag == "ground")
+        {
+            if (bounceCount >= bounceMax)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                bounceCount++;
+                moveDirection = new Vector2(-moveDirection.x, moveDirection.y);
+            }
+        }
+
     }
 
     public void Destroy()

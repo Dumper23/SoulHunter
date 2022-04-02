@@ -733,6 +733,7 @@ public class playerController : MonoBehaviour
             updateLiveUI();
             deadSoundObject.GetComponent<AudioSource>().clip = deadSound;
             Instantiate(deadSoundObject, transform.position, transform.rotation);
+
             Invoke("die", 2f);
             (Instantiate(deathParticles, transform.position, Quaternion.identity) as ParticleSystem).Play();
             this.gameObject.GetComponent<playerController>().enabled = false;
@@ -893,6 +894,7 @@ public class playerController : MonoBehaviour
 
     private void die()
     {
+        PlayerSave.SavePlayer(this);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -904,6 +906,10 @@ public class playerController : MonoBehaviour
             {
                 if (playerLives + 2 <= 4) {
                     playerLives = playerLives + 2;
+                }
+                else
+                {
+                    playerLives = 4;
                 }
             }else
             {

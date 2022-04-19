@@ -11,7 +11,8 @@ public class BossVoice : FatherEnemy
         Projectiles,
         Plataform,
         Altars,
-        Shield,
+        Laser,
+        LaserBall,
         SwitchFase,
         Dead
     }
@@ -25,7 +26,11 @@ public class BossVoice : FatherEnemy
         firstLoop = true,
         hasAltars = false,
         isAltars = false,
-        isStarting = true;
+        isStarting = true,
+        spikes = false,
+        platforming = false,
+        doAdvice = false,
+        laseringBall = false;
 
     public HealthBarBoss healthBar;
 
@@ -34,7 +39,11 @@ public class BossVoice : FatherEnemy
     private int actualFase = 0,
         numAltars = 2,
         numAltarsV2 = 4,
-        numAltarsV3 = 8;
+        numAltarsV3 = 6,
+        platformNumber,
+        platformNumberNext,
+        type,
+        direction = 1;
 
     [SerializeField]
     private int ammountBullets = 4,
@@ -48,32 +57,112 @@ public class BossVoice : FatherEnemy
         rateBullets = 2f,
         rateBulletsV3 = 1.5f,
         waitingDuration = 4f,
-        altarsPreDuration = 8f,
+        waitingDurationV2 = 3f,
+        waitingDurationV3 = 2f,
+        altarsPreDuration = 6f,
+        altarsPreDurationV2 = 6f,
+        altarsPreDurationV3 = 8f,
         altarsDuration = 2f,
         projectilesDuration = 6f,
-        switchFaseDuration = 2f;
+        plataformAnimationDuration = 1.5f,
+        plataformDuration = 1f,
+        plataformDurationV2 = 1f,
+        platformAdviceDuration = 1f,
+        plataformsMaxDuration = 10f,
+        plataformsMaxDurationV2 = 10.5f,
+        switchFaseDuration = 2f,
+        spikesDuration = 6f,
+        spikesDurationV2 = 5f,
+        spikesExtraDuration = 1f,
+        spikesExtraDuration2 = 1f,
+        laserDuration = 1f,
+        laserDurationV3 = 1f,
+        laserAnimationDuration = 1.5f,
+        laserStartAngle = 225,
+        laserEndAngle = -45,
+        laserStartAngleV2 = 135,
+        laserEndAngleV2 = 405,
+        laserStartAngleV3 = 225,
+        laserEndAngleV3 = -45,
+        laserBallAnimationDuration = 1,
+        laserBallPreDuration = 3,
+        laserBallNoActivationDuration = 2,
+        laserBallNoActivationDurationV3 = 2,
+        laserBallDuration = 5,
+        laserBallSpeed = 25,
+        laserBallSpeedV3 = 15;
 
     private float currentHealth, 
         waitingStartTime,
         altarsStartTime,
         projectilesStartTime,
-        switchFaseStartTime;
+        plataformStartTime,
+        nextPlatformStartTime,
+        switchFaseStartTime,
+        spikesStartTime,
+        laserStartTime,
+        laserBallStartTime;
+
+    [SerializeField]
+    private ParticleSystem
+        groundParticles,
+        roofParticles,
+        rightParticles,
+        leftParticles;
 
     public List<AltarBehaviour> altars = new List<AltarBehaviour>();
+    public List<GameObject> platforms = new List<GameObject>();
+    public List<GameObject> lasers = new List<GameObject>();
+    public List<GameObject> preLasers = new List<GameObject>();
 
     [SerializeField]
     private GameObject shield,
         sprite,
         portal,
-        portalSpawnPoint;
+        portalSpawnPoint,
+        endPos,
+        platform1,
+        platform2,
+        groundSpikes,
+        endGroundSpikes,
+        roofSpikes,
+        endRoofSpikes,
+        leftSpikes,
+        rightSpikes,
+        startPlatforms,
+        endPlatforms,
+        advice,
+        laser,
+        laserCenter,
+        laserBall,
+        spotA,
+        spotB;
 
     private Animator spriteAnimator;
 
-    [SerializeField]
-    private AudioClip clip;
+    private Vector3 
+        startPos,
+        spikestStartPos,
+        spikestStartPos2,
+        platformsStartPos;
 
     [SerializeField]
-    private AudioSource audio;
+    private AudioClip clip,
+        clip2,
+        clip3,
+        clip4,
+        clip5,
+        clip6,
+        clip7;
+
+    [SerializeField]
+    private AudioSource audio,
+        audio2,
+        audio3,
+        audio4,
+        audio5,
+        audio6,
+        audio7;
 
     // Start is called before the first frame update
     void Start()
@@ -83,6 +172,18 @@ public class BossVoice : FatherEnemy
         GetComponent<FireVoiceBullets>().SetAmmount(ammountBullets);
         currentHealth = maxHealth;
         SwitchState(State.Waiting);
+        startPos = sprite.transform.position;
+        spikestStartPos = groundSpikes.transform.position;
+        spikestStartPos2 = roofSpikes.transform.position;
+        platformsStartPos = startPlatforms.transform.position;
+
+        statesToRandomize = new State[6];
+        statesToRandomize[0] = State.Projectiles;
+        statesToRandomize[1] = State.Projectiles;
+        statesToRandomize[2] = State.Projectiles;
+        statesToRandomize[3] = State.Plataform;
+        statesToRandomize[4] = State.Laser;
+        statesToRandomize[5] = State.LaserBall;
     }
 
     // Update is called once per frame
@@ -149,6 +250,229 @@ public class BossVoice : FatherEnemy
         }
         #endregion
 
+        #region Spikes
+        if (spikes)
+        {
+
+            if (Time.time >= spikesStartTime + spikesDuration)
+            {
+                if (Time.time >= spikesStartTime + spikesDuration + spikesExtraDuration)
+                {
+                    if (actualFase == 2)
+                    {
+                        groundSpikes.transform.position = spikestStartPos;
+                        spikes = false;
+                    }
+
+                    //groundSpikes.SetActive(false);
+
+
+                    if(actualFase == 3)
+                    {
+                        roofSpikes.transform.position = spikestStartPos2;
+                        platform1.SetActive(false);
+                        platform2.SetActive(false);
+                        if (Time.time >= spikesStartTime + spikesDuration + spikesExtraDuration + spikesExtraDuration2)
+                        {
+                            spikes = false;
+                            leftParticles.Play();
+                            rightParticles.Play();
+                            leftSpikes.SetActive(true);
+                            rightSpikes.SetActive(true);
+                            Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                float value = spikestStartPos.y;
+                if (actualFase == 2)
+                {
+                    value = Lerp(spikestStartPos.y, endGroundSpikes.transform.position.y, spikesStartTime, spikesDuration);
+                    groundSpikes.transform.position = new Vector3(groundSpikes.transform.position.x, value, groundSpikes.transform.position.z);
+                }
+                if (actualFase == 3)
+                {
+                    value = Lerp(spikestStartPos2.y, endRoofSpikes.transform.position.y, spikesStartTime, spikesDuration);
+                    roofSpikes.transform.position = new Vector3(roofSpikes.transform.position.x, value, roofSpikes.transform.position.z);
+                }
+
+                
+            }
+        }
+        #endregion
+
+        #region Platform
+        if (platforming)
+        {
+            if (Time.time >= plataformStartTime + plataformAnimationDuration + plataformsMaxDuration)
+            {
+                platforming = false;
+                platforms[platformNumber].transform.position = platformsStartPos;
+                platforms[platformNumber].SetActive(false);
+                advice.SetActive(false);
+            }
+            else
+            {
+                if (Time.time >= nextPlatformStartTime + plataformDuration - platformAdviceDuration && doAdvice && !(Time.time >= plataformStartTime + plataformAnimationDuration + plataformsMaxDuration - plataformDuration))
+                {
+                    //fer advice
+                    platformNumberNext = Random.Range(0, platforms.Count);
+                    advice.transform.position = new Vector3(platforms[platformNumberNext].transform.position.x, advice.transform.position.y, advice.transform.position.z);
+                    advice.SetActive(true);
+                    advice.GetComponent<Animator>().Play("Advice");
+                    doAdvice = false;
+                }
+                if (Time.time >= nextPlatformStartTime + plataformDuration)
+                {
+                    //acaba la platform d'ara
+                    nextPlatformStartTime = Time.time;
+                    platforms[platformNumber].transform.position = platformsStartPos;
+                    platforms[platformNumber].SetActive(false);
+
+                    platformNumber = platformNumberNext;
+
+                    platformsStartPos = platforms[platformNumber].transform.position;
+                    platforms[platformNumber].SetActive(true);
+                    doAdvice = true;
+                    advice.SetActive(false);
+                }
+                else
+                {
+                    float value = Lerp(platformsStartPos.y, endPlatforms.transform.position.y, nextPlatformStartTime, plataformDuration);
+
+                    platforms[platformNumber].transform.position = new Vector3(platforms[platformNumber].transform.position.x, value, platforms[platformNumber].transform.position.z);
+                }
+            }
+            /*
+            if (Time.time >= plataformStartTime + plataformAnimationDuration + plataformDuration)
+            {
+
+                //platforming = false;
+                platforms[platformNumber].transform.position = platformsStartPos;
+                platforms[platformNumber].SetActive(false);
+            }
+            else
+            {
+
+                float value = Lerp(platformsStartPos.y, endPlatforms.transform.position.y, (plataformStartTime + plataformAnimationDuration), plataformDuration);
+
+                platforms[platformNumber].transform.position = new Vector3(platforms[platformNumber].transform.position.x, value, platforms[platformNumber].transform.position.z);
+                //platforms[platformNumber].transform.position = Vector3.MoveTowards(platforms[platformNumber].transform.position, endPlatforms.transform.position, 20 * Time.deltaTime);
+            }*/
+        }
+        #endregion
+
+        #region LaserBall
+        if (laseringBall)
+        {
+            if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration + laserBallDuration)
+            {
+                laseringBall = false;
+                laserBall.SetActive(false);
+                preLasers[0].SetActive(false);
+                preLasers[1].SetActive(false);
+                preLasers[2].SetActive(false);
+                preLasers[3].SetActive(false);
+                lasers[0].SetActive(false);
+                lasers[1].SetActive(false);
+                lasers[2].SetActive(false);
+                lasers[3].SetActive(false);
+            }
+            else
+            {
+                laserBall.transform.Rotate(0, 0, laserBallSpeed * Time.deltaTime * direction);
+                laserBall.SetActive(true);
+                if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration)
+                {
+                    //no cal(?)
+                    if (actualFase == 2)
+                    {
+
+                        lasers[0].SetActive(true);
+                        lasers[1].SetActive(true);
+
+                        //laserBall.transform.position = spotB.transform.position;
+                    }
+                    else
+                    {
+                        laserBall.SetActive(true);
+                        laserBall.transform.position = spotA.transform.position;
+
+                        if (actualFase == 1)
+                        {
+                            lasers[0].SetActive(true);
+
+                        }
+                        else
+                        {
+
+                            lasers[0].SetActive(true);
+                            lasers[1].SetActive(true);
+                            lasers[2].SetActive(true);
+                            lasers[3].SetActive(true);
+                        }
+                    }
+                }
+                else
+                {
+                    if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallNoActivationDuration)
+                    {
+                        if (actualFase == 2)
+                        {
+
+                            lasers[0].SetActive(true);
+                            lasers[1].SetActive(true);
+
+                            //laserBall.transform.position = spotB.transform.position;
+                        }
+                        else
+                        {
+                            //laserBall.transform.position = spotA.transform.position;
+                            if (actualFase == 1)
+                            {
+                                lasers[0].SetActive(true);
+
+                            }
+                            else
+                            {
+                                lasers[0].SetActive(true);
+                                lasers[1].SetActive(true);
+                                lasers[2].SetActive(true);
+                                lasers[3].SetActive(true);
+                            }
+                        }
+                    }
+                    float pos;
+                    if (actualFase == 2)
+                    {
+                        pos = Lerp(laserCenter.transform.position.y, spotB.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        preLasers[0].SetActive(true);
+                        preLasers[1].SetActive(true);
+                    }
+                    else
+                    {
+                        pos = Lerp(laserCenter.transform.position.y, spotA.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        if (actualFase == 1)
+                        {
+                            preLasers[0].SetActive(true);
+                        }
+                        else
+                        {
+                            preLasers[0].SetActive(true);
+                            preLasers[1].SetActive(true);
+                            preLasers[2].SetActive(true);
+                            preLasers[3].SetActive(true);
+                        }
+                    }
+                    laserBall.transform.position = new Vector3(laserBall.transform.position.x, pos, laserBall.transform.position.z);
+                }
+            }
+        }
+        #endregion
+
         switch (currentState)
         {
 
@@ -164,8 +488,11 @@ public class BossVoice : FatherEnemy
             case State.Altars:
                 UpdateAltarsState();
                 break;
-            case State.Shield:
-                UpdateShieldState();
+            case State.Laser:
+                UpdateLaserState();
+                break;
+            case State.LaserBall:
+                UpdateLaserBallState();
                 break;
             case State.SwitchFase:
                 UpdateSwitchFaseState();
@@ -211,9 +538,12 @@ public class BossVoice : FatherEnemy
                 }
                 else
                 {
-                    SwitchState(State.Projectiles);
+                    //SwitchState(State.Projectiles);
+                    //SwitchState(State.Plataform);
+                    SwitchState(RandomBehaviour());
                 }
             }
+
         }
     }
 
@@ -229,6 +559,8 @@ public class BossVoice : FatherEnemy
     {
         projectilesStartTime = Time.time;
         firstLoop = true;
+        audio5.clip = clip5;
+        audio5.Play();
     }
     private void UpdateProjectilesState()
     {
@@ -255,15 +587,43 @@ public class BossVoice : FatherEnemy
     #region PLATAFORM
     private void EnterPlataformState()
     {
-
+        plataformStartTime = Time.time;
+        //platformNumber = Random.Range(0,platforms.Count);
+        doAdvice = true;
+        audio3.clip = clip3;
+        audio3.Play();
     }
     private void UpdatePlataformState()
     {
 
+        if (Time.time >= plataformStartTime + plataformAnimationDuration)
+        {
+            platforming = true;
+            //platforms[platformNumber].SetActive(true);
+            nextPlatformStartTime = Time.time;
+            platformNumber = platformNumberNext;
+            platformsStartPos = platforms[platformNumber].transform.position;
+            platforms[platformNumber].SetActive(true);
+            advice.SetActive(false);
+            doAdvice = true;
+
+            SwitchState(State.Waiting);
+        }
+        else
+        {
+            if (Time.time >= plataformStartTime + plataformAnimationDuration - platformAdviceDuration && doAdvice)
+            {
+                platformNumberNext = Random.Range(0, platforms.Count);
+                advice.transform.position = new Vector3(platforms[platformNumberNext].transform.position.x, advice.transform.position.y, advice.transform.position.z);
+                advice.SetActive(true);
+                advice.GetComponent<Animator>().Play("Advice");
+                doAdvice = false;
+            }
+        }
     }
     private void ExitPlataformState()
     {
-
+        advice.SetActive(false);
     }
     #endregion
 
@@ -274,6 +634,7 @@ public class BossVoice : FatherEnemy
         altarsStartTime = Time.time;
         firstLoop = true;
         isAltars = true;
+        Invoke("activateAltarsSound", altarsPreDuration - 1f);
     }
     private void UpdateAltarsState()
     {
@@ -281,6 +642,7 @@ public class BossVoice : FatherEnemy
         {
             if (firstLoop)
             {
+
                 firstLoop = false;
                 activateAltars = new int[numAltars];
                 bool isOK;
@@ -329,7 +691,8 @@ public class BossVoice : FatherEnemy
             }
             if (Time.time >= altarsStartTime + altarsPreDuration + altarsDuration)
             {
-                SwitchState(State.Projectiles);
+                //SwitchState(State.Projectiles);
+                SwitchState(RandomBehaviour());
             }
             else
             {
@@ -341,6 +704,13 @@ public class BossVoice : FatherEnemy
             //animacio de pocho sense escut
         }
     }
+
+    private void activateAltarsSound()
+    {
+        audio6.clip = clip6;
+        audio6.Play();
+    }
+
     private void ExitAltarsState()
     {
         isStarting = false;
@@ -348,17 +718,75 @@ public class BossVoice : FatherEnemy
     }
     #endregion
 
-    //-------SHIELD------
-    #region SHIELD
-    private void EnterShieldState()
+    //-------LASER------
+    #region LASER
+    private void EnterLaserState()
     {
+        laserStartTime = Time.time;
+        type = Random.Range(0, 2);
+        audio4.clip = clip4;
+        audio4.Play();
+    }
+    private void UpdateLaserState()
+    {
+        if (Time.time >= laserStartTime + laserAnimationDuration)
+        {
+            if (Time.time >= laserStartTime + laserAnimationDuration + laserDuration)
+            {
+
+                SwitchState(State.Waiting);
+            }
+            else
+            {
+                laser.SetActive(true);
+                float angle;
+                if (type == 0) 
+                {
+                    angle = Lerp(laserEndAngle, laserStartAngle, laserStartTime + laserAnimationDuration, laserDuration);
+                }
+                else
+                {
+                    angle = Lerp(laserStartAngle, laserEndAngle, laserStartTime + laserAnimationDuration, laserDuration);
+                }
+                laser.transform.rotation = Quaternion.Euler(0, 0, angle);
+            }
+        }
 
     }
-    private void UpdateShieldState()
+    private void ExitLaserState()
     {
-
+        laser.SetActive(false);
+        laser.GetComponentInChildren<Laser>().StopParticles();
     }
-    private void ExitShieldState()
+    #endregion
+
+    //-------LASERBALL------
+    #region LASERBALL
+    private void EnterLaserBallState()
+    {
+        laserBallStartTime = Time.time;
+        audio7.clip = clip7;
+        audio7.Play();
+        int val = Random.Range(0, 2);
+        if (val == 0)
+        {
+            direction = 1;
+        }
+        else
+        {
+            direction = -1;
+        }
+    }
+    private void UpdateLaserBallState()
+    {
+        if (Time.time >= laserBallStartTime + laserBallAnimationDuration)
+        {
+            laseringBall = true;
+            laserBall.transform.position = laserCenter.transform.position;
+            SwitchState(State.Waiting);
+        }
+    }
+    private void ExitLaserBallState()
     {
 
     }
@@ -368,6 +796,19 @@ public class BossVoice : FatherEnemy
     #region SWITCHFASE
     private void EnterSwitchFaseState()
     {
+        laseringBall = false;
+        laserBall.SetActive(false);
+        preLasers[0].SetActive(false);
+        preLasers[1].SetActive(false);
+        preLasers[2].SetActive(false);
+        preLasers[3].SetActive(false);
+        lasers[0].SetActive(false);
+        lasers[1].SetActive(false);
+        lasers[2].SetActive(false);
+        lasers[3].SetActive(false);
+        CancelInvoke("activateAltarsSound");
+        audio2.clip = clip2;
+        audio2.Play();
         switch (actualFase)
         {
             case 1:
@@ -377,13 +818,34 @@ public class BossVoice : FatherEnemy
             case 2:
                 numAltars = numAltarsV2;
                 GetComponent<FireVoiceBullets>().SetAmmount(ammountBulletsV2);
+                //GetComponent<FireVoiceBullets>().ChangeAngles(-165, 165);
+                GetComponent<FireVoiceBullets>().ChangeAngles(-105, -255);
+                groundParticles.Play();
+                plataformDuration = plataformDurationV2;
+                plataformsMaxDuration = plataformsMaxDurationV2;
+                laserEndAngle = laserEndAngleV2;
+                laserStartAngle = laserStartAngleV2;
+                waitingDuration = waitingDurationV2;
+                altarsPreDuration = altarsPreDurationV2;
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
                 numAltars = numAltarsV3;
+                groundSpikes.SetActive(false);
+                roofParticles.Play();
+                spikesDuration = spikesDurationV2;
+                laserEndAngle = laserEndAngleV3;
+                laserStartAngle = laserStartAngleV3;
+                laserDuration = laserDurationV3;
+                waitingDuration = waitingDurationV3;
+                altarsPreDuration = altarsPreDurationV3;
+                laserBallNoActivationDuration = laserBallNoActivationDurationV3;
+                laserBallSpeed = laserBallSpeedV3;
+
                 GetComponent<FireVoiceBullets>().SetAmmount(ammountBulletsV3);
                 GetComponent<FireVoiceBullets>().SetFireRate(rateBulletsV3);
-                
+                GetComponent<FireVoiceBullets>().ChangeAngles(-75, 75);
+
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }
@@ -393,8 +855,22 @@ public class BossVoice : FatherEnemy
     }
     private void UpdateSwitchFaseState()
     {
+        Camera.main.GetComponent<Animator>().SetTrigger("shake");
+        float value = startPos.y;
+        if (actualFase == 2)
+        {
+            value = Lerp(startPos.y, endPos.transform.position.y, switchFaseStartTime, switchFaseDuration);
+        }
+        if(actualFase == 3)
+        {
+            value = Lerp( endPos.transform.position.y, startPos.y, switchFaseStartTime, switchFaseDuration);
+        }
+
+        sprite.transform.position = new Vector3( sprite.transform.position.x, value, sprite.transform.position.z);
+
         if (Time.time >= switchFaseStartTime + switchFaseDuration)
         {
+
             isStarting = true;
             hasInmunity = true;
             shield.SetActive(true);
@@ -403,6 +879,14 @@ public class BossVoice : FatherEnemy
     }
     private void ExitSwitchFaseState()
     {
+        if (actualFase == 2)
+        {
+            platform1.SetActive(true);
+            platform2.SetActive(true);
+        }
+        spikes = true;
+        spikesStartTime = Time.time;
+        groundSpikes.SetActive(true);
         switchingFase = false;
     }
     #endregion
@@ -444,8 +928,11 @@ public class BossVoice : FatherEnemy
             case State.Altars:
                 ExitAltarsState();
                 break;
-            case State.Shield:
-                ExitShieldState();
+            case State.Laser:
+                ExitLaserState();
+                break;            
+            case State.LaserBall:
+                ExitLaserBallState();
                 break;
             case State.SwitchFase:
                 ExitSwitchFaseState();
@@ -469,8 +956,11 @@ public class BossVoice : FatherEnemy
             case State.Altars:
                 EnterAltarsState();
                 break;
-            case State.Shield:
-                EnterShieldState();
+            case State.Laser:
+                EnterLaserState();
+                break;            
+            case State.LaserBall:
+                EnterLaserBallState();
                 break;
             case State.SwitchFase:
                 EnterSwitchFaseState();
@@ -482,10 +972,49 @@ public class BossVoice : FatherEnemy
 
         currentState = state;
     }
+    private float Lerp(float start, float end, float timeStartedLerping, float lerpTime = 1)
+    {
+        float timeSinceStarted = Time.time - timeStartedLerping;
+
+        float percentageComplete = timeSinceStarted / lerpTime;
+
+        float result = Vector3.Lerp(new Vector3(start, 0, 0), new Vector3(end, 0, 0), percentageComplete).x;
+
+        return result;
+    }
 
     public override void applyKnockback(float[] position)
     {
         //Nothing
+    }
+
+    private State RandomBehaviour()
+    {
+        /*
+        if (meteoring && venoming && isFrontAttack)
+        {
+            if (actualFase == 3)
+            {
+                return State.JumpAttack;
+            }
+            else
+            {
+                return State.Walking;
+            }
+        }*/
+
+        bool isOk = false;
+        while (!isOk)
+        {
+            int pos = Random.Range(0, (statesToRandomize.Length));
+            if (!(statesToRandomize[pos] == State.Plataform && platforming)
+                && !(statesToRandomize[pos] == State.LaserBall && laseringBall))
+            {
+                return statesToRandomize[pos];
+            }
+        }
+        //no hauria
+        return State.Waiting;
     }
 
     public override void Damage(float[] attackDetails, bool wantKnockback)

@@ -8,8 +8,8 @@ public class FireVoiceBullets : MonoBehaviour
     private int bulletsAmount = 10;
 
     [SerializeField]
-    private float startAngle = 90f,
-        endAngle = 270f;
+    private float startAngle = -75f,
+        endAngle = 75f;
 
     private Vector2 bulletMoveDirection;
 
@@ -65,5 +65,11 @@ public class FireVoiceBullets : MonoBehaviour
     public void SetFireRate(float rate)
     {
         fireRate = rate;
+    }
+
+    public void ChangeAngles(float start, float end)
+    {
+        startAngle = start;
+        endAngle = end;
     }
 }

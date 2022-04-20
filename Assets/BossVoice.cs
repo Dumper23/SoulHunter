@@ -412,7 +412,7 @@ public class BossVoice : FatherEnemy
                             lasers[0].SetActive(true);
                             lasers[1].SetActive(true);
                             lasers[2].SetActive(true);
-                            lasers[3].SetActive(true);
+                            //lasers[3].SetActive(true);
                         }
                     }
                 }
@@ -441,7 +441,7 @@ public class BossVoice : FatherEnemy
                                 lasers[0].SetActive(true);
                                 lasers[1].SetActive(true);
                                 lasers[2].SetActive(true);
-                                lasers[3].SetActive(true);
+                                //lasers[3].SetActive(true);
                             }
                         }
                     }
@@ -464,7 +464,7 @@ public class BossVoice : FatherEnemy
                             preLasers[0].SetActive(true);
                             preLasers[1].SetActive(true);
                             preLasers[2].SetActive(true);
-                            preLasers[3].SetActive(true);
+                            //preLasers[3].SetActive(true);
                         }
                     }
                     laserBall.transform.position = new Vector3(laserBall.transform.position.x, pos, laserBall.transform.position.z);

@@ -41264,6 +41264,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1230119991}
     - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
+      propertyPath: attackDamage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556257231163928204, guid: e2be7e61eac74134ebdc68e57881cf2f, type: 3}
       propertyPath: lostSoulName
       value: 
       objectReference: {fileID: 1230119976}
@@ -45983,6 +45987,10 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 957762089}
+    - target: {fileID: 3414335182874165132, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: altarsPreDurationV3
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3414335182874165133, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
       propertyPath: m_Name
       value: BossVoice

@@ -39779,7 +39779,7 @@ GameObject:
   - component: {fileID: 1226840743}
   m_Layer: 0
   m_Name: DifWall
-  m_TagString: Untagged
+  m_TagString: difWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45989,7 +45989,7 @@ PrefabInstance:
       objectReference: {fileID: 957762089}
     - target: {fileID: 3414335182874165132, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
       propertyPath: altarsPreDurationV3
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3414335182874165133, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
       propertyPath: m_Name

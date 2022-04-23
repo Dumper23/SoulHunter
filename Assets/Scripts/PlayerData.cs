@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class PlayerData{
-
+    public int deaths;
     public int points;
     public int lives;
     public int attackDamage;
@@ -18,10 +18,12 @@ public class PlayerData{
 
     public PlayerData(playerController player)
     {
+
         points = GameManager.Instance.getPoints();
         lives = player.playerLives;
         attackDamage = player.attackDamage;
         attackRate = player.attackRate;
+        deaths = player.deaths;
 
         position = new float[3];
         position[0] = player.transform.position.x;

@@ -72,7 +72,7 @@ public class bulletSeeker : FatherBullet
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.tag == "ground")
+        if (collision.transform.tag == "ground" || collision.transform.tag == "difWall")
         {
             gameObject.SetActive(false);
         }

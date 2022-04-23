@@ -17,6 +17,9 @@ TagManager:
   - Meteor
   - Limit
   - BossIgnore
+  - deathText
+  - damageScreen
+  - difWall
   layers:
   - Default
   - TransparentFX

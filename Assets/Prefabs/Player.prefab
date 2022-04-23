@@ -313,6 +313,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  bulletLayer:
+    serializedVersion: 2
+    m_Bits: 0
   attackDamage: 10
   attackRate: 3
   playerLives: 4
@@ -328,8 +331,6 @@ MonoBehaviour:
   live3: {fileID: 0}
   live4: {fileID: 0}
   shield: {fileID: 0}
-  attackIndicator: {fileID: 0}
-  speedIndicator: {fileID: 0}
   shieldTimer: {fileID: 0}
   lostSoulName: {fileID: 0}
   lostSoulDescription: {fileID: 0}
@@ -351,6 +352,9 @@ MonoBehaviour:
   - name: 
     image: {fileID: 0}
   inventoryUI: {fileID: 0}
+  damageRedScreen: {fileID: 0}
+  stepTime: 0
+  timeToStep: 0.25
   playerSounds:
   - {fileID: 4556257231163928200}
   - {fileID: 4556257231163926903}
@@ -391,7 +395,9 @@ MonoBehaviour:
   outBurstRange: 0.5
   outBurstDamage: 2
   currentLevel: Tutorial
+  deaths: 0
   venomBar: {fileID: 0}
+  wallJumpTime: 0.2
 --- !u!95 &4556257231163928202
 Animator:
   serializedVersion: 3

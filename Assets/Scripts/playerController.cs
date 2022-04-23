@@ -110,8 +110,14 @@ public class playerController : MonoBehaviour
     public List<GameObject> lostSoulToggles = new List<GameObject>();
     public LostSoulsPlaceHolderIcons[] lostSoulsEquippedIcons;
     public GameObject inventoryUI;
+    public GameObject damageRedScreen;
+
+    private TextMeshProUGUI deathTextCounter;
+
 
     [Header("Sound Settings")]
+    public float stepTime = 0f;
+    public float timeToStep = 0.5f;
     public List<AudioSource> playerSounds = new List<AudioSource>();
     public GameObject deadSoundObject;
     public AudioSource generalAudios;
@@ -152,6 +158,7 @@ public class playerController : MonoBehaviour
     private int enemyCounter = 0;
     public string currentLevel = "Tutorial";
     private bool paused = false;
+    public int deaths = 0;
     
     //Venom variables
     private float distanceTraveled = 0;
@@ -179,6 +186,8 @@ public class playerController : MonoBehaviour
     private float wallJumpCounter;
     void Start()
     {
+        deathTextCounter = GameObject.FindGameObjectWithTag("deathText").GetComponent<TextMeshProUGUI>();
+        damageRedScreen = GameObject.FindGameObjectWithTag("damageScreen");
         descriptions();
         if (loadPlayerData)
         {
@@ -214,6 +223,8 @@ public class playerController : MonoBehaviour
 
         //We find the ground collider game object
         groundCollider = transform.Find("groundCollider");
+
+        deathTextCounter.text = "x"+ deaths.ToString();
     }
 
     private void descriptions()
@@ -264,6 +275,7 @@ public class playerController : MonoBehaviour
             playerVelocity = temp.speed;
             transform.position = new Vector3(temp.position[0], temp.position[1]);
             currentLevel = temp.currentLevel;
+            deaths = temp.deaths;
             for (int i = 0; i < temp.lostSouls.Length; i++)
             {
                 if (temp.lostSouls[i] != null)
@@ -295,7 +307,6 @@ public class playerController : MonoBehaviour
         }
     }
 
-    //-----------TODO: FixedUpdate (All the physics calculation and Update All the imput recievement)
 
     private void FixedUpdate()
     {
@@ -464,9 +475,18 @@ public class playerController : MonoBehaviour
                 {
                     if (isGrounded)
                     {
-                        if (horizontalIn != 0)
+                        if (Mathf.Abs(horizontalIn) >= 0.1)
                         {
                             changeAnimationState(PLAYER_RUN);
+                            if (!isAttacking)
+                            {
+                                animator.speed = Mathf.Abs(horizontalIn);
+                            }
+                            else
+                            {
+                                animator.speed = 1;
+                            }
+                            
                         }
                         else
                         {
@@ -525,6 +545,16 @@ public class playerController : MonoBehaviour
                     }
                     if (horizontalIn != 0)
                     {
+                        if (!isAttacking)
+                        {
+                            if (Time.time >= stepTime)
+                            {
+                                playerSounds[1].Play();
+                                stepTime = Time.time + timeToStep - Mathf.Abs(horizontalIn) * 0.1f;
+                            }
+                        }
+
+                        
                         if (timeTrail <= 0)
                         {
                             Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
@@ -534,7 +564,7 @@ public class playerController : MonoBehaviour
                             }
                             Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                             timeTrail = startTimeTrail;
-                            playerSounds[1].Play();
+                           
                         }
                         else
                         {
@@ -632,9 +662,13 @@ public class playerController : MonoBehaviour
 
                 #endregion
 
-            //Combat functionality
-            
+                //Combat functionality
+
                 #region Combat
+                if (isAttacking)
+                {
+                    animator.speed = 1;
+                }
                 if (horizontalIn < 0)
                 {
                     attackPoint.position = new Vector3(-relativeAttackPointPos + transform.position.x, attackPoint.position.y, attackPoint.position.z);
@@ -730,10 +764,12 @@ public class playerController : MonoBehaviour
         #region Player death
         if (playerLives <= 0)
         {
+            damageRedScreen.GetComponent<Animator>().Play("damageScreen");
             updateLiveUI();
             deadSoundObject.GetComponent<AudioSource>().clip = deadSound;
             Instantiate(deadSoundObject, transform.position, transform.rotation);
-
+            deaths++;
+            deathTextCounter.text = "x" + deaths.ToString();
             Invoke("die", 2f);
             (Instantiate(deathParticles, transform.position, Quaternion.identity) as ParticleSystem).Play();
             this.gameObject.GetComponent<playerController>().enabled = false;
@@ -852,6 +888,7 @@ public class playerController : MonoBehaviour
             {
                 playerSounds[4].Play();
                 playerLives--;
+                damageRedScreen.GetComponent<Animator>().Play("damageScreen");
                 //Activate Thorns here
                 if (lostSouls.TryGetValue("Thorns", out LostSouls thorns))
                 {
@@ -863,6 +900,7 @@ public class playerController : MonoBehaviour
             }
             else
             {
+                damageRedScreen.GetComponent<Animator>().Play("damageScreen");
                 shield.color = new Color(0, 0, 0, 0);
                 shielded = false;
                 shieldTimer.enabled = true;

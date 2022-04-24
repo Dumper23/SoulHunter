@@ -138,12 +138,20 @@ public class playerController : MonoBehaviour
     public float holyWaterDamageMultiplier = 1.5f;
     public float outBurstRange = 1f;
     public float outBurstDamage = 1f;
+    public float voiceBulletSpeed = 10f;
+    public int voiceBulletDamage = 5;
+    public float voiceBulletTime = 1f;
+    public float voiceAttackRate = 1f;
+    [Range(0, 0.75f)]
+    public float voiceDispersion = 1f;
 
     private int lostSoulsEquipped = 0;
     private bool stoneBreaker = false;
     private bool holyWater = false;
     private bool soulKeeperActive = false;
     private bool deflectMissiles = false;
+    private bool voice = false;
+    private float nextVoice = 0;
     private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
     //Other settings
@@ -184,6 +192,7 @@ public class playerController : MonoBehaviour
 
     public float wallJumpTime = 0.2f;
     private float wallJumpCounter;
+    private Collider2D tempCollider;
     void Start()
     {
         deathTextCounter = GameObject.FindGameObjectWithTag("deathText").GetComponent<TextMeshProUGUI>();
@@ -256,6 +265,9 @@ public class playerController : MonoBehaviour
 
         lostSoulDescriptionDictionary.Add("HolyWater",
             "You will deal more damage to Demonic enemies.\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
+
+        lostSoulDescriptionDictionary.Add("Voice",
+           "You will generate sound waves when you attack.");
 
     }
 
@@ -464,7 +476,7 @@ public class playerController : MonoBehaviour
                 {
                     facingRight = true;
                 }
-                else
+                else if (horizontalIn < 0)
                 {
                     facingRight = false;
                 }
@@ -685,7 +697,44 @@ public class playerController : MonoBehaviour
                         isAttacking = true;
                         generalAudios.clip = bladeSound;
                         generalAudios.Play();
-                        //Play attack animation
+
+                        if (voice && Time.time >= nextVoice)
+                        {
+                            
+                            //Shoot
+                            GameObject bullet = playerBulletPool.Instance.GetPooledObject();
+                            if (bullet != null)
+                            {
+                                bullet.transform.position = this.transform.position;
+                                bullet.GetComponent<playerBullet>().speed = voiceBulletSpeed;
+                                bullet.GetComponent<playerBullet>().damage = voiceBulletDamage;
+                                bullet.GetComponent<playerBullet>().directionToMove = (facingRight ? new Vector2(1, 0) : new Vector2(-1, 0));
+                                bullet.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
+                                bullet.SetActive(true);
+                            }
+                            GameObject bullet2 = playerBulletPool.Instance.GetPooledObject();
+                            if (bullet2 != null)
+                            {
+                                bullet2.transform.position = this.transform.position;
+                                bullet2.GetComponent<playerBullet>().speed = voiceBulletSpeed;
+                                bullet2.GetComponent<playerBullet>().damage = voiceBulletDamage;
+                                bullet2.GetComponent<playerBullet>().directionToMove = (facingRight ? new Vector2(1, voiceDispersion) : new Vector2(-1, voiceDispersion));
+                                bullet2.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
+                                bullet2.SetActive(true);
+                            }
+                            GameObject bullet3 = playerBulletPool.Instance.GetPooledObject();
+                            if (bullet3 != null)
+                            {
+                                bullet3.transform.position = this.transform.position;
+                                bullet3.GetComponent<playerBullet>().speed = voiceBulletSpeed;
+                                bullet3.GetComponent<playerBullet>().damage = voiceBulletDamage;
+                                bullet3.GetComponent<playerBullet>().directionToMove = (facingRight ? new Vector2(1, -voiceDispersion) : new Vector2(-1, -voiceDispersion));
+                                bullet3.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
+                                bullet3.SetActive(true);
+                            }
+                            nextVoice = Time.time + 1 / voiceAttackRate;
+                        }
+
                         if (isGrounded)
                         {
                             changeAnimationState(PLAYER_ATTACK);
@@ -777,6 +826,7 @@ public class playerController : MonoBehaviour
             this.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             this.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
             this.gameObject.SetActive(false);
+            PlayerSave.SavePlayer(this);
         }
         #endregion
 
@@ -869,13 +919,16 @@ public class playerController : MonoBehaviour
 
     private void deflectMissilesFunction()
     {
-        Collider2D[] hitBullets = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), bulletLayer);
-
-        foreach(Collider2D bullet in hitBullets)
+        if (deflectMissiles)
         {
-            if (bullet.GetComponent<FatherBullet>() != null)
+            Collider2D[] hitBullets = Physics2D.OverlapBoxAll(attackPoint.position, new Vector2(attackRange, attackRange), bulletLayer);
+
+            foreach (Collider2D bullet in hitBullets)
             {
-                bullet.GetComponent<FatherBullet>().ChangeDirection();
+                if (bullet.GetComponent<FatherBullet>() != null)
+                {
+                    bullet.GetComponent<FatherBullet>().ChangeDirection();
+                }
             }
         }
     }
@@ -932,7 +985,6 @@ public class playerController : MonoBehaviour
 
     private void die()
     {
-        PlayerSave.SavePlayer(this);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -984,10 +1036,11 @@ public class playerController : MonoBehaviour
             {
                 takeDamage();
                 collision.gameObject.SetActive(false);
+                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
             }
             else
             {
-                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
             }
         }
 
@@ -995,15 +1048,21 @@ public class playerController : MonoBehaviour
         {
             if (!isDashing)
             {
-                takeDamage();
+                takeDamage();   
             }
             else
             {
-                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+                tempCollider = collision;
+                Physics2D.IgnoreCollision(collision.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
+                Invoke("returnCollision", 1f);
             }
         }
     }
 
+    private void returnCollision()
+    {
+        Physics2D.IgnoreCollision(tempCollider.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         #region Damage to player
@@ -1039,13 +1098,16 @@ public class playerController : MonoBehaviour
             if (!isDashing)
             {
                 takeDamage();
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
             }
             else
             {
-                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
             }
         }
     }
+
+    
 
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -1285,7 +1347,7 @@ public class playerController : MonoBehaviour
                             damageMessage[2] = transform.position.y;
                             if (enemy.GetComponentInParent<FatherEnemy>() != null)
                             {
-                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, false);
                             }
                         }
                     }
@@ -1315,7 +1377,33 @@ public class playerController : MonoBehaviour
             }
             else
             {
-                deflectMissiles = true;
+                deflectMissiles = false;
+            }
+        }
+
+        if (lostSouls.ContainsKey("Voice"))
+        {
+            lostSouls.TryGetValue("Voice", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                voice = true;
+            }
+            else
+            {
+                voice = false;
+            }
+        }
+
+        if (lostSouls.ContainsKey("DemonKing"))
+        {
+            lostSouls.TryGetValue("DemonKing", out LostSouls ls);
+            if (ls.isEquiped && ls.isActive)
+            {
+                //Demonking on
+            }
+            else
+            {
+                //Demonking off
             }
         }
     }

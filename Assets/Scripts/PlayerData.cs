@@ -135,6 +135,28 @@ public class PlayerData{
             i++;
         }
 
+        if (player.lostSouls.TryGetValue("Voice", out ls))
+        {
+            lostSouls[i] = "Voice";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
+        if (player.lostSouls.TryGetValue("DemonKing", out ls))
+        {
+            lostSouls[i] = "DemonKing";
+            if (ls.isEquiped)
+            {
+                equippedLostSouls[j] = ls.lostSoulName;
+                j++;
+            }
+            i++;
+        }
+
 
 
         speed = player.playerVelocity;

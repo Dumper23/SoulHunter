@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8400102998301369255}
   - component: {fileID: 2019256208533771075}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3042225324012391327}
   - component: {fileID: 8843149380431956191}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 8009967629592147945}
   - component: {fileID: 8009967629592147944}
   - component: {fileID: 8009967629592147947}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: redDoor
   m_TagString: ground
   m_Icon: {fileID: 0}
@@ -327,19 +327,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5423835568570743543, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5423835568866850061, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5423835568933394222, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5423835569005401766, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5423835569839949073, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Pivot.x
@@ -431,7 +431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5423835569839949074, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5423835569839949074, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_IsActive
@@ -439,7 +439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5423835570457765151, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09bd92c18384faa4aa79e0b51aecf77f, type: 3}

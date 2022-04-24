@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 4556257231163926901}
   - component: {fileID: 148214777}
   - component: {fileID: 1598524100100205568}
+  - component: {fileID: 2114549610}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -315,7 +316,7 @@ MonoBehaviour:
     m_Bits: 64
   bulletLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   attackDamage: 10
   attackRate: 3
   playerLives: 4
@@ -335,6 +336,8 @@ MonoBehaviour:
   lostSoulName: {fileID: 0}
   lostSoulDescription: {fileID: 0}
   lostSoulToggles:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -385,6 +388,10 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 076b6efe8e20fbf48be10dc5b20f95d9, type: 3}
   - name: HolyWater
     sprite: {fileID: 21300000, guid: 1790ab1207edd8f4eb67b888a28a8470, type: 3}
+  - name: Voice
+    sprite: {fileID: 21300000, guid: 432793d9d92b8ac42babc5ed7792c502, type: 3}
+  - name: DemonKing
+    sprite: {fileID: 21300000, guid: 18e27a8e41feda94684855bba65604d0, type: 3}
   ThornsPoint: {fileID: 868142690}
   ThornsRange: 2
   light: {fileID: 4556257231619769987}
@@ -394,6 +401,11 @@ MonoBehaviour:
   holyWaterDamageMultiplier: 1.5
   outBurstRange: 0.5
   outBurstDamage: 2
+  voiceBulletSpeed: 10
+  voiceBulletDamage: 5
+  voiceBulletTime: 1
+  voiceAttackRate: 1
+  voiceDispersion: 0.475
   currentLevel: Tutorial
   deaths: 0
   venomBar: {fileID: 0}
@@ -1009,6 +1021,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2114549610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4556257231163928207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2985b0526bce994cb2bac8a27c5fd38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObjects: []
+  objectToPool: {fileID: 2958455641712359070, guid: dc8099ce7b7f79144953bdf1e37530fb, type: 3}
+  amountToPool: 9
 --- !u!1 &4556257231514175597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,13 +1315,13 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 8509282825386138242, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
---- !u!4 &4556257231513842242 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7860880343662132919, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
-  m_PrefabInstance: {fileID: 5921220626856217845}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &4556257231513842241 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 7860880343662132916, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
+  m_PrefabInstance: {fileID: 5921220626856217845}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4556257231513842242 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7860880343662132919, guid: 0e576e937e8855447ad5f6faa5f5cf1c, type: 3}
   m_PrefabInstance: {fileID: 5921220626856217845}
   m_PrefabAsset: {fileID: 0}

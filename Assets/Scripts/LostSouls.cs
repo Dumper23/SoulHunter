@@ -8,8 +8,4 @@ public class LostSouls : MonoBehaviour
     public string lostSoulName;
     public bool isActive;
 
-    private void Start()
-    {
-        
-    }
 }

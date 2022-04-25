@@ -400,12 +400,12 @@ MonoBehaviour:
   stoneBreakerDamageMultiplier: 1.5
   holyWaterDamageMultiplier: 1.5
   outBurstRange: 0.5
-  outBurstDamage: 2
+  outBurstDamage: 5
   voiceBulletSpeed: 10
   voiceBulletDamage: 5
   voiceBulletTime: 1
   voiceAttackRate: 1
-  voiceDispersion: 0.475
+  voiceDispersion: 0.4
   currentLevel: Tutorial
   deaths: 0
   venomBar: {fileID: 0}

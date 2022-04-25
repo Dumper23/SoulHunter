@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     //public Text pointText;
     //public Slider soulBar;
     //public int maxPoints = 125;
+    public bool playerInDemonicAltar = false;
 
     [Header("Pause Menu")]
     public static bool GameIsPaused = false;

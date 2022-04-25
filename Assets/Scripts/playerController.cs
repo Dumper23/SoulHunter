@@ -168,6 +168,7 @@ public class playerController : MonoBehaviour
     private bool paused = false;
     public int deaths = 0;
     
+    
     //Venom variables
     private float distanceTraveled = 0;
     private bool venomed = false;
@@ -388,7 +389,7 @@ public class playerController : MonoBehaviour
         #region LostSouls
         //Lost souls inventory
 
-        if (Input.GetButtonDown("Inventory") && !GameManager.Instance.isPaused()){
+        if (Input.GetButtonDown("Inventory") && !GameManager.Instance.isPaused() && GameManager.Instance.playerInDemonicAltar){
             inventory = !inventory;
             updateInventory();
             toggleInventory();
@@ -1503,7 +1504,7 @@ public class playerController : MonoBehaviour
 
     private void toggleInventory()
     {
-        if (inventory)
+        if (inventory && GameManager.Instance.playerInDemonicAltar)
         {
             Time.timeScale = 0f;
             GameManager.Instance.changeInventory(true);

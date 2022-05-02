@@ -45,7 +45,7 @@ public class Enemy_Champion : FatherEnemy
         wallCheckDistance,
         waitingDuration = 2f;
 
-    private bool inRange,
+    private bool
         wallDetected,
         inThorns,
         isKnockingBack = false,
@@ -67,6 +67,9 @@ public class Enemy_Champion : FatherEnemy
 
     private State currentState;
     private State[] statesToRandomize;
+
+    [SerializeField]
+    private BossRangeOfActivation rangeOfActivation;
 
     [SerializeField]
     private Transform wallCheck;
@@ -169,21 +172,33 @@ public class Enemy_Champion : FatherEnemy
     private void UpdateWaitingState()
     {
         if (!isActivated)
-        {
+        {/*
             float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
             if (distanceFromPlayer < lineOfSite)
             {
                 isActivated = true;
                 inRange = true;
                 SwitchState(State.Walking);
+            }*/
+            if (rangeOfActivation.inRange())
+            {
+                SwitchState(State.Walking);
+                isActivated = true;
             }
         }
         else
         {
             if (Time.time >= waitingStartTime + waitingDuration)
             {
-                Debug.Log("EEEEEEEI");
-                SwitchState(State.Walking);
+                float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+                if (distanceFromPlayer < lineOfSite)
+                {
+                    SwitchState(State.Walking);
+                }
+                else
+                {
+                    SwitchState(State.Waiting);
+                }
             }
         }
     }
@@ -226,7 +241,6 @@ public class Enemy_Champion : FatherEnemy
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if (distanceFromPlayer > lineOfSite)
         {
-            inRange = false;
             SwitchState(State.Waiting);
         }
         else
@@ -496,7 +510,7 @@ public class Enemy_Champion : FatherEnemy
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, lineOfSite);
+        //Gizmos.DrawWireSphere(transform.position, lineOfSite);
         Gizmos.color = Color.red;
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance*facingDirection, wallCheck.position.y));
 

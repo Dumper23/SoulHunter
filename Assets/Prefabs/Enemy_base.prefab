@@ -409,6 +409,18 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 64
+  whatIsTrap:
+    serializedVersion: 2
+    m_Bits: 512
+  whatIsDiffWall:
+    serializedVersion: 2
+    m_Bits: 8192
+  whatIsMushroom:
+    serializedVersion: 2
+    m_Bits: 32768
+  whatIsDoor:
+    serializedVersion: 2
+    m_Bits: 16384
   knockbackSpeed: {x: 5, y: 2}
   hitParticle: {fileID: 7336040460848702072}
   deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}

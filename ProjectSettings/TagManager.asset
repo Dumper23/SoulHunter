@@ -31,9 +31,9 @@ TagManager:
   - BossIgnore
   - Boss
   - LaserLimits
-  - 
-  - 
-  - 
+  - DiffWall
+  - Door
+  - Mushroom
   - 
   - 
   - 

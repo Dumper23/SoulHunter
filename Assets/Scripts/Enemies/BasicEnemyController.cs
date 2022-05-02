@@ -44,7 +44,11 @@ public class BasicEnemyController : FatherEnemy
     [SerializeField]
     private LayerMask 
         whatIsGround, 
-        whatIsEnemy;
+        whatIsEnemy,
+        whatIsTrap,
+        whatIsDiffWall,
+        whatIsMushroom,
+        whatIsDoor;
 
     [SerializeField]
     private Vector2 knockbackSpeed;
@@ -70,7 +74,12 @@ public class BasicEnemyController : FatherEnemy
         groundDetected,
         groundDetectedBack,
         wallDetected,
-        enemyDetected;
+        enemyDetected,
+        spikesDetected,
+        spikesDetected2,
+        doorDetected,
+        mushroomDetected,
+        diffWallDetected;
 
     private GameObject alive;
 
@@ -123,11 +132,20 @@ public class BasicEnemyController : FatherEnemy
     {
         groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
         groundDetectedBack = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsGround);
+        spikesDetected = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsTrap);
+        spikesDetected2 = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsTrap);
+        if ((spikesDetected || spikesDetected2) && !(groundDetected || groundDetectedBack))
+        {
+            SwitchState(State.Dead);
+        }
 
         wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
+        diffWallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsDiffWall);
+        doorDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsDoor);
         enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsEnemy);
+        mushroomDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsMushroom);
 
-        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected)
+        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected || doorDetected || diffWallDetected || mushroomDetected)
         {
           
             Flip();

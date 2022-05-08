@@ -22,6 +22,10 @@ public class Enemy_bush : FatherEnemy
 
     public int pointsToGive = 10;
 
+    public int soulsToGive = 5;
+    public GameObject soul;
+    public float soulForce;
+
     [SerializeField]
     private GameObject
         deathChunkParticle,
@@ -139,6 +143,11 @@ public class Enemy_bush : FatherEnemy
         //Spawn chunks and blood
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
+        for (int i = 0; i <= soulsToGive; i++)
+        {
+            GameObject g = Instantiate(soul, transform.position, Quaternion.identity);
+            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+        }
         Destroy(gameObject);
     }
 

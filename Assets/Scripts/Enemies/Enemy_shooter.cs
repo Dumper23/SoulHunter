@@ -8,6 +8,10 @@ public class Enemy_shooter : FatherEnemy
     public int damageToPlayer = 1;
     public int pointsToGive = 10;
 
+    public int soulsToGive = 5;
+    public GameObject soul;
+    public float soulForce;
+
     private AudioSource audioSource;
     private bool alreadySound = false;
     public List<AudioClip> audios;
@@ -203,6 +207,12 @@ public class Enemy_shooter : FatherEnemy
         //Spawn chunks and blood
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
         Instantiate(deadSoundObject, transform.position, transform.rotation);
+
+        for (int i = 0; i <= soulsToGive; i++)
+        {
+            GameObject g = Instantiate(soul, transform.position, Quaternion.identity);
+            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+        }
 
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);

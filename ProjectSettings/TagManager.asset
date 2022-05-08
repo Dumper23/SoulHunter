@@ -21,6 +21,8 @@ TagManager:
   - damageScreen
   - difWall
   - playerBullet
+  - Soul
+  - soulCounter
   layers:
   - Default
   - TransparentFX

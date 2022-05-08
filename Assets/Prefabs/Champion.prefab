@@ -685,7 +685,7 @@ MonoBehaviour:
   speed: 3
   speedRoll: 12
   lineOfSite: 16.99
-  maxHealth: 80
+  maxHealth: 10
   knockbackDuration: 1
   maxWalkingSwitchStateDuration: 6
   maxAttackRollDuration: 12
@@ -699,7 +699,7 @@ MonoBehaviour:
     m_Bits: 8
   particleDamage: {fileID: 5844874861629275032}
   swicher: 1
-  thornsSoul: {fileID: 5862817789789983971, guid: d5ec6226506aedf43a9f8c1932cf4bce, type: 3}
+  thornsSoul: {fileID: 5885284475451404299, guid: 97ed447fe214831458074e276d004b80, type: 3}
 --- !u!114 &1678340976
 MonoBehaviour:
   m_ObjectHideFlags: 0

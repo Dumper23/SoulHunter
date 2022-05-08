@@ -367,7 +367,7 @@ public class Enemy_Champion : FatherEnemy
         //Spawn chunks and blood
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
-        //Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
+        Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
         GameObject p = Instantiate(portal, new Vector3(sprite.transform.position.x, sprite.transform.position.y + 3, sprite.transform.position.z), portal.transform.rotation);
         p.GetComponent<EndLevel>().nextLevelName = "DemoEnd";
         Destroy(gameObject);

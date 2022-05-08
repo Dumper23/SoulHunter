@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class mainMenu : MonoBehaviour
 {
@@ -11,7 +12,22 @@ public class mainMenu : MonoBehaviour
     public AudioMixer audioMixer;
     public Dropdown resolutionDropDown;
     public GameObject popUp;
+    public GameObject popUp2;
+    public EventSystem es;
+    public GameObject buttonNo;
 
+    public GameObject buttonPlay;
+    public GameObject levelSelection;
+    public GameObject quitButton;
+    public GameObject optionsButton;
+    public GameObject deleteButton;
+
+    public GameObject buttonBack;
+    public GameObject buttonLevel1;
+
+    public GameObject levels;
+
+    private bool cheatCode = false;
     private Resolution[] resolutions;
 
     private void Start()
@@ -19,6 +35,17 @@ public class mainMenu : MonoBehaviour
         resolutions = Screen.resolutions;
         popUp.SetActive(false);
         resolutionDropDown.ClearOptions();
+
+        PlayerData d = PlayerSave.LoadPlayer();
+        if(d != null)
+        {
+            if (d.hasEndedGame)
+            {
+
+                cheatCode = true;
+            }
+        }
+
 
         List<string> options = new List<string>();
 
@@ -40,6 +67,30 @@ public class mainMenu : MonoBehaviour
         resolutionDropDown.RefreshShownValue();
     }
 
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.M) && !cheatCode)
+        {
+            cheatCode = true;
+            levelSelection.SetActive(true);
+        }
+
+        if (cheatCode)
+        {
+            levelSelection.SetActive(true);
+        }
+    }
+
+    public void options()
+    {
+        EventSystem.current.SetSelectedGameObject(buttonBack);
+    }
+
+    public void back()
+    {
+        EventSystem.current.SetSelectedGameObject(buttonPlay);
+    }
+
     public void playGame()
     {
         PlayerData data = PlayerSave.LoadPlayer();
@@ -53,15 +104,29 @@ public class mainMenu : MonoBehaviour
         }
     }
 
-    public void deleteSavedGame()
+    public void cancelDelete()
     {
-        popUp.SetActive(true);
-        Invoke("delete", 1.5f);
+        popUp2.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(buttonPlay);
     }
 
+    public void deleteSavedGame()
+    {
+        popUp2.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(buttonNo);
+    }
+
+    public void confirmDeleteSavedGame()
+    {
+        popUp.SetActive(true);
+        popUp2.SetActive(false);
+        Invoke("delete", 1.5f);
+    }
+    
     private void delete()
     {
         popUp.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(buttonPlay);
         PlayerSave.deleteSave();
     }
 
@@ -89,5 +154,33 @@ public class mainMenu : MonoBehaviour
     {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
+    public void showLevels()
+    {
+        levels.SetActive(true);
+        buttonPlay.SetActive(false);
+        levelSelection.SetActive(false);
+        quitButton.SetActive(false);
+        optionsButton.SetActive(false);
+        deleteButton.SetActive(false);
+
+    EventSystem.current.SetSelectedGameObject(buttonLevel1);
+    }
+
+    public void loadLevel(string level)
+    {
+        SceneManager.LoadScene(level);
+    }
+
+    public void backLevels()
+    {
+        levels.SetActive(false);
+        buttonPlay.SetActive(true);
+        levelSelection.SetActive(true);
+        quitButton.SetActive(true);
+        optionsButton.SetActive(true);
+        deleteButton.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(buttonPlay);
     }
 }

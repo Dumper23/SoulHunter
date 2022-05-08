@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerData{
     public int deaths;
     public int points;
+    public int souls;
     public int lives;
     public int attackDamage;
     public float attackRate;
@@ -15,15 +16,28 @@ public class PlayerData{
     public int jumpAmount;
     public string currentLevel;
     public string[] equippedLostSouls;
+    public bool hasEndedGame;
 
-    public PlayerData(playerController player)
+    public PlayerData(playerController player, bool changeLevel, int oldSouls, int oldPoints)
     {
+        if (changeLevel)
+        {
+            points = GameManager.Instance.getPoints();
+            souls = player.soulsCollected;
+        }
+        else
+        {
+            points = oldPoints;
+            souls = oldSouls;
+        }
 
-        points = GameManager.Instance.getPoints();
+        hasEndedGame = player.hasEndedGame;
+
         lives = player.playerLives;
         attackDamage = player.attackDamage;
         attackRate = player.attackRate;
         deaths = player.deaths;
+        
 
         position = new float[3];
         position[0] = player.transform.position.x;

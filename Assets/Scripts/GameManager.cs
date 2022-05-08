@@ -49,22 +49,13 @@ public class GameManager : MonoBehaviour
 
     public void addPoints(int points)
     {
-        if (playerPoints + points < 125)
-        {
-            playerPoints += points;
-            //pointText.text = playerPoints.ToString();
-        }
-        else
-        {
-            playerPoints = 125;
-            //pointText.text = playerPoints.ToString();
-        }
+        playerPoints += points;
     }
 
     public void nextLevel(string nl, playerController playerController)
     {
         playerController.setCurrentLevelName(nl);
-        PlayerSave.SavePlayer(playerController);
+        PlayerSave.SavePlayer(playerController, true, playerController.soulsCollected, playerPoints);
         SceneManager.LoadScene(nl);
     }
 

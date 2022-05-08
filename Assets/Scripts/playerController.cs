@@ -79,7 +79,7 @@ public class playerController : MonoBehaviour
     public float attackRate = 2f;
     public int playerLives = 3;
     public float relativeAttackPointPos = 0.58f;
-    public float attackAnimationDelay = 0.25f;
+    public float attackAnimationDelay = 0.3f;
     public ParticleSystem deathParticles;
 
     private int maxLives;
@@ -112,6 +112,7 @@ public class playerController : MonoBehaviour
     public GameObject inventoryUI;
     public GameObject damageRedScreen;
 
+    private TextMeshProUGUI soulsText;
     private TextMeshProUGUI deathTextCounter;
 
 
@@ -155,6 +156,11 @@ public class playerController : MonoBehaviour
     private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
     //Other settings
+    public float magnetRange;
+    public float magnetForce;
+    public int soulsCollected;
+
+    public bool hasEndedGame = false;
     private Transform t;
     private Rigidbody2D r2d;
     private SpriteRenderer sprite;
@@ -197,6 +203,7 @@ public class playerController : MonoBehaviour
     void Start()
     {
         deathTextCounter = GameObject.FindGameObjectWithTag("deathText").GetComponent<TextMeshProUGUI>();
+        soulsText = GameObject.FindGameObjectWithTag("soulCounter").GetComponent<TextMeshProUGUI>();
         damageRedScreen = GameObject.FindGameObjectWithTag("damageScreen");
         descriptions();
         if (loadPlayerData)
@@ -289,6 +296,8 @@ public class playerController : MonoBehaviour
             transform.position = new Vector3(temp.position[0], temp.position[1]);
             currentLevel = temp.currentLevel;
             deaths = temp.deaths;
+            soulsCollected = temp.souls;
+            GameManager.Instance.playerPoints = temp.points;
             for (int i = 0; i < temp.lostSouls.Length; i++)
             {
                 if (temp.lostSouls[i] != null)
@@ -363,6 +372,18 @@ public class playerController : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
+        soulsText.SetText(soulsCollected.ToString() + " / 666");
+        if(soulsCollected >= 666)
+        {
+            soulsCollected = 0;
+            if (playerLives < maxLives)
+            {
+                damageRedScreen.GetComponent<Animator>().Play("healScreen");
+                playerLives++;
+                updateLiveUI();
+            }
+        }
+
         float verticalIn = 0;
         //Camera Movement
         if (Input.GetAxisRaw("RightJoystick") > 0)
@@ -606,7 +627,7 @@ public class playerController : MonoBehaviour
                     jumpParticle.Play();
                 }
 
-                if (horizontalIn != 0)
+                if (horizontalIn != 0 && !isAttacking)
                 {
                     sprite.flipX = (horizontalIn < 0);
                 }
@@ -827,7 +848,16 @@ public class playerController : MonoBehaviour
             this.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             this.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
             this.gameObject.SetActive(false);
-            PlayerSave.SavePlayer(this);
+            PlayerData temp = PlayerSave.LoadPlayer();
+            if(temp != null)
+            {
+                PlayerSave.SavePlayer(this, false, temp.souls, temp.points);
+            }
+            else
+            {
+                PlayerSave.SavePlayer(this, false, 0, 0);
+            }
+            
         }
         #endregion
 
@@ -913,7 +943,20 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-        
+
+        Collider2D[] souls = Physics2D.OverlapCircleAll(transform.position, magnetRange);
+
+        if (souls.Length > 0)
+        {
+            foreach (Collider2D soul in souls)
+            {
+                if (soul.tag == "Soul")
+                {
+                    soul.transform.Translate((transform.position - soul.transform.position).normalized * magnetForce * Time.deltaTime);
+                }
+            }
+        }
+
 
         paused = GameManager.Instance.isPaused();
     }
@@ -993,6 +1036,7 @@ public class playerController : MonoBehaviour
     {
         if (playerLives + 1 <= maxLives)
         {
+            damageRedScreen.GetComponent<Animator>().Play("healScreen");
             if (soulKeeperActive)
             {
                 if (playerLives + 2 <= 4) {
@@ -1016,6 +1060,19 @@ public class playerController : MonoBehaviour
         isAttacking = false;
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.transform.tag == "Lancer")
+        {
+            takeDamage();
+        }
+        if (collision.transform.tag == "Soul")
+        {
+            soulsCollected += 4;
+            Destroy(collision.gameObject);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         #region LostSoul Trigger
@@ -1031,7 +1088,13 @@ public class playerController : MonoBehaviour
 
         #endregion
 
-        if (collision.transform.tag == "Bullet")
+        if (collision.transform.tag == "Soul")
+        {
+            soulsCollected += 4;
+            Destroy(collision.gameObject);
+        }
+
+            if (collision.transform.tag == "Bullet")
         {
             if (!isDashing)
             {
@@ -1194,6 +1257,8 @@ public class playerController : MonoBehaviour
         Gizmos.DrawWireSphere(ThornsPoint.position, ThornsRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(ThornsPoint.position, outBurstRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, magnetRange);
     }
 
     //Function that allows us to play any animation of the animator (Avoiding horrible web structures)
@@ -1397,6 +1462,7 @@ public class playerController : MonoBehaviour
 
         if (lostSouls.ContainsKey("DemonKing"))
         {
+            hasEndedGame = true;
             lostSouls.TryGetValue("DemonKing", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {

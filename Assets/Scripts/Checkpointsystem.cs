@@ -10,7 +10,7 @@ public class Checkpointsystem : MonoBehaviour
     {
         if (collision.transform.tag == "Player" && !isActivated)
         {
-            PlayerSave.SavePlayer(collision.transform.GetComponent<playerController>());
+            PlayerSave.SavePlayer(collision.transform.GetComponent<playerController>(), false, 0, 0);
             isActivated = true;
         }
     }

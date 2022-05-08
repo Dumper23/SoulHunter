@@ -406,6 +406,10 @@ MonoBehaviour:
   voiceBulletTime: 1
   voiceAttackRate: 1
   voiceDispersion: 0.4
+  magnetRange: 3.5
+  magnetForce: 10
+  soulsCollected: 0
+  hasEndedGame: 0
   currentLevel: Tutorial
   deaths: 0
   venomBar: {fileID: 0}
@@ -646,9 +650,9 @@ AudioSource:
   m_GameObject: {fileID: 4556257231163928207}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 8300000, guid: 65912f068272ac145bfbb5be3f71ec3e, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.38
   m_Pitch: 1
   Loop: 0
@@ -742,9 +746,9 @@ AudioSource:
   m_GameObject: {fileID: 4556257231163928207}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 8300000, guid: c0b2c65a579703945abe4712b824ceb6, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.17
   m_Pitch: 1
   Loop: 0
@@ -934,9 +938,9 @@ AudioSource:
   m_GameObject: {fileID: 4556257231163928207}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.091
   m_Pitch: 1
   Loop: 0

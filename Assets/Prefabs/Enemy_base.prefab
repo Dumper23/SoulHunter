@@ -389,6 +389,9 @@ MonoBehaviour:
   outBursted: 0
   damageToPlayer: 1
   pointsToGive: 20
+  soulsToGive: 10
+  soul: {fileID: 5330374998443095163, guid: d80be715e73c85346a5937a84666fc92, type: 3}
+  soulForce: 35
   audios:
   - {fileID: 8300000, guid: 8302e0cc8970a3f4f97fa9ef91794f81, type: 3}
   - {fileID: 8300000, guid: 6f525e323bae0c04abc456692d975292, type: 3}
@@ -423,7 +426,7 @@ AudioSource:
   m_GameObject: {fileID: 7314299276509080381}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.3

@@ -63,8 +63,16 @@ public class Enemy_shooter : FatherEnemy
     // Start is called before the first frame update
     void Start()
     {
-        
-        player = GameObject.FindObjectOfType<playerController>().transform;
+        playerController a = FindObjectOfType<playerController>();
+        if (a != null)
+        {
+            player = GameObject.FindObjectOfType<playerController>().transform;
+
+        }
+        else
+        {
+            Dead();
+        }
         currentHealth = maxHealth;
         audioSource = GetComponent<AudioSource>();
 

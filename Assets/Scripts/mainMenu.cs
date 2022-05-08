@@ -21,6 +21,7 @@ public class mainMenu : MonoBehaviour
     public GameObject quitButton;
     public GameObject optionsButton;
     public GameObject deleteButton;
+    public Slider volume;
 
     public GameObject buttonBack;
     public GameObject buttonLevel1;
@@ -69,6 +70,9 @@ public class mainMenu : MonoBehaviour
 
     private void Update()
     {
+        float aux;
+        audioMixer.GetFloat("volume", out aux);
+        volume.value = aux;
         if(Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.M) && !cheatCode)
         {
             cheatCode = true;

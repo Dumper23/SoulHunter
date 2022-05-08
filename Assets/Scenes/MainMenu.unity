@@ -14830,6 +14830,7 @@ MonoBehaviour:
   quitButton: {fileID: 2086573488}
   optionsButton: {fileID: 10742288}
   deleteButton: {fileID: 2095374865}
+  volume: {fileID: 111579015}
   buttonBack: {fileID: 789563683}
   buttonLevel1: {fileID: 88787933}
   levels: {fileID: 43009489}

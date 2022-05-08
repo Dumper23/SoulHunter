@@ -213,7 +213,7 @@ public class BasicEnemyController : FatherEnemy
     {
         //Spawn chunks and blood
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
-        Instantiate(deadSoundObject, transform.position, transform.rotation);
+        Instantiate(deadSoundObject, alive.transform.position, transform.rotation);
 
         for (int i = 0; i <= soulsToGive; i++)
         {

@@ -216,7 +216,7 @@ public class Enemy_shooter : FatherEnemy
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
         Instantiate(deadSoundObject, transform.position, transform.rotation);
 
-        for (int i = 0; i <= soulsToGive; i++)
+        for (int i = 0; i < soulsToGive; i++)
         {
             GameObject g = Instantiate(soul, transform.position, Quaternion.identity);
             g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);

@@ -135,6 +135,9 @@ MonoBehaviour:
   outBursted: 0
   damageToPlayer: 1
   pointsToGive: 10
+  soulsToGive: 0
+  soul: {fileID: 0}
+  soulForce: 0
   audios:
   - {fileID: 8300000, guid: 2c5fcbf069c0cf74c8c6244280f4d954, type: 3}
   - {fileID: 8300000, guid: 675fd62aff902e74a8e3ff046624a48d, type: 3}

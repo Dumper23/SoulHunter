@@ -372,7 +372,7 @@ public class playerController : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
-        soulsText.SetText(soulsCollected.ToString() + " / 666");
+        soulsText.SetText(soulsCollected.ToString());
         if(soulsCollected >= 666)
         {
             soulsCollected = 0;

@@ -40178,7 +40178,7 @@ GameObject:
   - component: {fileID: 1226840742}
   - component: {fileID: 1226840741}
   - component: {fileID: 1226840743}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: DifWall
   m_TagString: difWall
   m_Icon: {fileID: 0}
@@ -47058,6 +47058,34 @@ PrefabInstance:
       propertyPath: particlesHit
       value: 
       objectReference: {fileID: 341017252}
+    - target: {fileID: 7601224623263717264, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717265, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717266, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717270, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717271, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717272, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
+    - target: {fileID: 7601224623263717273, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc54b22fcffb130478b679a1713d0345, type: 3}
 --- !u!1 &7601224623263717263 stripped

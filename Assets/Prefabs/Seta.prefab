@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6135871449785715564}
   - component: {fileID: 6135871449785715554}
   - component: {fileID: 5037261535567416332}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Seta
   m_TagString: Untagged
   m_Icon: {fileID: 0}

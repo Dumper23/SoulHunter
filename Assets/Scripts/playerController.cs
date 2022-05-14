@@ -145,6 +145,7 @@ public class playerController : MonoBehaviour
     public float voiceAttackRate = 1f;
     [Range(0, 0.75f)]
     public float voiceDispersion = 1f;
+    public int demonKingDamage = 2;
 
     private int lostSoulsEquipped = 0;
     private bool stoneBreaker = false;
@@ -152,6 +153,7 @@ public class playerController : MonoBehaviour
     private bool soulKeeperActive = false;
     private bool deflectMissiles = false;
     private bool voice = false;
+    private bool demonKing = false;
     private float nextVoice = 0;
     private Dictionary<string, string> lostSoulDescriptionDictionary = new Dictionary<string, string>();
 
@@ -277,6 +279,9 @@ public class playerController : MonoBehaviour
         lostSoulDescriptionDictionary.Add("Voice",
            "You will generate sound waves when you attack.");
 
+        lostSoulDescriptionDictionary.Add("DemonKing",
+          "This Lost Soul will unlock the level selector and it grants you x2 damage");
+
     }
 
     public void setCurrentLevelName(string levelName)
@@ -385,6 +390,7 @@ public class playerController : MonoBehaviour
         }
 
         float verticalIn = 0;
+
         //Camera Movement
         if (Input.GetAxisRaw("RightJoystick") > 0)
         {
@@ -441,30 +447,6 @@ public class playerController : MonoBehaviour
             #region Wall Sliding
 
             isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, LayerMask.GetMask("Ground"));
-            /*
-            if (isTouchingFront && !isGrounded && horizontalIn != 0)
-            {
-                wallSliding = true;
-                if (!chargedJump)
-                {
-                    if(availableJumps < 2)
-                    {
-                        availableJumps = 1;
-                        chargedJump = true;
-                    }
-                }
-                changeAnimationState(PLAYER_WALLSLIDE);
-            }
-            else
-            {
-                wallSliding = false;
-                chargedJump = false;
-            }
-
-            if (wallSliding)
-            {
-                r2d.velocity = new Vector2(r2d.velocity.x, Mathf.Clamp(r2d.velocity.y, -wallSlidingSpeed, Mathf.Infinity));
-            }*/
 
             wallSliding = false;
             if (isTouchingFront && !isGrounded)
@@ -773,6 +755,7 @@ public class playerController : MonoBehaviour
 
                             }
                         }
+
                         Invoke("stopAttack", attackAnimationDelay);
 
                         if (deflectMissiles)
@@ -799,6 +782,10 @@ public class playerController : MonoBehaviour
                                 else if (enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
                                 {
                                     damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
+                                }
+                                else if (demonKing)
+                                {
+                                    damageMessage[0] = attackDamage * demonKingDamage;
                                 }
                                 else
                                 {
@@ -1466,11 +1453,11 @@ public class playerController : MonoBehaviour
             lostSouls.TryGetValue("DemonKing", out LostSouls ls);
             if (ls.isEquiped && ls.isActive)
             {
-                //Demonking on
+                demonKing = true;
             }
             else
             {
-                //Demonking off
+                demonKing = false;
             }
         }
     }

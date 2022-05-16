@@ -280,7 +280,7 @@ public class playerController : MonoBehaviour
            "You will generate sound waves when you attack.");
 
         lostSoulDescriptionDictionary.Add("DemonKing",
-          "This Lost Soul will unlock the level selector and it grants you x2 damage");
+          "This Lost Soul will unlock the level selector and it grants you x2 damage and x2 souls collected!");
 
     }
 
@@ -1055,7 +1055,14 @@ public class playerController : MonoBehaviour
         }
         if (collision.transform.tag == "Soul")
         {
-            soulsCollected += 4;
+            if (demonKing)
+            {
+                soulsCollected += (4 * 2);
+            }
+            else
+            {
+                soulsCollected += 4;
+            }
             Destroy(collision.gameObject);
         }
     }
@@ -1077,7 +1084,14 @@ public class playerController : MonoBehaviour
 
         if (collision.transform.tag == "Soul")
         {
-            soulsCollected += 4;
+            if (demonKing)
+            {
+                soulsCollected += (4 * 2);
+            }
+            else
+            {
+                soulsCollected += 4;
+            }
             Destroy(collision.gameObject);
         }
 

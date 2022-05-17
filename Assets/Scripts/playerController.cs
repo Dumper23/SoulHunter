@@ -109,6 +109,7 @@ public class playerController : MonoBehaviour
     public TextMeshProUGUI lostSoulDescription;
     public List<GameObject> lostSoulToggles = new List<GameObject>();
     public LostSoulsPlaceHolderIcons[] lostSoulsEquippedIcons;
+    public LostSoulsPlaceHolderIcons[] lostSoulsEquippedIconsHUD;
     public GameObject inventoryUI;
     public GameObject damageRedScreen;
 
@@ -1548,7 +1549,13 @@ public class playerController : MonoBehaviour
                                         lostSoulsEquippedIcons[k].name = lostSoulsIcons[j].name;
                                         alreadySet = true;
                                     }
-                                    if(alreadySet) break;
+                                    if (lostSoulsEquippedIconsHUD[k].name == "")
+                                    {
+                                        lostSoulsEquippedIconsHUD[k].image.sprite = lostSoulsIcons[j].sprite;
+                                        lostSoulsEquippedIconsHUD[k].name = lostSoulsIcons[j].name;
+                                        alreadySet = true;
+                                    }
+                                    if (alreadySet) break;
                                 }
                             }
                         }
@@ -1562,6 +1569,11 @@ public class playerController : MonoBehaviour
                         {
                             lostSoulsEquippedIcons[k].image.sprite = nothingEquipped;
                             lostSoulsEquippedIcons[k].name = "";
+                        }
+                        if (lostSoulsEquippedIconsHUD[k].name == lostSoulToggles[i].name)
+                        {
+                            lostSoulsEquippedIconsHUD[k].image.sprite = nothingEquipped;
+                            lostSoulsEquippedIconsHUD[k].name = "";
                         }
                     }
                 }

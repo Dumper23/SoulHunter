@@ -22,10 +22,12 @@ public class DoorSystemManager : MonoBehaviour
 
     private void Start()
     {
+        greenKeyImg.gameObject.transform.parent.gameObject.SetActive(true);
+
         notFound = new Color();
-        notFound.r = 255;
-        notFound.g = 255;
-        notFound.b = 255;
+        notFound.r = 31;
+        notFound.g = 31;
+        notFound.b = 31;
         notFound.a = 0.25f;
 
         found = new Color();

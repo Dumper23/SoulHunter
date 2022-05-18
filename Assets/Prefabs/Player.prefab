@@ -386,11 +386,11 @@ MonoBehaviour:
   - name: StoneBreaker
     sprite: {fileID: 21300000, guid: 3e61ba69f9a57014f9f260c955d25092, type: 3}
   - name: OutBurst
-    sprite: {fileID: 21300000, guid: fd9f42da62f9b0441b875cf62112fd58, type: 3}
+    sprite: {fileID: 21300000, guid: 37077b37dcce1a74e9b4e91e83d699f7, type: 3}
   - name: HardSkin
     sprite: {fileID: 21300000, guid: 2bf81477c69a94940af2daf7b8031dd1, type: 3}
   - name: SoulKeeper
-    sprite: {fileID: 21300000, guid: 37437f1732e524548b946002dc1b914c, type: 3}
+    sprite: {fileID: 21300000, guid: 6272b8f086cecc340a3c8dd38b8dfeb0, type: 3}
   - name: DeflectMissiles
     sprite: {fileID: 21300000, guid: 076b6efe8e20fbf48be10dc5b20f95d9, type: 3}
   - name: HolyWater

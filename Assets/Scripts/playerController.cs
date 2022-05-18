@@ -269,7 +269,7 @@ public class playerController : MonoBehaviour
             "It Grants you with a shield that will protect you from 1 hit, it will be recharged in " + hardSkinRecoveryTime + "s.\n\nShadow told us that the shield is a table from Ikea, we still don't know if that's true or not.");
 
         lostSoulDescriptionDictionary.Add("SoulKeeper", 
-            "When you kill one healer, instead of 1hp you will recieve 2hp. \n\n");
+            "Enemies will leave x2 souls when you kill them. \n\n");
 
         lostSoulDescriptionDictionary.Add("DeflectMissiles",
             "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
@@ -1025,19 +1025,9 @@ public class playerController : MonoBehaviour
         if (playerLives + 1 <= maxLives)
         {
             damageRedScreen.GetComponent<Animator>().Play("healScreen");
-            if (soulKeeperActive)
-            {
-                if (playerLives + 2 <= 4) {
-                    playerLives = playerLives + 2;
-                }
-                else
-                {
-                    playerLives = 4;
-                }
-            }else
-            {
-                playerLives++;
-            }
+            
+            playerLives++;
+            
             
             updateLiveUI();
         }
@@ -1059,6 +1049,9 @@ public class playerController : MonoBehaviour
             if (demonKing)
             {
                 soulsCollected += (4 * 2);
+            }else if (soulKeeperActive)
+            {
+                soulsCollected += Mathf.RoundToInt(4 * 1.5f);
             }
             else
             {
@@ -1088,6 +1081,10 @@ public class playerController : MonoBehaviour
             if (demonKing)
             {
                 soulsCollected += (4 * 2);
+            }
+            else if (soulKeeperActive)
+            {
+                soulsCollected += Mathf.RoundToInt(4 * 1.5f);
             }
             else
             {
@@ -1195,6 +1192,8 @@ public class playerController : MonoBehaviour
             }
         }
     }
+
+
 
     //Update the ui to display the correct number of lives
     private void updateLiveUI()

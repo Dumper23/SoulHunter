@@ -1,0 +1,684 @@
+fileFormatVersion: 2
+guid: 67e5196bff0778b41a540e1fe1f518ff
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1136959169165815081
+    second: darksoldiersheetupdate (1)_0
+  - first:
+      213: 4850426679761475098
+    second: darksoldiersheetupdate (1)_1
+  - first:
+      213: -2644230167772750229
+    second: darksoldiersheetupdate (1)_2
+  - first:
+      213: 253210620314347251
+    second: darksoldiersheetupdate (1)_3
+  - first:
+      213: -8965743942231432552
+    second: darksoldiersheetupdate (1)_4
+  - first:
+      213: -908258979349165940
+    second: darksoldiersheetupdate (1)_5
+  - first:
+      213: -9010566380385463317
+    second: darksoldiersheetupdate (1)_6
+  - first:
+      213: -2238614044595715432
+    second: darksoldiersheetupdate (1)_7
+  - first:
+      213: -7970647529410589049
+    second: darksoldiersheetupdate (1)_8
+  - first:
+      213: 3876592766376966909
+    second: darksoldiersheetupdate (1)_9
+  - first:
+      213: -6257531583323730013
+    second: darksoldiersheetupdate (1)_10
+  - first:
+      213: -2077574469105532257
+    second: darksoldiersheetupdate (1)_11
+  - first:
+      213: -2127277995844624765
+    second: darksoldiersheetupdate (1)_12
+  - first:
+      213: 771733009246535000
+    second: darksoldiersheetupdate (1)_13
+  - first:
+      213: -3478436064045189328
+    second: darksoldiersheetupdate (1)_14
+  - first:
+      213: -1250582209301621835
+    second: darksoldiersheetupdate (1)_15
+  - first:
+      213: -1026872764187226101
+    second: darksoldiersheetupdate (1)_16
+  - first:
+      213: -9146721111737660358
+    second: darksoldiersheetupdate (1)_17
+  - first:
+      213: -4665121247832551932
+    second: darksoldiersheetupdate (1)_18
+  - first:
+      213: -6452832522710270278
+    second: darksoldiersheetupdate (1)_19
+  - first:
+      213: 207713768239238178
+    second: darksoldiersheetupdate (1)_20
+  - first:
+      213: -3774442671712605295
+    second: darksoldiersheetupdate (1)_21
+  - first:
+      213: 4601083196983485980
+    second: darksoldiersheetupdate (1)_22
+  - first:
+      213: -2141838508197308807
+    second: darksoldiersheetupdate (1)_23
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 195
+        width: 33
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d29fb5d8a5b830f0800000000000000
+      internalID: -1136959169165815081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_1
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 194
+        width: 31
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a169248dd5d205340800000000000000
+      internalID: 4850426679761475098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_2
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 193
+        width: 31
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6e98811caecd4bd0800000000000000
+      internalID: -2644230167772750229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 195
+        width: 31
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f66135b7b5938300800000000000000
+      internalID: 253210620314347251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_4
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 194
+        width: 31
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8926f281367439380800000000000000
+      internalID: -8965743942231432552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_5
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 193
+        width: 31
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8885db35473563f0800000000000000
+      internalID: -908258979349165940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_6
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 131
+        width: 33
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be31c08fd9904f280800000000000000
+      internalID: -9010566380385463317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_7
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 130
+        width: 33
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8920caa1368dee0e0800000000000000
+      internalID: -2238614044595715432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_8
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 129
+        width: 32
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78e03a36d42926190800000000000000
+      internalID: -7970647529410589049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_9
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 130
+        width: 33
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfa7fbaf49c6cc530800000000000000
+      internalID: 3876592766376966909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_10
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 130
+        width: 33
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3af8335cd28c829a0800000000000000
+      internalID: -6257531583323730013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_11
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 129
+        width: 32
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f924b8e1709fa23e0800000000000000
+      internalID: -2077574469105532257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_12
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 65
+        width: 16
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38e1d2ffee36a72e0800000000000000
+      internalID: -2127277995844624765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_13
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 65
+        width: 23
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85d3595451fb5ba00800000000000000
+      internalID: 771733009246535000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_14
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 64
+        width: 35
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 037bdac44dc1abfc0800000000000000
+      internalID: -3478436064045189328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_15
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 64
+        width: 18
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b357244b1a05aee0800000000000000
+      internalID: -1250582209301621835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_16
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 64
+        width: 32
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b00d81d59a0dfb1f0800000000000000
+      internalID: -1026872764187226101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_17
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 67
+        width: 31
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3c8f4b3c91501180800000000000000
+      internalID: -9146721111737660358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_18
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 1
+        width: 16
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40e40d421f8224fb0800000000000000
+      internalID: -4665121247832551932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_19
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 1
+        width: 23
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abe34c8520fe276a0800000000000000
+      internalID: -6452832522710270278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_20
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 35
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22c8bda5292f1e200800000000000000
+      internalID: 207713768239238178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_21
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 0
+        width: 18
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19b6e7f436c7e9bc0800000000000000
+      internalID: -3774442671712605295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_22
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 0
+        width: 32
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1628324ac45adf30800000000000000
+      internalID: 4601083196983485980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darksoldiersheetupdate (1)_23
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 2
+        width: 33
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97695a88939a642e0800000000000000
+      internalID: -2141838508197308807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 8d308512ec23f444796f92afc4792d6f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

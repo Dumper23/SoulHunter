@@ -1478,12 +1478,11 @@ public class playerController : MonoBehaviour
 
     IEnumerator endOutburstEnemy(Collider2D enemy)
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
         if (enemy != null)
         {
             enemy.GetComponentInParent<FatherEnemy>().outBursted = false;
         }
-        StopAllCoroutines();
     }
 
     private void updateInventory()

@@ -11,6 +11,7 @@ public class kamikaze : FatherEnemy
     public float explotionTime = 5f;
     public List<AudioClip> audios;
     public GameObject deadSoundObject;
+    public GameObject circleAdvice;
 
     public int soulsToGive = 5;
     public GameObject soul;
@@ -41,17 +42,30 @@ public class kamikaze : FatherEnemy
     private bool alreadyDetected = false;
 
     private float flipX = 0;
+    private SpriteRenderer sp;
 
     void Start()
     {
+        sp = GetComponent<SpriteRenderer>();
         flipX = -transform.localScale.x;
         anim = GetComponent<Animator>();
         target = FindObjectOfType<playerController>().gameObject;
         audioSource = GetComponent<AudioSource>();
+        circleAdvice.SetActive(false);
     }
 
     void Update()
     {
+        if (target.transform.position.x > transform.position.x)
+        {
+            //transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            sp.flipX = false;
+        }
+        else
+        {
+            //transform.localScale = new Vector3(-flipX, transform.localScale.y, transform.localScale.z);
+            sp.flipX = true;
+        }
         if (explotionReady)
         {
             Invoke("explode", explotionTime);
@@ -65,20 +79,13 @@ public class kamikaze : FatherEnemy
                     audioSource.clip = audios[INRANGE_SOUND];
                     audioSource.Play();
                 }
-                if (target.transform.position.x > transform.position.x)
-                {
-                    transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-                }
-                else
-                {
-                    transform.localScale = new Vector3(-flipX, transform.localScale.y, transform.localScale.z);
-                }
-                
                 
                 anim.Play("kamikazeMove");
                 transform.Translate((target.transform.position - transform.position).normalized * Time.deltaTime * moveSpeed);
                 if((target.transform.position - transform.position).magnitude <= explotionStartRange)
                 {
+                    anim.Play("kamikazeIdle");
+                    circleAdvice.SetActive(true);
                     explotionReady = true;
                     dead = true;
                 }

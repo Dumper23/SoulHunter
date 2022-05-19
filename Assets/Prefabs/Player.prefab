@@ -375,7 +375,7 @@ MonoBehaviour:
   generalAudios: {fileID: 1598524100100205568}
   deadSound: {fileID: 8300000, guid: 8801e49ba85cce247b7d55cb71b44f8e, type: 3}
   bladeSound: {fileID: 8300000, guid: d7b8bdb9116e3734ebb911d8e672f87d, type: 3}
-  nothingEquipped: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  nothingEquipped: {fileID: 21300000, guid: b2b2b5de96fed40d2898dd15c17892e6, type: 3}
   lostSoulsIcons:
   - name: Light
     sprite: {fileID: 21300000, guid: 588c453d912cfaa4489230991a26ef34, type: 3}
@@ -394,7 +394,7 @@ MonoBehaviour:
   - name: DeflectMissiles
     sprite: {fileID: 21300000, guid: 091de0be432f428499491c7161f2e7da, type: 3}
   - name: HolyWater
-    sprite: {fileID: 21300000, guid: 1790ab1207edd8f4eb67b888a28a8470, type: 3}
+    sprite: {fileID: 21300000, guid: 7cb12c08b6fc9ba43878fa28a55a3ba0, type: 3}
   - name: Voice
     sprite: {fileID: 21300000, guid: 432793d9d92b8ac42babc5ed7792c502, type: 3}
   - name: DemonKing

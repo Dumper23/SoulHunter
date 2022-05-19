@@ -214,7 +214,8 @@ public class playerController : MonoBehaviour
             loadPlayer();
             updateInventory();
             GameObject startPos = GameObject.FindGameObjectWithTag("Start");
-            if (startPos != null) {
+            if (startPos != null)
+            {
                 transform.position = startPos.transform.position;
             }
         }
@@ -244,7 +245,16 @@ public class playerController : MonoBehaviour
         //We find the ground collider game object
         groundCollider = transform.Find("groundCollider");
 
-        deathTextCounter.text = "x"+ deaths.ToString();
+        deathTextCounter.text = "x" + deaths.ToString();
+
+        
+        if (lostSouls.TryGetValue("HardSkin", out LostSouls ls))
+        {
+            if (ls.isEquiped && ls.isActive)
+            {
+                shieldTimer.gameObject.SetActive(true);
+            }
+        }
     }
 
     private void descriptions()
@@ -389,6 +399,7 @@ public class playerController : MonoBehaviour
                 updateLiveUI();
             }
         }
+
 
         float verticalIn = 0;
 
@@ -753,7 +764,7 @@ public class playerController : MonoBehaviour
                             }
                             else if (r2d.velocity.y < 0)
                             {
-
+                                changeAnimationState(PLAYER_ATTACKUP);
                             }
                         }
 

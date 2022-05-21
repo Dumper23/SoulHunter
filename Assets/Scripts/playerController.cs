@@ -783,32 +783,35 @@ public class playerController : MonoBehaviour
                             {
                                 float[] damageMessage = new float[3];
 
-                                if (enemy.GetComponentInParent<FatherEnemy>().hasShield && enemy.GetComponentInParent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
-                                {
-                                    damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
-                                }
-                                else if (enemy.GetComponentInParent<FatherEnemy>().hasShield && stoneBreaker)
-                                {
-                                    damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
-                                }
-                                else if (enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
-                                {
-                                    damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
-                                }
-                                else if (demonKing)
-                                {
-                                    damageMessage[0] = attackDamage * demonKingDamage;
-                                }
-                                else
-                                {
-                                    damageMessage[0] = attackDamage;
-                                }
-
-                                damageMessage[1] = transform.position.x;
-                                damageMessage[2] = transform.position.y;
                                 if (enemy.GetComponentInParent<FatherEnemy>() != null)
                                 {
-                                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                                    if (enemy.GetComponentInParent<FatherEnemy>().hasShield && enemy.GetComponentInParent<FatherEnemy>().isDemon && stoneBreaker && holyWater)
+                                    {
+                                        damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier * holyWaterDamageMultiplier;
+                                    }
+                                    else if (enemy.GetComponentInParent<FatherEnemy>().hasShield && stoneBreaker)
+                                    {
+                                        damageMessage[0] = attackDamage * stoneBreakerDamageMultiplier;
+                                    }
+                                    else if (enemy.GetComponentInParent<FatherEnemy>().isDemon && holyWater)
+                                    {
+                                        damageMessage[0] = attackDamage * holyWaterDamageMultiplier;
+                                    }
+                                    else if (demonKing)
+                                    {
+                                        damageMessage[0] = attackDamage * demonKingDamage;
+                                    }
+                                    else
+                                    {
+                                        damageMessage[0] = attackDamage;
+                                    }
+
+                                    damageMessage[1] = transform.position.x;
+                                    damageMessage[2] = transform.position.y;
+                                    if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                                    {
+                                        enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                                    }
                                 }
                             }
                             if (enemy.tag == "Healer")
@@ -1158,7 +1161,10 @@ public class playerController : MonoBehaviour
                 knockbackInfo[0] = 1.0f;
                 knockbackInfo[1] = transform.position.x;
                 knockbackInfo[2] = transform.position.y;
-                collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+                if (collision.transform.GetComponentInParent<FatherEnemy>() != null)
+                {
+                    collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+                }
             }
             if (collision.transform.tag == "Bullet")
             {
@@ -1195,7 +1201,10 @@ public class playerController : MonoBehaviour
                 knockbackInfo[0] = 1.0f;
                 knockbackInfo[1] = transform.position.x;
                 knockbackInfo[2] = transform.position.y;
-                collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+                if (collision.transform.GetComponentInParent<FatherEnemy>() != null)
+                {
+                    collision.transform.GetComponentInParent<FatherEnemy>().applyKnockback(knockbackInfo);
+                }
             }
             if (collision.transform.tag == "Bullet")
             {

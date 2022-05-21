@@ -40,12 +40,15 @@ public class ArrowTrap : MonoBehaviour
         }
         else
         {
-            Collider2D collision = Physics2D.OverlapCircle(activationPoint.position, activationRange);
-            if(collision != null && collision.tag == "Player" && !activated)
+            Collider2D[] collision = Physics2D.OverlapCircleAll(activationPoint.position, activationRange);
+            foreach (Collider2D c in collision)
             {
-                shoot();
-                time = 0;
-                activated = true;
+                if (c != null && c.tag == "Player" && !activated)
+                {
+                    shoot();
+                    time = 0;
+                    activated = true;
+                }
             }
             if (activated)
             {

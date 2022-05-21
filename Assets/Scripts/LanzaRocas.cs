@@ -14,12 +14,26 @@ public class LanzaRocas : FatherEnemy
     public GameObject soul;
     public float soulForce = 35f;
 
+    private AudioSource audioSource;
+    public List<AudioClip> audios;
+    public GameObject deadSoundObject;
+
+    private const int DAMAGE_SOUND = 0;
+    private const int DEAD_SOUND = 1;
+    private const int ATTACK_SOUND = 2;
+
+    [SerializeField]
+    private GameObject
+        deathBloodParticle;
+
+
     private float time = 0;
     private Transform target;
     private float ballForce = 35f;
     private SpriteRenderer sp;
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         sp = GetComponent<SpriteRenderer>();
         target = FindObjectOfType<playerController>().transform;
     }
@@ -41,6 +55,8 @@ public class LanzaRocas : FatherEnemy
             if ((target.position - transform.position).magnitude <= range)
             {
                 time = 0;
+                audioSource.clip = audios[ATTACK_SOUND];
+                audioSource.Play();
                 shoot();
             }
         }
@@ -48,12 +64,16 @@ public class LanzaRocas : FatherEnemy
 
     private void dead()
     {
-        for (int i = 0; i < soulsToGive; i++)
+        deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
+        Instantiate(deadSoundObject, transform.position, transform.rotation);
+
+        for (int i = 0; i <= soulsToGive; i++)
         {
             GameObject g = Instantiate(soul, transform.position, Quaternion.identity);
             g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
         }
 
+        Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
         Destroy(gameObject);
     }
 
@@ -66,6 +86,10 @@ public class LanzaRocas : FatherEnemy
             if(ballForce >= 12)
             {
                 ballForce = 12;
+            }
+            if (ballForce <= 2)
+            {
+                ballForce = 3;
             }
         }
         else
@@ -91,7 +115,10 @@ public class LanzaRocas : FatherEnemy
     public override void Damage(float[] damageMessage, bool wantKnockback)
     {
         health -= damageMessage[0];
-        if(health <= 0)
+        audioSource.clip = audios[DAMAGE_SOUND];
+        audioSource.Play();
+        Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
+        if (health <= 0)
         {
             dead();
         }

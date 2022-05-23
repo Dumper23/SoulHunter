@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class spikeBall : MonoBehaviour
 {
+    public GameObject deadAudio;
+
     private AudioSource audio;
 
     private void Start()
@@ -14,12 +16,10 @@ public class spikeBall : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GameObject go = Instantiate(new GameObject(), transform.position, Quaternion.identity);
-        go.AddComponent<AudioSource>();
+        GameObject go = Instantiate(deadAudio, transform.position, Quaternion.identity);
         go.GetComponent<AudioSource>().clip = audio.clip;
-        go.GetComponent<AudioSource>().volume = 0.5f;
+        go.GetComponent<AudioSource>().volume = 0.05f;
         go.GetComponent<AudioSource>().Play();
-        go.AddComponent<destroyObject>();
-        go.GetComponent<destroyObject>().timeToDestroy = 3f;
+
     }
 }

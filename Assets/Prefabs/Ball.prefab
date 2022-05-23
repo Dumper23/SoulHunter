@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf539fa29d2a2a2468e496b8f9738be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadAudio: {fileID: 3631797305425108967, guid: d2f281f1413e4bc4ebf3a9ac5beb1d60, type: 3}
 --- !u!82 &6566488055555299426
 AudioSource:
   m_ObjectHideFlags: 0

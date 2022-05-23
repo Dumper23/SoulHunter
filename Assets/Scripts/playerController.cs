@@ -760,11 +760,11 @@ public class playerController : MonoBehaviour
                         {
                             if (r2d.velocity.y > 0)
                             {
-                                changeAnimationState(PLAYER_ATTACKUP);
+                                changeAnimationState(PLAYER_ATTACK);
                             }
                             else if (r2d.velocity.y < 0)
                             {
-                                changeAnimationState(PLAYER_ATTACKUP);
+                                changeAnimationState(PLAYER_ATTACK);
                             }
                         }
 

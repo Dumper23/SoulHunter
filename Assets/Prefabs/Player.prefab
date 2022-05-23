@@ -404,8 +404,8 @@ MonoBehaviour:
   light: {fileID: 4556257231619769987}
   maxLostSoulsEquipped: 3
   hardSkinRecoveryTime: 6
-  stoneBreakerDamageMultiplier: 1.5
-  holyWaterDamageMultiplier: 1.5
+  stoneBreakerDamageMultiplier: 2
+  holyWaterDamageMultiplier: 2.5
   outBurstRange: 0.5
   outBurstDamage: 10
   voiceBulletSpeed: 10

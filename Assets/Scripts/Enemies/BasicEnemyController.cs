@@ -11,6 +11,7 @@ public class BasicEnemyController : FatherEnemy
         Dead
     }
 
+    public GameObject modifierIndicator;
 
     public int damageToPlayer = 1;
     public int pointsToGive = 10;
@@ -98,6 +99,13 @@ public class BasicEnemyController : FatherEnemy
     // Start is called before the first frame update
     void Start()
     {
+        if(modifierIndicator != null)
+        {
+            if (hasShield || isDemon)
+            {
+                modifierIndicator.SetActive(true);
+            }
+        }
         alive = transform.Find("Alive").gameObject;
         aliveRb = alive.GetComponent<Rigidbody2D>();
         aliveAnim = alive.GetComponent<Animator>();
@@ -242,9 +250,19 @@ public class BasicEnemyController : FatherEnemy
 
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
-       
 
-        currentHealth -= attackDetails[0];
+        if (isDemon)
+        {
+            currentHealth -= attackDetails[0]  / 3;
+        }
+        else if (hasShield)
+        {
+            currentHealth -= attackDetails[0] / 2;
+        }
+        else
+        {
+            currentHealth -= attackDetails[0];
+        }
         audioSource.clip = audios[DAMAGE_SOUND];
         audioSource.Play();
         //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));

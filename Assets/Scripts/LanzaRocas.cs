@@ -83,11 +83,17 @@ public class LanzaRocas : FatherEnemy
         if (forceDependingOnDistance)
         {
             ballForce = (target.position - transform.position).magnitude / 1.5f;
-            if(ballForce >= 12)
+
+            if (ballForce >= 14)
             {
                 ballForce = 12;
-            }
-            if (ballForce <= 2)
+            }else if (ballForce >= 13 && ballForce < 14)
+            {
+                ballForce = 10.5f;
+            }else if (ballForce >= 11 && ballForce < 13)
+            {
+                ballForce = 9;
+            }else if (ballForce <= 2)
             {
                 ballForce = 3;
             }

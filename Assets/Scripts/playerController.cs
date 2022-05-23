@@ -761,7 +761,7 @@ public class playerController : MonoBehaviour
 
                         foreach (Collider2D enemy in hitEnemies)
                         {
-                            if (enemy.tag == "Enemy")
+                            if (enemy.tag == "Enemy" || enemy.tag == "Scorpion")
                             {
                                 float[] damageMessage = new float[3];
 
@@ -1133,11 +1133,24 @@ public class playerController : MonoBehaviour
             playerLives = 0;
         }
 
+        if(collision.transform.tag == "Scoprion" && !immune)
+        {
+            
+        }
+
         if ((collision.transform.tag == "Enemy" || collision.transform.tag == "Bullet") && !immune)
         {
 
             //Reaction to damage
-            takeDamage();
+            if (collision.transform.GetComponentInParent<Scorpion>() != null)
+            {
+                takeDamage();
+                takeVenom();
+            }
+            else
+            {
+                takeDamage();
+            }
 
             if (collision.transform.tag == "Enemy")
             {
@@ -1175,6 +1188,12 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if ((collision.transform.tag == "Scoprion" && !immune))
+        {
+            takeVenom();
+            takeDamage();
+        }
+
         if ((collision.transform.tag == "Enemy" || collision.transform.tag == "Bullet") && !immune)
         {
             takeDamage();
@@ -1410,7 +1429,7 @@ public class playerController : MonoBehaviour
                     {
                         if (enemy.GetComponentInParent<FatherEnemy>() != null)
                         {
-                            if (enemy.tag == "Enemy" && !enemy.GetComponentInParent<FatherEnemy>().outBursted)
+                            if ((enemy.tag == "Scorpion" || enemy.tag == "Enemy") && !enemy.GetComponentInParent<FatherEnemy>().outBursted)
                             {
                                 StartCoroutine("endOutburstEnemy", enemy);
                                 enemy.GetComponentInParent<FatherEnemy>().outBursted = true;

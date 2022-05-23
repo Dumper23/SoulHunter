@@ -23,6 +23,9 @@ TagManager:
   - playerBullet
   - Soul
   - soulCounter
+  - SoulV2
+  - SoulV3
+  - Spirit
   layers:
   - Default
   - TransparentFX
@@ -40,7 +43,7 @@ TagManager:
   - DiffWall
   - Door
   - Mushroom
-  - 
+  - Spirit
   - 
   - 
   - 

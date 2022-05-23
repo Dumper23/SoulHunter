@@ -42,20 +42,24 @@ public class Laser : MonoBehaviour
                 {
                     if (Vector3.Distance(laserFirePoint.position, _hit.point) > defDistanceRay)
                     {
-                        
-                    
-                    //Draw2DRay(laserFirePoint.position, gameObject.GetComponentInParent<Transform>().transform.right * defDistanceRay);
+
+
+                        //Draw2DRay(laserFirePoint.position, gameObject.GetComponentInParent<Transform>().transform.right * defDistanceRay);
+
 
                         Draw2DRay(laserFirePoint.position, (_hit.point - new Vector2(laserFirePoint.position.x, laserFirePoint.position.y)).normalized * defDistanceRay + (Vector2)laserFirePoint.position);
                     }
                     else
                     {
+
                         Draw2DRay(laserFirePoint.position, _hit.point);
                     }
                 }
                 else
                 {
                     //Draw2DRay(laserFirePoint.position, laserFirePoint.transform.right * defDistanceRay);
+
+
                 }
             }
             else
@@ -67,6 +71,8 @@ public class Laser : MonoBehaviour
         }
         else
         {
+
+
             Draw2DRay(laserFirePoint.position, laserFirePoint.transform.right * defDistanceRay);
 
         }

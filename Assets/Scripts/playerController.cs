@@ -125,6 +125,7 @@ public class playerController : MonoBehaviour
     public AudioSource generalAudios;
     public AudioClip deadSound;
     public AudioClip bladeSound;
+    public GameObject soulPickUp;
 
     [Header("LostSouls Settings")]
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
@@ -728,26 +729,7 @@ public class playerController : MonoBehaviour
                                 bullet.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
                                 bullet.SetActive(true);
                             }
-                            GameObject bullet2 = playerBulletPool.Instance.GetPooledObject();
-                            if (bullet2 != null)
-                            {
-                                bullet2.transform.position = this.transform.position;
-                                bullet2.GetComponent<playerBullet>().speed = voiceBulletSpeed;
-                                bullet2.GetComponent<playerBullet>().damage = voiceBulletDamage;
-                                bullet2.GetComponent<playerBullet>().directionToMove = (facingRight ? new Vector2(1, voiceDispersion) : new Vector2(-1, voiceDispersion));
-                                bullet2.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
-                                bullet2.SetActive(true);
-                            }
-                            GameObject bullet3 = playerBulletPool.Instance.GetPooledObject();
-                            if (bullet3 != null)
-                            {
-                                bullet3.transform.position = this.transform.position;
-                                bullet3.GetComponent<playerBullet>().speed = voiceBulletSpeed;
-                                bullet3.GetComponent<playerBullet>().damage = voiceBulletDamage;
-                                bullet3.GetComponent<playerBullet>().directionToMove = (facingRight ? new Vector2(1, -voiceDispersion) : new Vector2(-1, -voiceDispersion));
-                                bullet3.GetComponent<playerBullet>().destroyWithTime(voiceBulletTime);
-                                bullet3.SetActive(true);
-                            }
+                            
                             nextVoice = Time.time + 1 / voiceAttackRate;
                         }
 
@@ -1060,6 +1042,7 @@ public class playerController : MonoBehaviour
         }
         if (collision.transform.tag == "Soul")
         {
+           
             if (demonKing)
             {
                 soulsCollected += (4 * 2);
@@ -1092,6 +1075,7 @@ public class playerController : MonoBehaviour
 
         if (collision.transform.tag == "Soul")
         {
+            Instantiate(soulPickUp);
             if (demonKing)
             {
                 soulsCollected += (4 * 2);
@@ -1424,17 +1408,20 @@ public class playerController : MonoBehaviour
 
                     foreach(Collider2D enemy in enemies)
                     {
-                        if(enemy.tag == "Enemy" && !enemy.GetComponentInParent<FatherEnemy>().outBursted)
+                        if (enemy.GetComponentInParent<FatherEnemy>() != null)
                         {
-                            StartCoroutine("endOutburstEnemy", enemy);
-                            enemy.GetComponentInParent<FatherEnemy>().outBursted = true;
-                            float[] damageMessage = new float[3];
-                            damageMessage[0] = outBurstDamage;
-                            damageMessage[1] = transform.position.x;
-                            damageMessage[2] = transform.position.y;
-                            if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                            if (enemy.tag == "Enemy" && !enemy.GetComponentInParent<FatherEnemy>().outBursted)
                             {
-                                enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, false);
+                                StartCoroutine("endOutburstEnemy", enemy);
+                                enemy.GetComponentInParent<FatherEnemy>().outBursted = true;
+                                float[] damageMessage = new float[3];
+                                damageMessage[0] = outBurstDamage;
+                                damageMessage[1] = transform.position.x;
+                                damageMessage[2] = transform.position.y;
+                                if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                                {
+                                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, false);
+                                }
                             }
                         }
                     }

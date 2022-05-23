@@ -7,11 +7,26 @@ public class playerBullet : MonoBehaviour
     public Vector2 directionToMove;
     public float speed;
     public int damage;
+    public GameObject particles;
+
+    private GameObject currentParticles;
+
+    private void OnEnable()
+    {
+        currentParticles = Instantiate(particles, transform.position, Quaternion.identity);
+        currentParticles.GetComponent<ParticlesFollowing>().timeToDestroy = 5f;
+        currentParticles.GetComponent<ParticlesFollowing>().target = transform;
+    }
 
     // Update is called once per frame
     void Update()
     {
         transform.Translate(directionToMove * speed * Time.deltaTime);
+    }
+
+    private void OnDisable()
+    {
+        currentParticles.GetComponent<ParticleSystem>().Stop();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -42,6 +57,7 @@ public class playerBullet : MonoBehaviour
 
     private void unableObject()
     {
+        currentParticles.GetComponent<ParticleSystem>().Stop();
         this.gameObject.SetActive(false);
     }
 }

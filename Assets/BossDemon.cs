@@ -102,6 +102,7 @@ public class BossDemon : FatherEnemy
         inDownLancers = false,
         firstLoop = false,
         meteoring = false,
+        wantsToMeteor = false,
         laseringBall = false,
         souling = false,
         soulingDone = false,
@@ -842,7 +843,6 @@ public class BossDemon : FatherEnemy
         StartSouling();
         spiritShield.SetActive(true);
         spiritShield.transform.parent.GetComponent<Animator>().Play("SpiritSpawn");
-
     }
     private void UpdateBossShieldState()
     {
@@ -859,6 +859,7 @@ public class BossDemon : FatherEnemy
                 previousValue = 0;
                 //spriteAnimator.Play("ShieldMeteors");
                 soulingDone = true;
+                wantsToMeteor = true;
             }
             else
             {
@@ -868,6 +869,8 @@ public class BossDemon : FatherEnemy
                     SwitchState(RandomBehaviour());
                     meteorsParticlesGO.SetActive(true);
                     meteoring = true;
+                    wantsToMeteor = false;
+
                 }
             }
         }
@@ -1185,9 +1188,9 @@ public class BossDemon : FatherEnemy
             iterations++;
             int pos = Random.Range(0, (statesToRandomize.Length));
             if (!(statesToRandomize[pos] == State.TPs && (!areTPsMissing || souling))
-                && !(statesToRandomize[pos] == State.BossLancer && (inDownLancers || meteoring || laseringBall || souling))
-                && !(statesToRandomize[pos] == State.BossShield && (inDownLancers || meteoring || laseringBall || souling))
-                && !(statesToRandomize[pos] == State.BossVoice && (inDownLancers || meteoring || laseringBall || souling))
+                && !(statesToRandomize[pos] == State.BossLancer && (inDownLancers || meteoring || wantsToMeteor || laseringBall || souling))
+                && !(statesToRandomize[pos] == State.BossShield && (inDownLancers || meteoring || wantsToMeteor || laseringBall || souling))
+                && !(statesToRandomize[pos] == State.BossVoice && (inDownLancers || meteoring || wantsToMeteor || laseringBall || souling))
                 && !(statesToRandomize[pos] == State.SideLava && inSideLava))
             {
                 return statesToRandomize[pos];

@@ -73,7 +73,8 @@ public class Enemy_Champion_Flyer : FatherEnemy
         lnFirstLoop = true,
         isAttackLightninging = false,
         firstLoop = false,
-        rushing = false;
+        rushing = false,
+        isInLight = false;
 
     private int facingDirection,
         ansFacingDirection,
@@ -207,6 +208,10 @@ public class Enemy_Champion_Flyer : FatherEnemy
                                 audio.clip = clip;
                                 audio.Play();
                                 animatorLightning.Play("Lightning");
+                                Invoke("LightEffect", 0.6f);
+                                Invoke("NoLightEffect", 0.75f);
+                                Invoke("LightEffect", 0.8f);
+                                Invoke("NoLightEffect", 0.95f);
                             }
                         }
                         else
@@ -217,6 +222,10 @@ public class Enemy_Champion_Flyer : FatherEnemy
 
                         }
                     }
+                }
+                if(isInLight)
+                {
+                    globalLight.intensity = 2f;
                 }
             }
         }
@@ -654,6 +663,15 @@ public class Enemy_Champion_Flyer : FatherEnemy
         }
 
         currentState = state;
+    }
+
+    private void LightEffect()
+    {
+        isInLight = true;
+    }
+    private void NoLightEffect()
+    {
+        isInLight = false;
     }
 
     private float Lerp(float start, float end, float timeStartedLerping, float lerpTime = 1)

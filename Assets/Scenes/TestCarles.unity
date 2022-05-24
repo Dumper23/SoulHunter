@@ -9082,6 +9082,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 628324228, guid: 0db764e9375a0434d92b5f8d565266bf, type: 3}
   m_PrefabInstance: {fileID: 745224144}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &897310562 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8602409309022819313, guid: c466216af0555674ebb5713d9b1718b1, type: 3}
+  m_PrefabInstance: {fileID: 1751111157}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &939979582
 GameObject:
   m_ObjectHideFlags: 0
@@ -10959,7 +10964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5961897726818060700, guid: 9095849dee1e7cc45a447c90f6fe1309, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -21.270435
+      value: -21.608
       objectReference: {fileID: 0}
     - target: {fileID: 5961897726818060700, guid: 9095849dee1e7cc45a447c90f6fe1309, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20635,6 +20640,10 @@ PrefabInstance:
       propertyPath: skeletonsToProtect.Array.data[2]
       value: 
       objectReference: {fileID: 2062076454}
+    - target: {fileID: 2248551833819934134, guid: 431ad40b3f6e42844a03af2edbac4707, type: 3}
+      propertyPath: skeletonsToProtect.Array.data[3]
+      value: 
+      objectReference: {fileID: 897310562}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 431ad40b3f6e42844a03af2edbac4707, type: 3}
 --- !u!1001 &2394745866796091872

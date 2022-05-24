@@ -116,12 +116,16 @@ public class mainMenu : MonoBehaviour
 
     public void deleteSavedGame()
     {
+        
         popUp2.SetActive(true);
         EventSystem.current.SetSelectedGameObject(buttonNo);
     }
 
     public void confirmDeleteSavedGame()
     {
+        cheatCode = false;
+        levels.SetActive(false);
+        levelSelection.SetActive(false);
         popUp.SetActive(true);
         popUp2.SetActive(false);
         Invoke("delete", 1.5f);

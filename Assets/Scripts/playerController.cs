@@ -126,6 +126,8 @@ public class playerController : MonoBehaviour
     public AudioClip deadSound;
     public AudioClip bladeSound;
     public GameObject soulPickUp;
+    [Range(-5, 15f)]
+    public float generalVolume = 0f;
 
     [Header("LostSouls Settings")]
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
@@ -271,7 +273,7 @@ public class playerController : MonoBehaviour
         //Si et pares a pensar pot ser que estiguin a les punxes perque hi ha sang i s'alimenten d'aquesta xd
 
         lostSoulDescriptionDictionary.Add("StoneBreaker",
-            "You will deal more damage to enemies with shield.\n\nThe name is not self explanatory but thats why this section exists. :)");
+            "You will deal more damage to enemies with shield (Indicated with a shield on top of the enemy).\n\nThe name is not self explanatory but thats why this section exists. :)");
 
         lostSoulDescriptionDictionary.Add("OutBurst",
             "You will damage the enemies if you hit them while dashing.\n\nShadow could have eaten something expired, causing him to leave a terible smell while dashing.");
@@ -286,7 +288,7 @@ public class playerController : MonoBehaviour
             "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
 
         lostSoulDescriptionDictionary.Add("HolyWater",
-            "You will deal more damage to Demonic enemies.\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
+            "You will deal more damage to Demonic enemies (Indicated with a demon logo on top of the enemy).\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
 
         lostSoulDescriptionDictionary.Add("Voice",
            "You will generate sound waves when you attack.");
@@ -560,10 +562,7 @@ public class playerController : MonoBehaviour
                     if (hittedGround)
                     {
                         Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                        if (aux.GetComponent<SpriteRenderer>() != null)
-                        {
-                            groundImpactParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
-                        }
+                        groundImpactParticles.startColor = new Color(0.1f,0.1f,0.1f);
                         hittedGround = false;
                         if (r2d.velocity.y <= 0)
                         {
@@ -587,10 +586,7 @@ public class playerController : MonoBehaviour
                         if (timeTrail <= 0)
                         {
                             Collider2D aux = Physics2D.OverlapCircle(groundCollider.position, 0.15f, LayerMask.GetMask("Ground"));
-                            if (aux.GetComponent<SpriteRenderer>() != null)
-                            {
-                                walkParticles.startColor = aux.GetComponent<SpriteRenderer>().color;
-                            }
+                            walkParticles.startColor = new Color(0.1f, 0.1f, 0.1f);
                             Instantiate(walkParticles, groundCollider.position, Quaternion.identity);
                             timeTrail = startTimeTrail;
                            
@@ -1351,7 +1347,10 @@ public class playerController : MonoBehaviour
                     damageMessage[0] = attackDamage;
                     damageMessage[1] = transform.position.x;
                     damageMessage[2] = transform.position.y;
-                    enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                    if (enemy.GetComponentInParent<FatherEnemy>() != null)
+                    {
+                        enemy.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+                    }
                 }
             }
         }

@@ -45,7 +45,9 @@ public class NecromancerStatic : FatherEnemy
         foreach(LineRenderer line in lines)
         {
             line.SetPosition(0, transform.position);
-            line.SetPosition(1, skeletonsToProtect[i].GetComponentInChildren<Rigidbody2D>().gameObject.transform.position);
+            if(skeletonsToProtect[i] != null){
+                line.SetPosition(1, skeletonsToProtect[i].GetComponentInChildren<Rigidbody2D>().gameObject.transform.position);
+            }
             i++;
         }
     }

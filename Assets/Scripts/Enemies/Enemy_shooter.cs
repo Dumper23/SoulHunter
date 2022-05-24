@@ -119,7 +119,18 @@ public class Enemy_shooter : FatherEnemy
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
 
-        currentHealth -= attackDetails[0];
+        if (isDemon)
+        {
+            currentHealth -= attackDetails[0] / 3;
+        }
+        else if (hasShield)
+        {
+            currentHealth -= attackDetails[0] / 2;
+        }
+        else
+        {
+            currentHealth -= attackDetails[0];
+        }
 
         audioSource.clip = audios[DAMAGE_SOUND];
         audioSource.Play();

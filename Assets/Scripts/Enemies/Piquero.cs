@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Scorpion : FatherEnemy
+public class Piquero : FatherEnemy
 {
     private enum State
     {
         Walking,
         Knockback,
         Dead,
-        Waiting
+        Attack
     }
 
-    public bool isPoisonous = true;
-
     public GameObject modifierIndicator;
-    public float rayOffsetY = 1.5f;
-    public float rayOffsetX = 1.5f;
 
     public int damageToPlayer = 1;
     public int pointsToGive = 10;
+    public float playerRangeDetection = 5f;
+    public float attackRange = 2f;
+    public float attackRate = 1f;
+    public Transform attackPoint;
+    public float damageRetard = 0.2f;
+    public float ressurrectionTime = 2f;
+    public bool isSkeleton = false;
 
     public int soulsToGive = 5;
     public GameObject soul;
@@ -100,19 +103,15 @@ public class Scorpion : FatherEnemy
     [SerializeField]
     private ParticleSystem particleDamage;
 
-    private bool playerDetected = false;
-    private bool isFalling = true;
+    private Animator anim;
     private Transform target;
 
-    private void Awake()
-    {
-        aliveRb = alive.GetComponent<Rigidbody2D>();
-        aliveRb.gravityScale = 0;
-    }
+    private float time = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        target = FindObjectOfType<playerController>().transform;
         if(modifierIndicator != null)
         {
             if (hasShield || isDemon)
@@ -120,13 +119,12 @@ public class Scorpion : FatherEnemy
                 modifierIndicator.SetActive(true);
             }
         }
-        
+        aliveRb = alive.GetComponent<Rigidbody2D>();
         aliveAnim = alive.GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-        target = FindObjectOfType<playerController>().transform;
+        anim = alive.GetComponent<Animator>();
         facingDirection = 1;
         currentHealth = maxHealth;
-        SwitchState(State.Waiting);
     }
 
     // Update is called once per frame
@@ -143,8 +141,8 @@ public class Scorpion : FatherEnemy
             case State.Dead:
                 UpdateDeadState();
                 break;
-            case State.Waiting:
-                UpdateWaitingState();
+            case State.Attack:
+                UpdateAttackState();
                 break;
         }
 
@@ -154,14 +152,18 @@ public class Scorpion : FatherEnemy
     #region WALKING
     private void EnterWalkingState()
     {
-        
+
     }
 
     private void UpdateWalkingState()
     {
-        aliveRb.gravityScale = 1f;
         
-        
+        anim.Play("walk");
+        if ((target.position - alive.transform.position).magnitude <= playerRangeDetection)
+        {
+            time = 1;
+            SwitchState(State.Attack);
+        }
         groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
         groundDetectedBack = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsGround);
         spikesDetected = Physics2D.Raycast(groundCheckBack.position, Vector2.down, groundCheckDistance, whatIsTrap);
@@ -171,39 +173,23 @@ public class Scorpion : FatherEnemy
             SwitchState(State.Dead);
         }
 
-        wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance * facingDirection, whatIsGround);
+        wallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);
         diffWallDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsDiffWall);
         doorDetected = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsDoor);
-        enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsEnemy);
+        enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, enemyDetectionRange, whatIsEnemy);
         mushroomDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsMushroom);
 
-        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected || doorDetected || diffWallDetected || mushroomDetected)
+        if ((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected || doorDetected || diffWallDetected || mushroomDetected)
         {
-            aliveRb.velocity =new Vector2(0.4f, 2f);
+            facingDirection *= -1;
+            alive.transform.localScale = new Vector3(alive.transform.localScale.x * -1, alive.transform.localScale.y, alive.transform.localScale.z);
         }
         else
         {
-            if (groundDetected && groundDetectedBack)
-            {
-                isFalling = false;
-            }
-
-            if (!isFalling)
-            {
-                if (target.position.x > alive.transform.position.x)
-                {
-                    facingDirection = 1;
-                    alive.transform.localScale = new Vector3(1, alive.transform.localScale.y, alive.transform.localScale.z);
-                }
-                else
-                {
-                    facingDirection = -1;
-                    alive.transform.localScale = new Vector3(-1, alive.transform.localScale.y, alive.transform.localScale.z);
-                }
-                movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
-                aliveRb.velocity = movement;
-            }
+            movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
+            aliveRb.velocity = movement;
         }
+
     }
 
     private void ExitWalkingState()
@@ -217,7 +203,6 @@ public class Scorpion : FatherEnemy
     #region KNOCKBACK
     private void EnterKnockbackState()
     {
-        alive.GetComponent<SpriteRenderer>().flipY = false;
         knockbackStartTime = Time.time;
         if(null != posPlayerForKnockback)
         {
@@ -261,15 +246,45 @@ public class Scorpion : FatherEnemy
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
         Instantiate(deadSoundObject, alive.transform.position, transform.rotation);
 
-        for (int i = 0; i <= soulsToGive; i++)
+        if (!isSkeleton)
         {
-            GameObject g = Instantiate(soul, alive.transform.position, Quaternion.identity);
-            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
-        }
+            for (int i = 0; i <= soulsToGive; i++)
+            {
+                GameObject g = Instantiate(soul, alive.transform.position, Quaternion.identity);
+                g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+            }
 
-        Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
-        Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
-        Destroy(gameObject);
+            Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
+            Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
+            Destroy(gameObject);
+        }
+        else
+        {
+            if( alive.GetComponent<Collider2D>().enabled == true)
+            {
+                anim.Play("die");
+                Invoke("ressurrect", ressurrectionTime);
+            }
+            aliveRb.gravityScale = 0;
+            aliveRb.velocity = Vector2.zero;
+            alive.GetComponent<Collider2D>().enabled = false;
+            
+            
+        }
+    }
+
+    private void ressurrect()
+    {
+        anim.Play("res");
+        currentHealth = maxHealth;
+        Invoke("walkAgain", 0.9f);
+    }
+
+    private void walkAgain()
+    {
+        alive.GetComponent<Collider2D>().enabled = true;
+        aliveRb.gravityScale = 1;
+        SwitchState(State.Walking);
     }
 
     private void UpdateDeadState()
@@ -283,36 +298,68 @@ public class Scorpion : FatherEnemy
     }
     #endregion
 
-    //---------Waiting------------
-    #region WAITING
-    private void UpdateWaitingState()
+
+    //----ALTRES----
+
+    public void UpdateAttackState()
     {
-        if (!playerDetected)
+        if ((target.position - alive.transform.position).magnitude > playerRangeDetection)
         {
-            aliveRb.gravityScale = 0;
-            alive.GetComponent<SpriteRenderer>().flipY = true;
+            SwitchState(State.Walking);
         }
 
-        
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"));
-        RaycastHit2D hit = Physics2D.Raycast(alive.transform.position - new Vector3(rayOffsetX, rayOffsetY, 0), new Vector3(0, -1000) + alive.transform.position - new Vector3(rayOffsetX, rayOffsetY, 0));
-        // If it hits something...
-        if (hit.collider != null)
+        if ((target.position - alive.transform.position).magnitude > attackRange)
         {
-            if (hit.collider.tag == "Player")
+            anim.Play("walk");
+            time = 1;
+            if (target.position.x > alive.transform.position.x)
             {
-                aliveRb.gravityScale = 9.81f;
-                alive.GetComponent<SpriteRenderer>().flipY = false;
-                playerDetected = true;
-                SwitchState(State.Walking);
+                facingDirection = 1;
+                alive.transform.localScale = new Vector3(1, alive.transform.localScale.y, alive.transform.localScale.z);
+            }
+            else
+            {
+                facingDirection = -1;
+                alive.transform.localScale = new Vector3(-1, alive.transform.localScale.y, alive.transform.localScale.z);
+            }
+            movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
+            aliveRb.velocity = movement;
+        }
+        else
+        {
+            time += Time.deltaTime;
+            if (time > attackRate)
+            {
+                anim.Play("attack");
+                time = 0;
+                Invoke("doDamage", damageRetard);
+                
             }
         }
     }
-    #endregion
-    //----ALTRES----
+
+    private void doDamage()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.position, 0.4f);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.tag == "Player")
+            {
+                hit.GetComponent<playerController>().takeDamage();
+            }
+        }
+    }
+
+    void cancelDamage()
+    {
+        CancelInvoke("doDamage");
+    }
 
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
+        Invoke("cancelDamage", 0.1f);
+        anim.Play("damage");
+
         if (isDemon)
         {
             currentHealth -= attackDetails[0]  / 3;
@@ -396,8 +443,11 @@ public class Scorpion : FatherEnemy
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(groundCheckBack.position, new Vector2(groundCheckBack.position.x, groundCheckBack.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
-        Gizmos.DrawLine(alive.transform.position - new Vector3(rayOffsetX, rayOffsetY, 0), new Vector3(0, -1000) + alive.transform.position - new Vector3(rayOffsetX, rayOffsetY, 0)) ;
-
+        Gizmos.DrawWireSphere(enemyCollision.position, enemyDetectionRange);
+        Gizmos.DrawWireSphere(alive.transform.position, playerRangeDetection);
+        Gizmos.DrawWireSphere(alive.transform.position - new Vector3(0, 0.75f, 0), attackRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPoint.position, 0.4f);
     }
 
     public override void mostraMissatge()

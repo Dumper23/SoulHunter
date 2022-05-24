@@ -9,30 +9,57 @@ public class Arrow : MonoBehaviour
     public float lifeTime = 5f;
     public GameObject spriteToRotate;
     public float rotationSpeed;
+    public bool isRotating = true;
 
     private Rigidbody2D rb;
     private void Start()
     {
         Destroy(gameObject, lifeTime);
-    }
+        if (GetComponentInChildren<Animator>())
+        {
+            GetComponentInChildren<Animator>().enabled = true;
+            GetComponentInChildren<Animator>().Play("arrow");
+        }
+    } 
 
 
     void Update()
     {
         transform.Translate(((direction + transform.position) - transform.position).normalized * Time.deltaTime * speed);
-        spriteToRotate.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+        if (isRotating)
+        {
+            spriteToRotate.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player")
+        if(collision.tag == "ground")
+        {
+            Destroy(this.gameObject);
+        }
+
+        if (collision.tag == "Player")
         {
             collision.GetComponent<playerController>().takeDamage();
+            if (!isRotating)
+            {
+                Destroy(gameObject);
+            }
         }
 
         if (collision.tag == "Player" || collision.tag == "ground" || collision.tag == "Mushroom")
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "ground")
+        {
+            Destroy(this.gameObject);
+        }
+
     }
 }

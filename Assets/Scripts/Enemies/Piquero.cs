@@ -23,6 +23,7 @@ public class Piquero : FatherEnemy
     public float damageRetard = 0.2f;
     public float ressurrectionTime = 2f;
     public bool isSkeleton = false;
+    public bool isProtected = false;
 
     public int soulsToGive = 5;
     public GameObject soul;
@@ -161,7 +162,7 @@ public class Piquero : FatherEnemy
         anim.Play("walk");
         if ((target.position - alive.transform.position).magnitude <= playerRangeDetection)
         {
-            time = 1;
+            time = attackRate / 1.5f;
             SwitchState(State.Attack);
         }
         groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
@@ -260,14 +261,29 @@ public class Piquero : FatherEnemy
         }
         else
         {
-            if( alive.GetComponent<Collider2D>().enabled == true)
+            if (isProtected)
             {
-                anim.Play("die");
-                Invoke("ressurrect", ressurrectionTime);
+                if (alive.GetComponent<Collider2D>().enabled == true)
+                {
+                    anim.Play("die");
+                    Invoke("ressurrect", ressurrectionTime);
+                }
+                aliveRb.gravityScale = 0;
+                aliveRb.velocity = Vector2.zero;
+                alive.GetComponent<Collider2D>().enabled = false;
             }
-            aliveRb.gravityScale = 0;
-            aliveRb.velocity = Vector2.zero;
-            alive.GetComponent<Collider2D>().enabled = false;
+            else
+            {
+                for (int i = 0; i <= soulsToGive; i++)
+                {
+                    GameObject g = Instantiate(soul, alive.transform.position, Quaternion.identity);
+                    g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+                }
+
+                Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
+                Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
+                Destroy(gameObject);
+            }
             
             
         }
@@ -311,7 +327,7 @@ public class Piquero : FatherEnemy
         if ((target.position - alive.transform.position).magnitude > attackRange)
         {
             anim.Play("walk");
-            time = 1;
+            time = attackRate/1.1f;
             if (target.position.x > alive.transform.position.x)
             {
                 facingDirection = 1;
@@ -357,7 +373,14 @@ public class Piquero : FatherEnemy
 
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
-        Invoke("cancelDamage", 0.1f);
+        if (isSkeleton)
+        {
+            Invoke("cancelDamage", 0.2f);
+        }
+        else
+        {
+            Invoke("cancelDamage", 0.2f);
+        }
         anim.Play("damage");
 
         if (isDemon)

@@ -150,8 +150,8 @@ MonoBehaviour:
   speedKnockback: 0.01
   lineOfSite: 7
   shootingRange: 4
-  maxHealth: 25
-  knockbackDuration: 1
+  maxHealth: 20
+  knockbackDuration: 0.5
   fireRate: 1
   bullet: {fileID: 8069326041670184453, guid: bbf888167fbe9ed45a71b1ad18e5e3a5, type: 3}
   bulletParent: {fileID: 5668566061518866024}

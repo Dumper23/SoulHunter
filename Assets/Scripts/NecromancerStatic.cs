@@ -27,7 +27,7 @@ public class NecromancerStatic : FatherEnemy
     {
         foreach (GameObject skeleton in skeletonsToProtect)
         {
-             
+            skeleton.GetComponent<Piquero>().isProtected = true;
             GameObject go = Instantiate(new GameObject(), gameObject.transform);
             LineRenderer line = go.AddComponent<LineRenderer>();
             line.startColor = Color.red;
@@ -70,7 +70,7 @@ public class NecromancerStatic : FatherEnemy
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
         foreach(GameObject skeleton in skeletonsToProtect)
         {
-            Destroy(skeleton);
+            skeleton.GetComponent<Piquero>().isProtected = false;
         }
         Destroy(gameObject);
     }

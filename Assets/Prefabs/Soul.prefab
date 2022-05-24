@@ -145,7 +145,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 159
+  m_SortingOrder: 999
   m_Sprite: {fileID: -8622283388504675842, guid: 6a7089cbd750c2440b8907df428963e2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.17254902, g: 0.909804, b: 0.96470594, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.25
   m_LightVolumeOpacity: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}

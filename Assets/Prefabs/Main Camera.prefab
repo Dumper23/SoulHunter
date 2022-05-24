@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2538039668607127938}
   - component: {fileID: 2538039668607127933}
   - component: {fileID: 2538039668607127934}
+  - component: {fileID: 1797325138}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -101,6 +102,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0.5, z: -10}
   smoothFactor: 7
   target: {fileID: 0}
+  follow: 1
 --- !u!114 &2538039668607127933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,3 +154,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1797325138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2538039668607127936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 74632833d09dc24448e4120fe8b306c7, type: 2}

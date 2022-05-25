@@ -327,17 +327,28 @@ public class Piquero : FatherEnemy
         if ((target.position - alive.transform.position).magnitude > attackRange)
         {
             anim.Play("walk");
-            time = attackRate/1.1f;
-            if (target.position.x > alive.transform.position.x)
+            if (isSkeleton)
             {
-                facingDirection = 1;
-                alive.transform.localScale = new Vector3(1, alive.transform.localScale.y, alive.transform.localScale.z);
+                time = attackRate / 1.2f;
             }
             else
             {
-                facingDirection = -1;
-                alive.transform.localScale = new Vector3(-1, alive.transform.localScale.y, alive.transform.localScale.z);
+                time = attackRate / 1.2f;
             }
+            if (Mathf.Abs(target.position.x - alive.transform.position.x) >= 0.5f)
+            {
+                if (target.position.x > alive.transform.position.x)
+                {
+                    facingDirection = 1;
+                    alive.transform.localScale = new Vector3(1, alive.transform.localScale.y, alive.transform.localScale.z);
+                }
+                else
+                {
+                    facingDirection = -1;
+                    alive.transform.localScale = new Vector3(-1, alive.transform.localScale.y, alive.transform.localScale.z);
+                }
+            }
+
             movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
             aliveRb.velocity = movement;
         }
@@ -379,7 +390,7 @@ public class Piquero : FatherEnemy
         }
         else
         {
-            Invoke("cancelDamage", 0.2f);
+            Invoke("cancelDamage", 0.15f);
         }
         anim.Play("damage");
 

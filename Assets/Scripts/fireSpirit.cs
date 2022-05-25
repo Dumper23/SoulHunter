@@ -5,10 +5,12 @@ using UnityEngine;
 public class fireSpirit : MonoBehaviour
 {
     public float jumpForce = 1f;
+    public float delay = 0;
 
     private float yPos = 0;
     private Rigidbody2D rb;
     private bool appliedForce = false;
+    private float time = 0;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -17,14 +19,18 @@ public class fireSpirit : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y < yPos)
+        time += Time.deltaTime;
+        if (time > delay)
         {
-            transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
-            rb.velocity = Vector2.zero;
-        }
-        if(transform.position.y == yPos)
-        {
-            applyForce();
+            if (transform.position.y < yPos)
+            {
+                transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
+                rb.velocity = Vector2.zero;
+            }
+            if (transform.position.y == yPos)
+            {
+                applyForce();
+            }
         }
     }
 

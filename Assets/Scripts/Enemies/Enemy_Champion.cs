@@ -99,7 +99,7 @@ public class Enemy_Champion : FatherEnemy
         statesToRandomize[0] = State.Defense;
         statesToRandomize[1] = State.AttackRoll;
         statesToRandomize[2] = State.Spikes;
-        statesToRandomize[3] = State.Defense;
+        statesToRandomize[3] = State.Spikes;
         statesToRandomize[4] = State.Spikes;
 
         if (player.position.x > this.transform.position.x)
@@ -326,8 +326,8 @@ public class Enemy_Champion : FatherEnemy
         SpikesStartTime = Time.time;
         swicher = false;
         inThorns = true;
-        sprite.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
-        sprite2.transform.localScale -= new Vector3(0.5f, 0.0f, 0.0f);
+        sprite.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
+        sprite2.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
     }
 
     private void UpdateSpikesState()
@@ -342,8 +342,8 @@ public class Enemy_Champion : FatherEnemy
     {
         GetComponent<fireSpikes>().Shoot();
         inThorns = false;
-        sprite.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
-        sprite2.transform.localScale += new Vector3(0.5f, 0.0f, 0.0f);
+        sprite.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
+        sprite2.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
     }
 
     #endregion
@@ -353,8 +353,8 @@ public class Enemy_Champion : FatherEnemy
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
-        sprite.transform.localScale -= new Vector3(0.0f,0.5f,0.0f);
-        sprite2.transform.localScale -= new Vector3(0.0f, 0.5f, 0.0f);
+        sprite.transform.localScale -= new Vector3(0.0f,0.2f,0.0f);
+        sprite2.transform.localScale -= new Vector3(0.0f, 0.2f, 0.0f);
         isKnockingBack = true;
     }
 
@@ -368,8 +368,8 @@ public class Enemy_Champion : FatherEnemy
 
     private void ExitKnockbackState()
     {
-        sprite.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
-        sprite2.transform.localScale += new Vector3(0.0f, 0.5f, 0.0f);
+        sprite.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
+        sprite2.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
         isKnockingBack = false;
     }
     #endregion
@@ -382,8 +382,8 @@ public class Enemy_Champion : FatherEnemy
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, transform.position, deathBloodParticle.transform.rotation);
         Instantiate(thornsSoul, transform.position, thornsSoul.transform.rotation);
-        GameObject p = Instantiate(portal, new Vector3(sprite.transform.position.x, sprite.transform.position.y + 3, sprite.transform.position.z), portal.transform.rotation);
-        p.GetComponent<EndLevel>().nextLevelName = "DemoEnd";
+        //GameObject p = Instantiate(portal, new Vector3(sprite.transform.position.x, sprite.transform.position.y + 3, sprite.transform.position.z), portal.transform.rotation);
+        //p.GetComponent<EndLevel>().nextLevelName = "DemoEnd";
         Destroy(gameObject);
     }
 

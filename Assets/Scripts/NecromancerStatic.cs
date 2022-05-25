@@ -30,10 +30,13 @@ public class NecromancerStatic : FatherEnemy
             skeleton.GetComponent<Piquero>().isProtected = true;
             GameObject go = Instantiate(new GameObject(), gameObject.transform);
             LineRenderer line = go.AddComponent<LineRenderer>();
-            line.startColor = Color.red;
+            line.startColor = Color.green;
+            line.endColor = Color.green;
             line.material = lineMaterial;
-            line.startWidth = 0.2f;
-            line.endWidth = 0f;
+            line.startWidth = 0.05f;
+            line.endWidth = 0.05f;
+            line.sortingOrder = 120;
+            line.textureMode = LineTextureMode.Tile;
             lines.Add(line);
         }
     }

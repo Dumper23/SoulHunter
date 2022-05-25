@@ -12,8 +12,15 @@ public class Arrow : MonoBehaviour
     public bool isRotating = true;
 
     private Rigidbody2D rb;
+    private Collider2D c;
     private void Start()
     {
+        if (isRotating)
+        {
+            c = GetComponent<Collider2D>();
+            c.enabled = false;
+            Invoke("enableCollision", 0.5f);
+        }
         Destroy(gameObject, lifeTime);
         if (GetComponentInChildren<Animator>())
         {
@@ -21,6 +28,11 @@ public class Arrow : MonoBehaviour
             GetComponentInChildren<Animator>().Play("arrow");
         }
     } 
+
+    void enableCollision()
+    {
+        c.enabled = true;
+    }
 
 
     void Update()

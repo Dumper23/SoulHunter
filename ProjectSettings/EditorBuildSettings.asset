@@ -78,6 +78,12 @@ EditorBuildSettings:
     path: Assets/Scenes/World4/L1W4.unity
     guid: e169ef2c0aeae6449b9a6a755f11a6ed
   - enabled: 1
+    path: Assets/Scenes/World4/L2W4.unity
+    guid: 034762dc0f1c1c644b475e36e2585f34
+  - enabled: 1
+    path: Assets/Scenes/World4/L3W4.unity
+    guid: 37051ebe515ce3448965960add8959c3
+  - enabled: 1
     path: Assets/Scenes/World4/L4W4.unity
     guid: 6c742032be0216341bf3220560fe052b
   - enabled: 1

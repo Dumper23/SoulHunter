@@ -376,6 +376,8 @@ MonoBehaviour:
   deadSound: {fileID: 8300000, guid: 8801e49ba85cce247b7d55cb71b44f8e, type: 3}
   bladeSound: {fileID: 8300000, guid: d7b8bdb9116e3734ebb911d8e672f87d, type: 3}
   soulPickUp: {fileID: 8750724572713179576, guid: 59d53809b75625e44a09b6576ef5b13d, type: 3}
+  generalVolume: 0
+  lostSoulCollectedSound: {fileID: 2232518333684341513, guid: ba577809ca2e0a6409984e6464aa2023, type: 3}
   nothingEquipped: {fileID: 21300000, guid: b2b2b5de96fed40d2898dd15c17892e6, type: 3}
   lostSoulsIcons:
   - name: Light

@@ -128,6 +128,7 @@ public class playerController : MonoBehaviour
     public GameObject soulPickUp;
     [Range(-5, 15f)]
     public float generalVolume = 0f;
+    public GameObject lostSoulCollectedSound;
 
     [Header("LostSouls Settings")]
     public Dictionary<string, LostSouls> lostSouls = new Dictionary<string, LostSouls>();
@@ -1064,6 +1065,7 @@ public class playerController : MonoBehaviour
             {
                 lostSouls.Add(collision.transform.GetComponent<LostSouls>().lostSoulName, collision.transform.GetComponent<LostSouls>());
             }
+            Instantiate(lostSoulCollectedSound, transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
         }
 

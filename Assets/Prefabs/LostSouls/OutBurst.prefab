@@ -46,9 +46,9 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.715
-  m_Color: {r: 1, g: 0.0489275, b: 0, a: 1}
+  m_Color: {r: 0.27450982, g: 0.19607845, b: 1, a: 1}
   m_Intensity: 1
-  m_LightVolumeOpacity: 0.107
+  m_LightVolumeOpacity: 0.066
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
@@ -196,5 +196,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.7681334, y: 2.5294814}
+  m_Size: {x: 1.1695712, y: 1.0687377}
   m_EdgeRadius: 0

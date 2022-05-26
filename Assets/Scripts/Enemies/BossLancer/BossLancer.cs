@@ -20,6 +20,10 @@ public class BossLancer : FatherEnemy
 
     public int pointsToGive = 100;
 
+    public int soulsToGive = 5;
+    public GameObject soul;
+    public float soulForce;
+
     private State currentState;
     private State[] statesToRandomize;
 
@@ -735,6 +739,11 @@ public class BossLancer : FatherEnemy
         Instantiate(outBurstSoul, new Vector3(sprite.transform.position.x, sprite.transform.position.y - 5, sprite.transform.position.z), outBurstSoul.transform.rotation);
         GameObject p = Instantiate(portal, new Vector3(sprite.transform.position.x + 5, sprite.transform.position.y-3, sprite.transform.position.z), portal.transform.rotation);
         p.GetComponent<EndLevel>().nextLevelName = "L1W2";
+        for (int i = 0; i <= soulsToGive; i++)
+        {
+            GameObject g = Instantiate(soul, upperRangeCircle.transform.position - new Vector3(0, 3, 0), Quaternion.identity);
+            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+        }
         Destroy(gameObject);
     }
 

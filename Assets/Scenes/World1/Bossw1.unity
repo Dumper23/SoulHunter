@@ -892,6 +892,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1255608515}
     - target: {fileID: 1457171829281863492, guid: b011520899903454cb7c184f1c011908, type: 3}
+      propertyPath: soulsToGive
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1457171829281863492, guid: b011520899903454cb7c184f1c011908, type: 3}
       propertyPath: outBurstSoul
       value: 
       objectReference: {fileID: 721773052708244744, guid: 4238cd811bdaf75459e182d9eb5890e6, type: 3}

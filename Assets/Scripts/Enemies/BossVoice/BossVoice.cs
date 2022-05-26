@@ -17,6 +17,11 @@ public class BossVoice : FatherEnemy
         Dead
     }
 
+    public int soulsToGive = 100;
+    public GameObject soul;
+    public float soulForce = 70;
+
+
     private State currentState;
     private State[] statesToRandomize;
 
@@ -899,6 +904,11 @@ public class BossVoice : FatherEnemy
         //Instantiate(hardSkinSoul, sprite.transform.position + new Vector3(0, 1, 0), hardSkinSoul.transform.rotation);
         GameObject p = Instantiate(portal, portalSpawnPoint.transform.position, portal.transform.rotation) as GameObject;
         p.GetComponent<EndLevel>().nextLevelName = "L1W4";
+        for (int i = 0; i <= soulsToGive; i++)
+        {
+            GameObject g = Instantiate(soul, sprite.transform.position, Quaternion.identity);
+            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+        }
         Destroy(gameObject);
     }
     private void UpdateDeadState()

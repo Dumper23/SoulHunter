@@ -23499,6 +23499,9 @@ MonoBehaviour:
   hasShield: 0
   isDemon: 0
   outBursted: 0
+  soulsToGive: 100
+  soul: {fileID: 5330374998443095163, guid: 3d8bd98e4fc919445ad74f88f755d4bf, type: 3}
+  soulForce: 70
   healthBar: {fileID: 0}
   pointsToGive: 100
   ammountBullets: 4

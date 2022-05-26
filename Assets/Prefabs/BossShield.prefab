@@ -5537,6 +5537,9 @@ MonoBehaviour:
   hasShield: 0
   isDemon: 0
   outBursted: 0
+  soulsToGive: 100
+  soul: {fileID: 5330374998443095163, guid: 3d8bd98e4fc919445ad74f88f755d4bf, type: 3}
+  soulForce: 70
   meteor: {fileID: 4431876603978192883, guid: 05e91ca91f1a39249911e1372d897566, type: 3}
   meteorsParticles: {fileID: 7392704453010549483, guid: 7c638baa3cb241b4ba13c5f89267d120, type: 3}
   pointSpawnFront: {fileID: 3018314737804228984}
@@ -5565,6 +5568,7 @@ MonoBehaviour:
   venomAnimationDuration: 5
   venomAnimationDurationV2: 4
   venomAnimationDurationV3: 2
+  venomAffectDuration: 7
   venomDuration: 10
   frontAttackStep1: 0.75
   frontAttackStep2: 0.25
@@ -5586,6 +5590,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   wallMovement: {fileID: 61072917202191941}
   jumpImpact: {fileID: 3305392928551483609}
+  fallParticles: {fileID: 0}
   jumpDamageArea: {fileID: 730293206}
   sismicEffect: {fileID: 824994479}
   shield: {fileID: 3305392929943932494}

@@ -395,9 +395,14 @@ MonoBehaviour:
   isDemon: 0
   outBursted: 0
   pointsToGive: 100
+  soulsToGive: 100
+  soul: {fileID: 5330374998443095163, guid: 3d8bd98e4fc919445ad74f88f755d4bf, type: 3}
+  soulForce: 70
   downLancer: {fileID: 3248514948776810472, guid: e0f5b760ece80054eb654b0750ac8d57, type: 3}
   summoner: {fileID: 2041905316307224188, guid: 2f6a15f413439c44695338d2b919969d, type: 3}
   healer: {fileID: 4327078923074099033, guid: 308d0961ef600214fb2c3fcea5771967, type: 3}
+  outBurstSoul: {fileID: 0}
+  portal: {fileID: 0}
   lancerParticles: {fileID: 2554671598083030472, guid: 9336d3a4617e5ce4fa062c90142471cb, type: 3}
   globalLight: {fileID: 0}
   lineOfActivation: 11.44

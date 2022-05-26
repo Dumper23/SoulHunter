@@ -17,6 +17,11 @@ public class BossShield : FatherEnemy
         Dead
     }
 
+    public int soulsToGive = 100;
+    public GameObject soul;
+    public float soulForce = 100;
+
+
     [SerializeField]
     private GameObject meteor,
         meteorsParticles,
@@ -784,6 +789,11 @@ public class BossShield : FatherEnemy
         Instantiate(hardSkinSoul, sprite.transform.position + new Vector3(0, 1, 0), hardSkinSoul.transform.rotation);
         GameObject p = Instantiate(portal, sprite.transform.position + new Vector3(0,5,0), portal.transform.rotation) as GameObject;
         p.GetComponent<EndLevel>().nextLevelName = "L1W3";
+        for (int i = 0; i <= soulsToGive; i++)
+        {
+            GameObject g = Instantiate(soul, pointSpawnFront.transform.position - new Vector3(1, -2, 0), Quaternion.identity);
+            g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+        }
         Destroy(gameObject);
     }
 

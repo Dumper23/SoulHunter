@@ -314,7 +314,7 @@ Animator:
   m_GameObject: {fileID: 7314299275699822467}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7adbd08acb3001041a582c77b530ee5d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -387,6 +387,7 @@ MonoBehaviour:
   hasShield: 0
   isDemon: 0
   outBursted: 0
+  modifierIndicator: {fileID: 0}
   damageToPlayer: 1
   pointsToGive: 20
   soulsToGive: 10

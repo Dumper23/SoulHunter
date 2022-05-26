@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3498264492804388400}
   - component: {fileID: 3498264492804388407}
   - component: {fileID: 3498264492804388406}
+  - component: {fileID: 1568672345}
   m_Layer: 6
   m_Name: FlySprite
   m_TagString: Untagged
@@ -96,6 +97,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiPath: {fileID: 3498264493143684796}
+--- !u!95 &1568672345
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498264492804388401}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c8a19b28438a45c4ab18d6a291c2f112, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3498264493143684797
 GameObject:
   m_ObjectHideFlags: 0

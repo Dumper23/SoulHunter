@@ -401,7 +401,7 @@ MonoBehaviour:
   - name: Voice
     sprite: {fileID: 21300000, guid: d2ec2a4fe629da9458831fe5ab8ffb47, type: 3}
   - name: DemonKing
-    sprite: {fileID: 21300000, guid: 18e27a8e41feda94684855bba65604d0, type: 3}
+    sprite: {fileID: 21300000, guid: 6b923081c30fe4f42aa299bedf9ca958, type: 3}
   ThornsPoint: {fileID: 868142690}
   ThornsRange: 2
   light: {fileID: 4556257231619769987}

@@ -23,10 +23,17 @@ public class HeartDemonBehaviour : FatherEnemy
 
     private SpriteRenderer sR;
 
+    [SerializeField]
+    private Sprite spriteR,
+        spriteB,
+        spriteP;
 
     private float
         currentHealth,
         enabledStartTime;
+
+    [SerializeField]
+    private GameObject bossSprite;
 
     private void Start()
     {
@@ -40,7 +47,7 @@ public class HeartDemonBehaviour : FatherEnemy
     {
         if (sR == null)
         {
-            sR = gameObject.GetComponent<SpriteRenderer>();
+            sR = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         }
 
         canDamage = false;
@@ -49,21 +56,25 @@ public class HeartDemonBehaviour : FatherEnemy
         noGoToPlayer();
         enabledStartTime = Time.time;
         triggered = false;
-        sR.color = Color.white;
-
+        sR.sprite = spriteP;
+        gameObject.transform.GetChild(0).transform.rotation = Quaternion.Euler(0,0,0);
     }
 
     private void Update()
     {
+        if (canHeal || canDamage) {
+            float angle = Mathf.Atan2((bossSprite.transform.position - transform.position).normalized.y, (bossSprite.transform.position - transform.position).normalized.x) * Mathf.Rad2Deg;
+            gameObject.transform.GetChild(0).transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        }
         if (active && !triggered && !canDamage)
         {
 
             if (Time.time >= enabledStartTime + enabledDuration)
             {
+                sR.sprite = spriteR;
                 triggered = true;
                 goToPlayer();
                 canHeal = true;
-
             }
         }
     }
@@ -125,6 +136,11 @@ public class HeartDemonBehaviour : FatherEnemy
         }
     }
 
+    public void SetMaxHealth(float health)
+    {
+        maxHealth = health;
+    }
+
     public bool Activation()
     {
         return active;
@@ -142,9 +158,10 @@ public class HeartDemonBehaviour : FatherEnemy
 
     public override void Damage(float[] attackDetails, bool wantKnockback)
     {
+
         if (active)
         {
-            currentHealth -= attackDetails[0];
+            currentHealth -= 10;
 
 
             //Hit particle
@@ -153,7 +170,7 @@ public class HeartDemonBehaviour : FatherEnemy
             {
                 goToPlayer();
                 canDamage = true;
-                sR.color = Color.green;
+                sR.sprite = spriteB;
             }
         }
     }
@@ -162,4 +179,5 @@ public class HeartDemonBehaviour : FatherEnemy
     {
         Debug.Log("<3");
     }
+
 }

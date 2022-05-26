@@ -44,7 +44,12 @@ public class playerBullet : MonoBehaviour
             damageMessage[2] = transform.position.y;
             if (collision.GetComponentInParent<FatherEnemy>() != null)
             {
+                if (collision.GetComponentInParent<FatherEnemy>().gameObject.GetComponent<HeartDemonBehaviour>())
+                {
+                    damageMessage[0] = 10f;
+                }
                 collision.GetComponentInParent<FatherEnemy>().Damage(damageMessage, true);
+
             }
             this.gameObject.SetActive(false);
         }

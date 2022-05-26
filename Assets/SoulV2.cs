@@ -13,6 +13,7 @@ public class SoulV2 : MonoBehaviour
     void Start()
     {
         Invoke("goToPlayer", 0.2f);
+        Destroy(this.gameObject, 5);
     }
 
     void goToPlayer()

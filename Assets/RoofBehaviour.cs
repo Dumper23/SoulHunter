@@ -11,6 +11,9 @@ public class RoofBehaviour : MonoBehaviour
     private GameObject roofR,
         roofL;
 
+    [SerializeField]
+    private float distance;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +23,7 @@ public class RoofBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        roofL.transform.localScale = new Vector3(cb.GetPercentage() / 10, 1, 1);
-        roofR.transform.localScale = new Vector3(cb.GetPercentage() / 10, 1, 1);
+        roofL.transform.localScale = new Vector3(cb.GetPercentage() * distance / 100, 1, 1);
+        roofR.transform.localScale = new Vector3(cb.GetPercentage() * distance / 100, 1, 1);
     }
 }

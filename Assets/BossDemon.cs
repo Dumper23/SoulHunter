@@ -16,6 +16,9 @@ public class BossDemon : FatherEnemy
         Dead
     }
 
+    [SerializeField]
+    private BossDemonMovement movement;
+
     private Transform player;
 
     public int pointsToGive = 500;
@@ -46,7 +49,12 @@ public class BossDemon : FatherEnemy
         spawnPoint,
         spiritLancer,
         spiritShield,
-        spiritVoice;
+        spiritVoice,
+        cover,
+        columnA,
+        columnB,
+        ballsA,
+        ballsB;
 
     public List<GameObject> lasers = new List<GameObject>();
     public List<GameObject> preLasers = new List<GameObject>();
@@ -69,12 +77,15 @@ public class BossDemon : FatherEnemy
         laserBallDuration = 20,
         laserBallSpeed = 25,
         switchFaseDuration = 2f,
+        switchFaseAnimationDuration = 3f,
         soulForce = 35,
         magnetRange = 25,
         magnetForce = 10,
         soulingDuration = 3,
         sideLavaAnimationDuration = 2,
-        sideLavaDuration = 0.5f;
+        sideLavaDuration = 0.5f,
+        heartSpawnDurationMin = 0.5f,
+        heartSpawnDurationMax = 2f;
 
     private float currentHealth, 
         quantity,
@@ -90,7 +101,9 @@ public class BossDemon : FatherEnemy
         soulLerpValue,
         soulLerpValue2,
         sideLavaStartTime,
-        sideLavaAmStartTime;
+        sideLavaAmStartTime,
+        heartSpawnStartTime,
+        heartCurrentDuration;
 
     private bool switchingFase = false,
         inTP = false,
@@ -109,7 +122,10 @@ public class BossDemon : FatherEnemy
         inSideLava = false,
         isSideLavaDone,
         animationEnded,
-        animationStarted;
+        animationStarted,
+        wantSwitchState = false,
+        inFirstHeart = true,
+        wantSpawnHearts = false;
 
     [SerializeField]
     private BoxCollider2D areaLancers,
@@ -128,13 +144,27 @@ public class BossDemon : FatherEnemy
     private int quantityMeteors = 40,
         quantityOfSouls = 20;
 
+    [SerializeField]
+    private Animator envAnimator;
+
+    private Animator animator;
+
+    [SerializeField]
+    private ParticleSystem
+        particlesCA,
+        particlesCB;
+
+    [SerializeField]
+    private HeartDemonBehaviour[] heartsDemon;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindObjectOfType<playerController>().gameObject.transform;
+        animator = GetComponent<Animator>();
         SwitchState(State.Waiting);
 
-
+        //fase1
         statesToRandomize = new State[5];
         statesToRandomize[0] = State.TPs;
         statesToRandomize[1] = State.BossLancer;
@@ -142,9 +172,14 @@ public class BossDemon : FatherEnemy
         statesToRandomize[3] = State.BossVoice;
         statesToRandomize[4] = State.Waiting;
 
-        /*statesToRandomize = new State[2];
+        statesToRandomize = new State[3];
         statesToRandomize[0] = State.Waiting;
-        statesToRandomize[1] = State.SideLava;*/
+        statesToRandomize[1] = State.SideLava;
+        statesToRandomize[2] = State.BossLancer;
+        //statesToRandomize = new State[1];
+        statesToRandomize[0] = State.Waiting;
+
+        spawnPoint.transform.position = spiritLancer.transform.position;
 
         currentHealth = maxHealth;
 
@@ -159,11 +194,82 @@ public class BossDemon : FatherEnemy
     {
         if (inTP)
         {
-
+            for (int i = 0; i < heartsDemon.Length; i++)
+            {
+                if (heartsDemon[i].gameObject.activeInHierarchy)
+                {
+                    if (!heartsDemon[i].Activation())
+                    {
+                        heartsDemon[i].gameObject.SetActive(false);
+                    }
+                }
+            }
         }
         else
         {
-            
+            #region heart demon
+            if (wantSpawnHearts) {
+                //desactivem els inactius i agafem un de inactiu
+                int posHD = -1;
+                for(int i = 0; i < heartsDemon.Length; i++)
+                {
+                    if (heartsDemon[i].gameObject.activeInHierarchy)
+                    {
+                        inFirstHeart = true;
+                        if (!heartsDemon[i].Activation())
+                        {
+                            heartsDemon[i].gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        posHD = i;
+                    }
+                }
+                //si hi ha inactius
+                if (posHD != -1)
+                {
+                    if (Time.time >= heartSpawnStartTime + heartCurrentDuration)
+                    {
+                        if (inFirstHeart)
+                        {
+                            heartsDemon[posHD].transform.position = sprite.transform.position;
+                            heartsDemon[posHD].gameObject.SetActive(true);
+                            heartsDemon[posHD].SetActivation(true);
+                            inFirstHeart = false;
+                            heartSpawnStartTime = Time.time;
+                            heartCurrentDuration = Random.Range(heartSpawnDurationMin, heartSpawnDurationMax);
+                        }
+                    }
+                }
+                /*
+                if (heartDemon.gameObject.activeInHierarchy)
+                {
+                    inFirstHeart = true;
+                    if (!heartDemon.Activation())
+                    {
+                        heartDemon.gameObject.SetActive(false);
+                        heartSpawnStartTime = Time.time;
+                        heartCurrentDuration = Random.Range(heartSpawnDurationMin, heartSpawnDurationMax);
+                    }
+                }
+                else
+                {
+                    if (Time.time >= heartSpawnStartTime + heartCurrentDuration) {
+                        if (inFirstHeart) {
+                            heartDemon.transform.position = sprite.transform.position;
+                            heartDemon.gameObject.SetActive(true);
+                            heartDemon.SetActivation(true);
+                            inFirstHeart = false;
+                        }
+                    }
+                }*/
+            }
+            else
+            {
+                desactivateAllHearts();
+            }
+            #endregion
         }
 
         #region souls
@@ -548,7 +654,6 @@ public class BossDemon : FatherEnemy
                 Vector2 positionStart = areaSideLava.transform.position;
                 positionStart.y = positionStart.y + (sideLava.transform.GetComponentInChildren<BoxCollider2D>().transform.localScale.y / 2);
                 //Create Lancers in correct positions
-                Debug.Log("--------" + quantitySideLava);
                 for (int i = 0; i < quantitySideLava; i++)
                 {
                     bool found = false;
@@ -595,7 +700,6 @@ public class BossDemon : FatherEnemy
             if (isSideLavaDone && Time.time >= sideLavaStartTime + sideLavaDuration)
             {
                 inSideLava = false;
-                Debug.Log("UIEDDUOHIDHUOHDOUHOUIPA");
                 BossDemonPool.BossDemonPoolInstance.DisableAllSL();
 
             }
@@ -607,13 +711,14 @@ public class BossDemon : FatherEnemy
         {
             actualFase = 2;
             //previousFase = 1;
+            wantSwitchState = true;
             SwitchState(State.SwitchFase);
-
         }
         if (healthBar.GetPercentageOfHealth() <= 0.33 && actualFase == 2)
         {
             actualFase = 3;
             //previousFase = 2;
+            wantSwitchState = true;
             SwitchState(State.SwitchFase);
         }
         #endregion
@@ -667,7 +772,12 @@ public class BossDemon : FatherEnemy
                 healthBar.SetMaxHealth(maxHealth);
                 healthBar.gameObject.SetActive(true);
                 isActivated = true;
+                movement.WantMove(true);
+                cover.SetActive(true);
                 actualFase = 1;
+                wantSpawnHearts = true;
+                heartCurrentDuration = heartSpawnDurationMax;
+                heartSpawnStartTime = Time.time;
             }
 
         }
@@ -693,9 +803,13 @@ public class BossDemon : FatherEnemy
     #region TPs
     private void EnterTPsState()
     {
+        animator.Play("BossDemonTpGo");
+        Invoke("animationTp", 1);
+        wantSpawnHearts = false;
         firstLoop = true;
         inTP = true;
         bool ok = false;
+        movement.WantMove(false);
         while (!ok)
         {
             posTP = Random.Range(0, TPs.Length);
@@ -705,7 +819,6 @@ public class BossDemon : FatherEnemy
                 ok = true;
             }
         }
-
     }
     private void UpdateTPsState()
     {
@@ -743,12 +856,21 @@ public class BossDemon : FatherEnemy
         }
         else
         {
+
+            Camera.main.GetComponent<Animator>().SetTrigger("shake");
             //waiting until everythingfinished
         }
     }
+    
+    private void animationTp()
+    {
+        animator.Play("BossDemonTp");
+    }
     private void ExitTPsState()
     {
-
+        movement.WantMove(true);
+        wantSpawnHearts = true;
+        animator.Play("BossDemonTpCome");
     }
     #endregion
 
@@ -833,6 +955,16 @@ public class BossDemon : FatherEnemy
     private void ExitBossLancerState()
     {
         //spriteAnimator.Play("LancerIdle");
+        if (wantSwitchState)
+        {
+
+            inDownLancers = false;
+            spiritLancer.SetActive(false);
+            spiritLancer.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
+
+            BossDemonPool.BossDemonPoolInstance.DisableAll();
+
+        }
     }
     #endregion
 
@@ -842,7 +974,7 @@ public class BossDemon : FatherEnemy
     {
         StartSouling();
         spiritShield.SetActive(true);
-        spiritShield.transform.parent.GetComponent<Animator>().Play("SpiritSpawn");
+        spiritShield.transform.parent.GetComponent<Animator>().Play("SpiritSpawn2");
     }
     private void UpdateBossShieldState()
     {
@@ -878,6 +1010,12 @@ public class BossDemon : FatherEnemy
     private void ExitBossShieldState()
     {
         //spriteAnimator.Play("ShieldIdle");
+        if (wantSwitchState)
+        {
+            meteoring = false;
+            spiritShield.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
+            spiritShield.SetActive(false);
+        }
     }
     #endregion
 
@@ -887,7 +1025,7 @@ public class BossDemon : FatherEnemy
     {
         StartSouling();
         spiritVoice.SetActive(true);
-        spiritVoice.transform.parent.GetComponent<Animator>().Play("SpiritSpawn");
+        spiritVoice.transform.parent.GetComponent<Animator>().Play("SpiritSpawn3");
         //audio7.clip = clip7;
         //audio7.Play();
         int val = Random.Range(0, 2);
@@ -929,7 +1067,32 @@ public class BossDemon : FatherEnemy
     }
     private void ExitBossVoiceState()
     {
+        if (wantSwitchState)
+        {
+            laseringBall = false;
+            spiritVoice.SetActive(false);
+            spiritVoice.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
 
+            laserBall.SetActive(false);
+            preLasers[0].SetActive(false);
+            preLasers[1].SetActive(false);
+            preLasers[2].SetActive(false);
+            preLasers[3].SetActive(false);
+            lasers[0].SetActive(false);
+            lasers[1].SetActive(false);
+            lasers[2].SetActive(false);
+            lasers[3].SetActive(false);
+
+            laserBall2.SetActive(false);
+            preLasers2[0].SetActive(false);
+            preLasers2[1].SetActive(false);
+            preLasers2[2].SetActive(false);
+            preLasers2[3].SetActive(false);
+            lasers2[0].SetActive(false);
+            lasers2[1].SetActive(false);
+            lasers2[2].SetActive(false);
+            lasers2[3].SetActive(false);
+        }
     }
     #endregion
 
@@ -937,7 +1100,6 @@ public class BossDemon : FatherEnemy
     #region SIDELAVA
     private void EnterSideLavaState()
     {
-        Debug.Log("SLENTER");
         inSideLava = true;
         sideLavaAmStartTime = Time.time;
 
@@ -963,7 +1125,7 @@ public class BossDemon : FatherEnemy
             while (!isOK)
             {
                 bool found = false;
-                attempt = Random.Range(0, (int)quantitySideLava);
+                attempt = Random.Range(0, (int)quantitySideLava-2);
 
                 for (int j = 0; j < i; j++)
                 {
@@ -991,7 +1153,11 @@ public class BossDemon : FatherEnemy
     }
     private void ExitSideLavaState()
     {
-
+        if (wantSwitchState)
+        {
+            inSideLava = false;
+            BossDemonPool.BossDemonPoolInstance.DisableAllSL();
+        }
     }
     #endregion
 
@@ -999,8 +1165,8 @@ public class BossDemon : FatherEnemy
     #region SWITCHFASE
     private void EnterSwitchFaseState()
     {
-        /*
-        spriteAnimator.Play("ShieldIdle");
+        souling = false;
+        wantSpawnHearts = false;
         switch (actualFase)
         {
             case 1:
@@ -1008,61 +1174,38 @@ public class BossDemon : FatherEnemy
 
                 break;
             case 2:
-
-                meteorsAnimationDuration = meteorsAnimationDurationV2;
-                meteorsDuration = meteorsDurationV2;
-                quantityMeteors = quantityMeteorsV2;
-                speed = speedV2;
-                venomAnimationDuration = venomAnimationDurationV2;
-                walkingDuration = walkingDurationV2;
-                frontAttackSpeed = frontAttackSpeedV2;
-                flippingDuration = flippingDurationV2;
-                frontAttackDuration = frontAttackDurationV2;
-
-                statesToRandomize = new State[13];
-
-                statesToRandomize[0] = State.Meteors;
-                statesToRandomize[1] = State.Venom;
-                statesToRandomize[2] = State.FrontAttack;
-                statesToRandomize[3] = State.Meteors;
-                statesToRandomize[4] = State.Venom;
-                statesToRandomize[5] = State.FrontAttack;
-                statesToRandomize[6] = State.Meteors;
-                statesToRandomize[7] = State.Venom;
-                statesToRandomize[8] = State.FrontAttack;
-                statesToRandomize[9] = State.Meteors;
-                statesToRandomize[10] = State.Venom;
-                statesToRandomize[11] = State.FrontAttack;
-                statesToRandomize[12] = State.JumpAttack;
-
-                venomAnimation = "ShieldVenomV2";
+                spawnPoint.transform.position = spiritShield.transform.position;
+                movement.WantMove(false);
+                movement.SetPos(90, 110);
+                movement.SetNewArea(107.9f, 76.11f, 45.57f + 46, 41.21f + 46); //una mica hardcoded TMP
+                statesToRandomize = new State[3];
+                
+                statesToRandomize[0] = State.Waiting;
+                statesToRandomize[1] = State.BossShield;
+                //statesToRandomize[2] = State.TPs;
+                statesToRandomize[2] = State.Waiting;
+                particlesCA.Play();
+                particlesCB.Play();
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
+                statesToRandomize = new State[4];
+                spawnPoint.transform.position = spiritVoice.transform.position;
 
-                meteorsAnimationDuration = meteorsAnimationDurationV3;
-                meteorsDuration = meteorsDurationV3;
-                quantityMeteors = quantityMeteorsV3;
-                speed = speedV3;
-                venomAnimationDuration = venomAnimationDurationV3;
-                walkingDuration = walkingDurationV3;
-                frontAttackSpeed = frontAttackSpeedV3;
-                flippingDuration = flippingDurationV3;
-                jumpDuration = jumpDurationV3;
-                jumpLevitationDuration = jumpLevitationDurationV3;
-
-                venomAnimation = "ShieldVenomV3";
-                jumpAnimation = "ShieldJumpV2";
+                statesToRandomize[0] = State.Waiting;
+                statesToRandomize[1] = State.BossVoice;
+                //statesToRandomize[2] = State.TPs;
+                statesToRandomize[2] = State.Waiting;
+                statesToRandomize[3] = State.SideLava;
+                //venomAnimation = "ShieldVenomV3";
+                //jumpAnimation = "ShieldJumpV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
                 break;
         }
-
-        if ((!isRight && sprite.transform.localRotation.y >= 0) || (isRight && sprite.transform.localRotation.y < 0))
-        {
-            sprite.transform.Rotate(0.0f, 180.0f, 0.0f);
-        }
-        */
+        
         switchingFase = true;
+        wantSwitchState = false;
+        firstLoop = true;
         switchFaseStartTime = Time.time;
     }
 
@@ -1081,15 +1224,51 @@ public class BossDemon : FatherEnemy
 
         sprite.transform.position = new Vector3(sprite.transform.position.x, value, sprite.transform.position.z);
         */
-        if (Time.time >= switchFaseStartTime + switchFaseDuration)
+        if (Time.time >= switchFaseStartTime + switchFaseAnimationDuration)
         {
-            SwitchState(State.Waiting);
+            if (actualFase == 2) {
+                if (firstLoop)
+                {
+                    envAnimator.Play("SwitchFase2");
+                    firstLoop = false;
+                    Invoke("StartBalls", 1);
+                }
+                if (Time.time >= switchFaseStartTime + switchFaseAnimationDuration + switchFaseDuration)
+                {
+                    envAnimator.Play("noAnimationTMP");
+                    SwitchState(State.Waiting);
+                }
+                else
+                {
+                    //moving
+                }
+            }
+            if (actualFase == 3)
+            {
+                if (firstLoop)
+                {
+                    envAnimator.Play("SwitchFase3");
+                    firstLoop = false;
+                }
+                if (Time.time >= switchFaseStartTime + switchFaseAnimationDuration + switchFaseDuration)
+                {
+                    envAnimator.Play("noAnimationTop");
+                    SwitchState(State.Waiting);
+                }
+                else
+                {
+                    //moving
+                }
+            }
         }
+
     }
 
     private void ExitSwitchFaseState()
     {
         switchingFase = false;
+        wantSpawnHearts = true;
+        movement.WantMove(true);
     }
     #endregion
 
@@ -1204,6 +1383,19 @@ public class BossDemon : FatherEnemy
         return State.Waiting;
     }
 
+    private void StartBalls()
+    {
+        ballsA.SetActive(true);
+        ballsB.SetActive(true);
+    }
+
+    private void desactivateAllHearts()
+    {
+        for (int i = 0; i < heartsDemon.Length; i++)
+        {
+            heartsDemon[i].gameObject.SetActive(false);
+        }
+    }
     private float Lerp(float start, float end, float timeStartedLerping, float lerpTime = 1)
     {
         float timeSinceStarted = Time.time - timeStartedLerping;
@@ -1244,7 +1436,22 @@ public class BossDemon : FatherEnemy
         
         if (!switchingFase)
         {
-            currentHealth -= attackDetails[0];
+            if (attackDetails[1] == -1 && attackDetails[2] == -1) 
+            {
+                if (currentHealth + attackDetails[0] <= maxHealth &&
+                    !((((currentHealth + attackDetails[0]) / maxHealth) > 0.66) && actualFase == 2) &&
+                    !((((currentHealth + attackDetails[0]) / maxHealth) > 0.33) && actualFase == 3)) {
+                    currentHealth += attackDetails[0];
+                }
+            }
+            else
+            {
+                if (attackDetails[1] == -2 && attackDetails[2] == -2)
+                {
+                    currentHealth -= attackDetails[0];
+                }
+            }
+
             healthBar.SetHealth(currentHealth);
 
             //Instantiate(hitParticle, alive.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
@@ -1268,6 +1475,7 @@ public class BossDemon : FatherEnemy
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, magnetRange);
+        Gizmos.DrawWireSphere(sprite.transform.position, magnetRange);
+        Gizmos.DrawWireSphere(spawnPoint.transform.position, magnetRange);
     }
 }

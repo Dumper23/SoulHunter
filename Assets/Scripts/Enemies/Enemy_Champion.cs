@@ -167,6 +167,7 @@ public class Enemy_Champion : FatherEnemy
         {
             waitingStartTime = Time.time;
         }
+        spriteAnimator.Play("Champion1Idle");
     }
 
     private void UpdateWaitingState()
@@ -271,6 +272,7 @@ public class Enemy_Champion : FatherEnemy
         swicher = false;
         inThorns = true;
         attackRollDuration = Random.Range(maxAttackRollDuration/2, maxAttackRollDuration + 1);
+        spriteAnimator.Play("Champion1Rush");
     }
 
     private void UpdateAttackRollState()
@@ -303,6 +305,7 @@ public class Enemy_Champion : FatherEnemy
         DefenseStartTime = Time.time;
         swicher = false;
         inThorns = true;
+        spriteAnimator.Play("Champion1Defense");
     }
 
     private void UpdateDefenseState()
@@ -353,9 +356,10 @@ public class Enemy_Champion : FatherEnemy
     private void EnterKnockbackState()
     {
         knockbackStartTime = Time.time;
-        sprite.transform.localScale -= new Vector3(0.0f,0.2f,0.0f);
-        sprite2.transform.localScale -= new Vector3(0.0f, 0.2f, 0.0f);
+        //sprite.transform.localScale -= new Vector3(0.0f,0.2f,0.0f);
+        //sprite2.transform.localScale -= new Vector3(0.0f, 0.2f, 0.0f);
         isKnockingBack = true;
+        spriteAnimator.Play("Champion1Knockback");
     }
 
     private void UpdateKnockbackState()
@@ -368,8 +372,8 @@ public class Enemy_Champion : FatherEnemy
 
     private void ExitKnockbackState()
     {
-        sprite.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
-        sprite2.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
+        //sprite.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
+        //sprite2.transform.localScale += new Vector3(0.0f, 0.2f, 0.0f);
         isKnockingBack = false;
     }
     #endregion

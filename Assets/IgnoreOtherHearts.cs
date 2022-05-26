@@ -11,6 +11,11 @@ public class IgnoreOtherHearts : MonoBehaviour
     {
         col = GetComponent<Collider2D>();
         playerCol = FindObjectOfType<playerController>().gameObject.GetComponent<Collider2D>();
+
+    }
+
+    private void Update()
+    {
         Physics2D.IgnoreCollision(col, playerCol);
     }
     // Start is called before the first frame update

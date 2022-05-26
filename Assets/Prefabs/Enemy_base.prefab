@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 7314299276509080382}
   - component: {fileID: 7314299276509080383}
   - component: {fileID: -4673906848357018400}
+  - component: {fileID: 7362680841785377405}
   m_Layer: 6
   m_Name: Enemy_base
   m_TagString: Enemy
@@ -387,6 +388,7 @@ MonoBehaviour:
   hasShield: 0
   isDemon: 0
   outBursted: 0
+  modifierIndicator: {fileID: 0}
   damageToPlayer: 1
   pointsToGive: 20
   soulsToGive: 10
@@ -525,6 +527,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &7362680841785377405
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7314299276509080381}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 596b3352f66b6184485de1fd156a3448, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2668601805059071501
 PrefabInstance:
   m_ObjectHideFlags: 0

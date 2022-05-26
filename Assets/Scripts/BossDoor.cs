@@ -10,6 +10,7 @@ public class BossDoor : MonoBehaviour
     private AudioSource bossMusic;
     public GameObject endBossMusic;
 
+
     private void Start()
     {
         if(GetComponent<AudioSource>() != null)

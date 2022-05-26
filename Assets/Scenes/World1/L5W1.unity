@@ -240,7 +240,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74305030}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 60.28, y: 23.777136, z: 0}
+  m_LocalPosition: {x: -12, y: -6.0228634, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 879179710}
@@ -250,8 +250,8 @@ Transform:
   - {fileID: 1742753950}
   - {fileID: 353184673}
   - {fileID: 467362008}
-  m_Father: {fileID: 0}
-  m_RootOrder: 30
+  m_Father: {fileID: 1924629300}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &74305033
 BoxCollider2D:
@@ -104788,7 +104788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6892235046677669456, guid: 940c563edffcd05409e7a1e79f489165, type: 3}
       propertyPath: maxHealth
-      value: 80
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6892235046677669459, guid: 940c563edffcd05409e7a1e79f489165, type: 3}
       propertyPath: m_Name
@@ -104845,6 +104845,11 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 4154421700041320221, guid: 940c563edffcd05409e7a1e79f489165, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 940c563edffcd05409e7a1e79f489165, type: 3}
+--- !u!1 &1762708035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6892235046677669459, guid: 940c563edffcd05409e7a1e79f489165, type: 3}
+  m_PrefabInstance: {fileID: 1762708034}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1774850736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105257,8 +105262,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1924629300}
-  - component: {fileID: 1924629301}
   - component: {fileID: 1924629302}
+  - component: {fileID: 1924629301}
   m_Layer: 17
   m_Name: ChampionZone
   m_TagString: Untagged
@@ -105276,7 +105281,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 72.28, y: 29.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 74305032}
   m_Father: {fileID: 0}
   m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105289,13 +105295,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1924629299}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c6bbf6ded6de444cb4944f598aff51c, type: 3}
+  m_Script: {fileID: 11500000, guid: fac747c5ed122e64eb9381cc2cf7f41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   barriers: {fileID: 74305030}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  entityToEliminate: {fileID: 1762708035}
+  ambientMusic: {fileID: 0}
+  endBossMusic: {fileID: 0}
 --- !u!61 &1924629302
 BoxCollider2D:
   m_ObjectHideFlags: 0

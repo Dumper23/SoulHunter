@@ -39,7 +39,7 @@ public class Enemy_shooter : FatherEnemy
     private float 
         currentHealth,
         nextFireTime,
-        knockbackStartTime;
+        knockbackStartTime = 0;
     private float[] posPlayerForKnockback;
 
 
@@ -63,6 +63,7 @@ public class Enemy_shooter : FatherEnemy
     // Start is called before the first frame update
     void Start()
     {
+        knockbackStartTime = 0;
         playerController a = FindObjectOfType<playerController>();
         if (a != null)
         {
@@ -181,7 +182,11 @@ public class Enemy_shooter : FatherEnemy
     }
     private void Knockback()
     {
-        knockbackStartTime = Time.time;
+        if (!isKnockback)
+        {
+            knockbackStartTime = 0;
+        }
+        knockbackStartTime += Time.deltaTime;
         isKnockback = true;
         if (null != posPlayerForKnockback)
         {
@@ -208,7 +213,7 @@ public class Enemy_shooter : FatherEnemy
                 posPlayerForKnockback[0] = 0.0f;
             }
         }
-        if (inRange)
+        if (inRange && isKnockback)
         {
             transform.position = transform.position + new Vector3(damageDirectionX, damageDirectionY, 0.0f) * speedKnockback;
         }
@@ -216,9 +221,10 @@ public class Enemy_shooter : FatherEnemy
         {
             isKnockback = false;
         }
-        if (Time.time >= knockbackStartTime + knockbackDuration)
+        if (knockbackStartTime >= knockbackDuration)
         {
             isKnockback = false;
+            rb.velocity = Vector2.zero;
         }
     }
     private void Dead()

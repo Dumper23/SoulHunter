@@ -113,6 +113,7 @@ public class Scorpion : FatherEnemy
     // Start is called before the first frame update
     void Start()
     {
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"));
         if(modifierIndicator != null)
         {
             if (hasShield || isDemon)
@@ -177,7 +178,7 @@ public class Scorpion : FatherEnemy
         enemyDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsEnemy);
         mushroomDetected = Physics2D.OverlapCircle(enemyCollision.position, facingDirection * enemyDetectionRange, whatIsMushroom);
 
-        if((!groundDetected && groundDetectedBack) || wallDetected || enemyDetected || doorDetected || diffWallDetected || mushroomDetected)
+        if((!groundDetected && groundDetectedBack) || wallDetected || doorDetected || diffWallDetected || mushroomDetected)
         {
             aliveRb.velocity =new Vector2(0.4f, 2f);
         }

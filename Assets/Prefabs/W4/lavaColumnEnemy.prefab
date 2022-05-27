@@ -107,7 +107,7 @@ MonoBehaviour:
   health: 5
   soulForce: 35
   soul: {fileID: 5330374998443095163, guid: d80be715e73c85346a5937a84666fc92, type: 3}
-  deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}
+  deathChunkParticle: {fileID: 782816691472561430, guid: 231347e9895a9044fa0d8d8cfc6d974f, type: 3}
   soulsToGive: 7
   attackRate: 2
   range: 25
@@ -127,7 +127,7 @@ AudioSource:
   m_GameObject: {fileID: 8368945959217545401}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.2

@@ -428,7 +428,7 @@ MonoBehaviour:
     m_Bits: 16384
   knockbackSpeed: {x: 5, y: 2}
   hitParticle: {fileID: 4968879154711721102}
-  deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}
+  deathChunkParticle: {fileID: 782816691472561430, guid: 231347e9895a9044fa0d8d8cfc6d974f, type: 3}
   deathBloodParticle: {fileID: 5640961278513363789, guid: 41a827ce79efc01498a12343a29550ad, type: 3}
   particleDamage: {fileID: 4968879153931805007}
 --- !u!82 &2168811775187927574

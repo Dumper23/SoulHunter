@@ -4974,7 +4974,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e953220f3828e894ebbe356eaf0f008f, type: 3}
   deadSoundObject: {fileID: 3631797305425108967, guid: 525cc56e37b4e5d4b847858ef2a811c8, type: 3}
   hitParticle: {fileID: 8620610981508206902}
-  deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}
+  deathChunkParticle: {fileID: 782816691472561430, guid: de4895d1b1c4744439741be9aaf2b3d3, type: 3}
   deathBloodParticle: {fileID: 5640961278513363789, guid: 41a827ce79efc01498a12343a29550ad, type: 3}
   particleDamage: {fileID: 8620610981508206899}
 --- !u!70 &8620610982223401426
@@ -5002,7 +5002,7 @@ AudioSource:
   m_GameObject: {fileID: 8620610982223401430}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.178

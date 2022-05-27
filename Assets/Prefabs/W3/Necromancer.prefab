@@ -60,7 +60,7 @@ MonoBehaviour:
   soul: {fileID: 5330374998443095163, guid: d80be715e73c85346a5937a84666fc92, type: 3}
   soulForce: 35
   soulsToGive: 10
-  deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}
+  deathChunkParticle: {fileID: 782816691472561430, guid: 4680ab6e1d780b94a90ecc098f20832f, type: 3}
   deathBloodParticle: {fileID: 5640961278513363789, guid: 41a827ce79efc01498a12343a29550ad, type: 3}
 --- !u!70 &2248551833819934135
 CapsuleCollider2D:

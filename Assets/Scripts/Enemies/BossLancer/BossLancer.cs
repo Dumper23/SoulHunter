@@ -121,9 +121,19 @@ public class BossLancer : FatherEnemy
 
     private GameObject sprite;
 
+    private AudioSource audioSource;
+
+    public AudioClip[] audios;
+
+    private int SPEARS_AUDIO = 0;
+    private int ROTATE_AUDIO = 1;
+    private int INVOKE_AUDIO = 2;
+    private int FRONT_AUDIO = 3;
+
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindObjectOfType<playerController>().gameObject.transform;
         GameObject lancer = transform.Find("LancerCollider").gameObject;
         //lancerAnimation = lancer.GetComponent<Animator>();
@@ -286,6 +296,8 @@ public class BossLancer : FatherEnemy
     {
         spriteAnimator.Play("LancerFrontAttack");
         frontAttackStartTime = Time.time;
+        audioSource.clip = audios[FRONT_AUDIO];
+        audioSource.Play();
         //lancerAnimation.Play("LancerAnimation");
     }
 
@@ -313,6 +325,8 @@ public class BossLancer : FatherEnemy
         summoningStartTime = Time.time;
         nextSummonStartTime = Time.time;
         quantitySummoned = 0;
+        audioSource.clip = audios[INVOKE_AUDIO];
+        audioSource.Play();
 
         quantitySummoning = (int)Mathf.Round(summoningDuration / waitUntilNextSummon);
 
@@ -411,6 +425,8 @@ public class BossLancer : FatherEnemy
     #region DOWNLANCERS
     private void EnterDownLancersState()
     {
+        audioSource.clip = audios[SPEARS_AUDIO];
+        audioSource.Play();
         firstLoop = true;
         lancersParticlesStartTime = Time.time;
         isAttackDone = false;
@@ -670,6 +686,8 @@ public class BossLancer : FatherEnemy
             upperDone = true;
             spriteAnimator.Play("LancerUpperAttack");
             upperRangeCircle.SetActive(false);
+            audioSource.clip = audios[ROTATE_AUDIO];
+            audioSource.Play();
         }
 
         if (Time.time >= upperAttackStartTime + upperAttackDuration + upperChargeDuration)

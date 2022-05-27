@@ -147,9 +147,21 @@ public class BossShield : FatherEnemy
     private string venomAnimation = "ShieldVenom",
         jumpAnimation = "ShieldJump";
 
+    public AudioClip[] audios;
+    public GameObject audioMeteors;
+
+    private int GAS_AUDIO = 0;
+    private int METEOR_AUDIO = 1;
+    private int SLAM_AUDIO = 2;
+    private int WALL_AUDIO = 3;
+
+    private AudioSource AudioSource;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        AudioSource = GetComponent<AudioSource>();
         player = GameObject.FindObjectOfType<playerController>().gameObject.transform;
 
         rangeOfActivation = transform.Find("Range").gameObject.GetComponent<BoxCollider2D>().GetComponent<BossRangeOfActivation>();
@@ -481,7 +493,7 @@ public class BossShield : FatherEnemy
 
     private void UpdateFrontAttackState()
     {
-
+        bool aux = false;
         if (Time.time >= frontAttackStartTime + frontAttackStep1)
         {
             if (Time.time >= frontAttackStartTime + frontAttackStep1 + frontAttackStep2)
@@ -502,6 +514,12 @@ public class BossShield : FatherEnemy
                     else
                     {
                         //"moure"
+                        if (!aux)
+                        {
+                            AudioSource.clip = audios[WALL_AUDIO];
+                            AudioSource.Play();
+                            aux = true;
+                        }
                         wallMovement.Play();
                         isFrontAttack = true;
                     }
@@ -534,6 +552,7 @@ public class BossShield : FatherEnemy
     #region METEORS
     private void EnterMeteorsState()
     {
+        Instantiate(audioMeteors);
         meteorsParticlesGO.SetActive(false);
         meteorsAnimationStartTime = Time.time;
         previousValue = 0;
@@ -572,6 +591,8 @@ public class BossShield : FatherEnemy
         venomAnimationStartTime = Time.time;
         //play animation
         spriteAnimator.Play(venomAnimation);
+        AudioSource.clip = audios[GAS_AUDIO];
+        AudioSource.Play();
     }
 
     private void UpdateVenomState()
@@ -624,6 +645,8 @@ public class BossShield : FatherEnemy
             if (Time.time >= jumpAttackStartTime + jumpDuration + jumpLevitationDuration)
             {
                 //caient
+                AudioSource.clip = audios[SLAM_AUDIO];
+                AudioSource.Play();
                 float height = Lerp(newPosition2.y, startPosition.y, jumpAttackStartTime + jumpDuration + jumpLevitationDuration, jumpDownDuration);
                 sprite.transform.position = new Vector3(newPosition2.x, height, newPosition2.z);
                 shield.SetActive(false);

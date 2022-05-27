@@ -169,6 +169,10 @@ public class BossVoice : FatherEnemy
         audio6,
         audio7;
 
+    private string amS1 = "VoiceSwitchTop";
+    private string amS2 = "VoiceSwitchDown";
+    private string amS = "VoiceSwitchTop";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -243,12 +247,14 @@ public class BossVoice : FatherEnemy
         if (healthBar.GetPercentageOfHealth() <= 0.66 && actualFase == 1)
         {
             actualFase = 2;
+            amS = amS1;
             //previousFase = 1;
             SwitchState(State.SwitchFase);
 
         }
         if (healthBar.GetPercentageOfHealth() <= 0.33 && actualFase == 2)
         {
+            amS = amS2;
             actualFase = 3;
             //previousFase = 2;
             SwitchState(State.SwitchFase);
@@ -832,6 +838,7 @@ public class BossVoice : FatherEnemy
                 laserStartAngle = laserStartAngleV2;
                 waitingDuration = waitingDurationV2;
                 altarsPreDuration = altarsPreDurationV2;
+                
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
@@ -857,6 +864,7 @@ public class BossVoice : FatherEnemy
 
         switchingFase = true;
         switchFaseStartTime = Time.time;
+        spriteAnimator.Play(amS);
     }
     private void UpdateSwitchFaseState()
     {
@@ -893,6 +901,7 @@ public class BossVoice : FatherEnemy
         spikesStartTime = Time.time;
         groundSpikes.SetActive(true);
         switchingFase = false;
+        spriteAnimator.Play("VoiceIdle");
     }
     #endregion
 

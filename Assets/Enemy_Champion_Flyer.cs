@@ -120,7 +120,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
     private AudioSource audio;
 
     [SerializeField]
-    private Animator animatorLightning;
+    private Animator animatorLightning, animatorArea;
     private Animator animatorSprite;
 
 
@@ -266,10 +266,12 @@ public class Enemy_Champion_Flyer : FatherEnemy
         {
             waitingStartTime = Time.time;
         }
+        animatorSprite.Play("Champ2Idle");
     }
 
     private void UpdateWaitingState()
     {
+        animatorSprite.Play("Champ2Idle");
         if (!isActivated)
         {
             if (rangeOfActivation.inRange())
@@ -300,10 +302,12 @@ public class Enemy_Champion_Flyer : FatherEnemy
         walkingStartTime = Time.time;
         currentPos = sprite.transform.position;
         pos = Random.Range(0,Spots.Length);
+        animatorSprite.Play("Champ2Idle");
     }
 
     private void UpdateWalkingState()
     {
+        animatorSprite.Play("Champ2Idle");
         if (Time.time >= walkingStartTime + walkingDuration || sprite.transform.position == Spots[pos].position)
         {
             SwitchState(randomBehaviour());
@@ -328,8 +332,13 @@ public class Enemy_Champion_Flyer : FatherEnemy
         rushStartTime = Time.time;
         startPos = sprite.transform.position;
         endPos = player.transform.position;
+        animatorSprite.Play("Champ2Pincho");
+        Invoke("RushAm",0.5f);
     }
-
+    private void RushAm()
+    {
+        animatorSprite.Play("Champ2Pincho2");
+    }
     private void UpdateAttackRushState()
     {
         if (Time.time >= rushStartTime + rushMovingDuration + rushDownDuration + rushVulnerableDuration)
@@ -341,6 +350,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
             if (Time.time >= rushStartTime + rushMovingDuration + rushDownDuration)
             {
                 vulnerable = true;
+                animatorSprite.Play("Champ2Vulnerable");
             }
             else
             {
@@ -364,6 +374,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
     {
         vulnerable = false;
         rushing = false;
+        animatorSprite.Play("Champion2NoAm");
     }
     #endregion
 
@@ -412,6 +423,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
 
         lightingingStartTime = Time.time;
         isAttackLightninging = true;
+        animatorSprite.Play("Champ2Rayos");
     }
 
     private void UpdateLightningState()
@@ -424,6 +436,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
         {
             if (Time.time >= lightingingStartTime + lightningAnimationDuration)
             {
+                animatorSprite.Play("Champ2Rayos2");
                 float angle = Lerp(startAngle, endAngle, (lightingingStartTime + lightningAnimationDuration), lightningingDuration);
                 lightningAttackGO.transform.rotation = Quaternion.Euler(0, 0, angle);
                 lightningAttackGO.SetActive(true);
@@ -449,6 +462,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
     {
         summonStartTime = Time.time;
         firstLoop = true;
+        animatorSprite.Play("Champ2Summon");
     }
 
     private void UpdateSummonState()
@@ -464,12 +478,16 @@ public class Enemy_Champion_Flyer : FatherEnemy
                 firstLoop = false;
                 Instantiate(summon, new Vector3(sprite.transform.position.x, sprite.transform.position.y - 1f, sprite.transform.position.z), sprite.transform.rotation);
             }
+            else
+            {
+                animatorSprite.Play("Champ2Summon");
+            }
         }
     }
 
     private void ExitSummonState()
     {
-
+        animatorSprite.Play("Champion2NoAm");
     }
 
     #endregion
@@ -482,7 +500,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
         //sprite.transform.localScale -= new Vector3(0.0f, 0.5f, 0.0f);
         isKnockingBack = true;
         areaLightnings.transform.gameObject.SetActive(true);
-        animatorSprite.Play("AreaLightning");
+        animatorArea.Play("AreaLightning");
         firstLoop = true;
     }
 
@@ -500,7 +518,7 @@ public class Enemy_Champion_Flyer : FatherEnemy
                 firstLoop = false;
                 particlesArea.transform.position = sprite.transform.position;
                 particlesArea.transform.parent.GetComponent<Animator>().Play("AreaLightningCollider");
-                animatorSprite.Play("noAnimationSprite");
+                animatorArea.Play("noAnimationSprite");
                 areaLightnings.transform.gameObject.SetActive(false);
                 particlesArea.Play();
             }

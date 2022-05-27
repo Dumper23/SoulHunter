@@ -65,6 +65,7 @@ public class BossDemonMovement : MonoBehaviour
     public void WantMove(bool b)
     {
         wantToMove = b;
+        
         /*if (!b)
         {
             targetJ2D.target = transform.position;
@@ -83,5 +84,9 @@ public class BossDemonMovement : MonoBehaviour
         minX = miX;
         maxY = maY;
         minY = miY;
+    }
+    public void SetMaxForce(float force)
+    {
+        targetJ2D.maxForce = force;
     }
 }

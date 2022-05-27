@@ -21,7 +21,12 @@ public class BossDemon : FatherEnemy
 
     private Transform player;
 
-    public int pointsToGive = 500;
+
+    [SerializeField]
+    private Transform portalSpawn;
+
+    public int pointsToGive = 500,
+        soulsToGive = 200;
 
     public HealthBarBoss healthBar;
 
@@ -58,7 +63,14 @@ public class BossDemon : FatherEnemy
         posCharger1,
         posCharger2,
         charger,
-        lavaV2;
+        lavaV2,
+        fase4pos,
+        roof,
+        falseFloor,
+        portal,
+        finalSouls,
+        falsePortal,
+        lostSoul;
 
     public List<GameObject> lasers = new List<GameObject>();
     public List<GameObject> preLasers = new List<GameObject>();
@@ -82,6 +94,7 @@ public class BossDemon : FatherEnemy
         laserBallSpeed = 25,
         switchFaseDuration = 2f,
         switchFaseDurationV2 = 2f,
+        switchFaseDurationV3 = 2f,
         switchFaseAnimationDuration = 3f,
         soulForce = 35,
         magnetRange = 25,
@@ -92,7 +105,9 @@ public class BossDemon : FatherEnemy
         heartSpawnDurationMin = 0.5f,
         heartSpawnDurationMax = 2f,
         chargerMinDuration = 4f,
-        chargerMaxDuration = 8f;
+        chargerMaxDuration = 8f,
+        deathDuration = 8f,
+        tpMinDurationAm = 2f;
 
     private float currentHealth, 
         quantity,
@@ -112,7 +127,9 @@ public class BossDemon : FatherEnemy
         heartSpawnStartTime,
         heartCurrentDuration,
         chargerStartTime,
-        chargerDuration;
+        chargerDuration,
+        deathStartTime,
+        tpStartTime;
 
     private bool switchingFase = false,
         inTP = false,
@@ -136,7 +153,8 @@ public class BossDemon : FatherEnemy
         inFirstHeart = true,
         wantSpawnHearts = false,
         coolDown = false,
-        whatPosCharger;
+        whatPosCharger,
+        goDownTrigger = false;
 
     [SerializeField]
     private BoxCollider2D areaLancers,
@@ -168,6 +186,9 @@ public class BossDemon : FatherEnemy
     [SerializeField]
     private HeartDemonBehaviour[] heartsDemon;
 
+    [SerializeField]
+    private AudioSource music;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -183,10 +204,14 @@ public class BossDemon : FatherEnemy
         statesToRandomize[3] = State.BossVoice;
         statesToRandomize[4] = State.Waiting;
 
-        statesToRandomize = new State[3];
+        statesToRandomize = new State[7];
         statesToRandomize[0] = State.Waiting;
         statesToRandomize[1] = State.SideLava;
         statesToRandomize[2] = State.BossLancer;
+        statesToRandomize[3] = State.Waiting;
+        statesToRandomize[4] = State.SideLava;
+        statesToRandomize[5] = State.BossLancer;
+        statesToRandomize[6] = State.TPs;
         //statesToRandomize = new State[2];
         statesToRandomize[0] = State.Waiting;
         //statesToRandomize[1] = State.TPs;
@@ -297,225 +322,186 @@ public class BossDemon : FatherEnemy
             #endregion
         }
 
-        #region souls
-        if (souling) {
-            soulLerpValue =  Lerp(0, quantityOfSouls, soulingStartTime, soulingDuration);
-            if (soulLerpValue >= actualSoul)
-            {
-                GameObject g = Instantiate(soul, player.transform.position, Quaternion.identity);
-                g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
-                actualSoul++;
-            }
-            if (soulLerpValue >= quantityOfSouls) {
-                souling = false;
-            }
-        }
-
-        Collider2D[] souls = Physics2D.OverlapCircleAll(sprite.transform.position, magnetRange);
-
-        if (souls.Length > 0)
-        {
-            foreach (Collider2D soul in souls)
-            {
-                if (soul.tag == "SoulV2")
+            #region souls
+            if (souling) {
+                soulLerpValue = Lerp(0, quantityOfSouls, soulingStartTime, soulingDuration);
+                if (soulLerpValue >= actualSoul)
                 {
-                    soul.transform.Translate((sprite.transform.position - soul.transform.position).normalized * magnetForce * Time.deltaTime);
+                    GameObject g = Instantiate(soul, player.transform.position, Quaternion.identity);
+                    g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+                    actualSoul++;
+                }
+                if (soulLerpValue >= quantityOfSouls) {
+                    souling = false;
                 }
             }
-        }
-        
-        Collider2D[] souls2 = Physics2D.OverlapCircleAll(spawnPoint.transform.position, magnetRange);
 
-        if (souls2.Length > 0)
-        {
-            foreach (Collider2D soul1 in souls2)
+            Collider2D[] souls = Physics2D.OverlapCircleAll(sprite.transform.position, magnetRange);
+
+            if (souls.Length > 0)
             {
-                if (soul1.tag == "SoulV3")
+                foreach (Collider2D soul in souls)
                 {
-                    soul1.transform.Translate((spawnPoint.transform.position - soul1.transform.position).normalized * magnetForce * Time.deltaTime);
-                }
-            }
-        }
-        #endregion
-
-        #region lancers
-        if (inDownLancers)
-        {
-            if (Time.time >= lancersParticlesStartTime + waitLancersParticlesDuration)
-            {
-                particlesEnded = true;
-                BossDemonPool.BossDemonPoolInstance.DisableParticles();
-            }
-            if (!isAttackDone)
-            {
-                Vector2 positionStart = areaLancers.transform.position;
-                positionStart.x = positionStart.x + (downLancer.transform.localScale.x / 2);
-                //Create Lancers in correct positions
-                for (int i = 0; i < quantity; i++)
-                {
-                    bool found = false;
-                    for (int j = 0; j < notSpawn.Length; j++)
+                    if (soul.tag == "SoulV2")
                     {
-                        if (notSpawn[j] == i)
-                        {
-                            found = true;
-                        }
-                    }
-                    if (!found)
-                    {
-                        Vector3 lancerPosition = new Vector3(positionStart.x + i * (downLancer.transform.localScale.x), positionStart.y, 0);
-
-                        if (particlesEnded)
-                        {
-                            GameObject lancer = BossDemonPool.BossDemonPoolInstance.GetLancer();
-                            lancer.transform.position = lancerPosition;
-                            lancer.SetActive(true);
-                        }
-                        if (!particlesCreated)
-                        {
-                            GameObject particle = BossDemonPool.BossDemonPoolInstance.GetParticle();
-                            particle.transform.position = lancerPosition;
-                            particle.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
-                            particle.SetActive(true);
-                            //Instantiate(lancerParticles, lancerPosition, Quaternion.Euler(-90f,0f,0f));
-                        }
-
+                        soul.transform.Translate((sprite.transform.position - soul.transform.position).normalized * magnetForce * Time.deltaTime);
                     }
                 }
-                if (particlesEnded)
+            }
+
+            Collider2D[] souls2 = Physics2D.OverlapCircleAll(spawnPoint.transform.position, magnetRange);
+
+            if (souls2.Length > 0)
+            {
+                foreach (Collider2D soul1 in souls2)
                 {
-                    isAttackDone = true;
-                    downLancersAttackStartTime = Time.time;
+                    if (soul1.tag == "SoulV3")
+                    {
+                        soul1.transform.Translate((spawnPoint.transform.position - soul1.transform.position).normalized * magnetForce * Time.deltaTime);
+                    }
                 }
             }
-            if (!particlesCreated)
-            {
-                particlesCreated = true;
-            }
-
-
-            if (isAttackDone && Time.time >= downLancersAttackStartTime + downLancersAttackDuration)
-            {
-                inDownLancers = false;
-                spiritLancer.SetActive(false);
-                spiritLancer.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
-
-                BossDemonPool.BossDemonPoolInstance.DisableAll();
-
-                //SwitchState(State.Waiting);
-            }
-        }
         #endregion
 
-        #region Meteors
-        if (meteoring)
+        if (actualFase != 4)
         {
-            //Maybe canviarlo una mica
-            Camera.main.GetComponent<Animator>().SetTrigger("shake");
-            float value = Lerp(0, quantityMeteors, meteorsStartTime, meteorsDuration);
-            if (previousValue < (int)value)
+
+            #region lancers
+            if (inDownLancers)
             {
-                //generate Meteor
-                GameObject meteor = BossDemonPool.BossDemonPoolInstance.GetMeteor();
-
-                Vector2 position = new Vector2(Random.Range(areaMeteors.transform.position.x + meteor.transform.localScale.x, areaMeteors.transform.position.x + areaMeteors.size.x - meteor.transform.localScale.x), areaMeteors.transform.position.y);
-
-                meteor.transform.position = position;
-                //float scale = Random.Range(0.2f, 1.4f);
-                float scale = GetRandomValueForScale();
-                meteor.transform.localScale = new Vector3(scale, scale, scale);
-                meteor.SetActive(true);
-                previousValue = (int)value;
-            }
-            if (value == quantityMeteors)
-            {
-                meteoring = false;
-                spiritShield.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
-                spiritShield.SetActive(false);
-
-            }
-        }
-        #endregion
-
-        #region LaserBall
-        if (laseringBall)
-        {
-            if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration + laserBallDuration)
-            {
-                laseringBall = false;
-                spiritVoice.SetActive(false);
-                spiritVoice.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
-
-                laserBall.SetActive(false);
-                preLasers[0].SetActive(false);
-                preLasers[1].SetActive(false);
-                preLasers[2].SetActive(false);
-                preLasers[3].SetActive(false);
-                lasers[0].SetActive(false);
-                lasers[1].SetActive(false);
-                lasers[2].SetActive(false);
-                lasers[3].SetActive(false);
-
-                laserBall2.SetActive(false);
-                preLasers2[0].SetActive(false);
-                preLasers2[1].SetActive(false);
-                preLasers2[2].SetActive(false);
-                preLasers2[3].SetActive(false);
-                lasers2[0].SetActive(false);
-                lasers2[1].SetActive(false);
-                lasers2[2].SetActive(false);
-                lasers2[3].SetActive(false);
-            }
-            else
-            {
-                laserBall.transform.Rotate(0, 0, laserBallSpeed * Time.deltaTime * direction);
-                laserBall.SetActive(true);
-
-                laserBall2.transform.Rotate(0, 0, laserBallSpeed * Time.deltaTime * (-1)*direction);
-                laserBall2.SetActive(true);
-                if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration)
+                if (Time.time >= lancersParticlesStartTime + waitLancersParticlesDuration)
                 {
-                    lasers[0].SetActive(true);
-                    lasers[1].SetActive(true);
-                    lasers[2].SetActive(true);
-                    lasers[3].SetActive(true);
-
-                    lasers2[0].SetActive(true);
-                    lasers2[1].SetActive(true);
-                    lasers2[2].SetActive(true);
-                    lasers2[3].SetActive(true);
-                    /*
-                    if (actualFase == 2)
+                    particlesEnded = true;
+                    BossDemonPool.BossDemonPoolInstance.DisableParticles();
+                }
+                if (!isAttackDone)
+                {
+                    Vector2 positionStart = areaLancers.transform.position;
+                    positionStart.x = positionStart.x + (downLancer.transform.localScale.x / 2);
+                    //Create Lancers in correct positions
+                    for (int i = 0; i < quantity; i++)
                     {
+                        bool found = false;
+                        for (int j = 0; j < notSpawn.Length; j++)
+                        {
+                            if (notSpawn[j] == i)
+                            {
+                                found = true;
+                            }
+                        }
+                        if (!found)
+                        {
+                            Vector3 lancerPosition = new Vector3(positionStart.x + i * (downLancer.transform.localScale.x), positionStart.y, 0);
 
-                        lasers[0].SetActive(true);
-                        lasers[1].SetActive(true);
+                            if (particlesEnded)
+                            {
+                                GameObject lancer = BossDemonPool.BossDemonPoolInstance.GetLancer();
+                                lancer.transform.position = lancerPosition;
+                                lancer.SetActive(true);
+                            }
+                            if (!particlesCreated)
+                            {
+                                GameObject particle = BossDemonPool.BossDemonPoolInstance.GetParticle();
+                                particle.transform.position = lancerPosition;
+                                particle.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+                                particle.SetActive(true);
+                                //Instantiate(lancerParticles, lancerPosition, Quaternion.Euler(-90f,0f,0f));
+                            }
 
-                        //laserBall.transform.position = spotB.transform.position;
+                        }
                     }
-                    else
+                    if (particlesEnded)
                     {
-                        laserBall.SetActive(true);
-                        laserBall.transform.position = spotA.transform.position;
+                        isAttackDone = true;
+                        downLancersAttackStartTime = Time.time;
+                    }
+                }
+                if (!particlesCreated)
+                {
+                    particlesCreated = true;
+                }
 
-                        if (actualFase == 1)
-                        {
-                            lasers[0].SetActive(true);
 
-                        }
-                        else
-                        {
+                if (isAttackDone && Time.time >= downLancersAttackStartTime + downLancersAttackDuration)
+                {
+                    inDownLancers = false;
+                    spiritLancer.SetActive(false);
+                    spiritLancer.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
 
-                            lasers[0].SetActive(true);
-                            lasers[1].SetActive(true);
-                            lasers[2].SetActive(true);
-                            //lasers[3].SetActive(true);
-                        }
-                    }*/
+                    BossDemonPool.BossDemonPoolInstance.DisableAll();
+
+                    //SwitchState(State.Waiting);
+                }
+            }
+            #endregion
+
+            #region Meteors
+            if (meteoring)
+            {
+                //Maybe canviarlo una mica
+                Camera.main.GetComponent<Animator>().SetTrigger("shake");
+                float value = Lerp(0, quantityMeteors, meteorsStartTime, meteorsDuration);
+                if (previousValue < (int)value)
+                {
+                    //generate Meteor
+                    GameObject meteor = BossDemonPool.BossDemonPoolInstance.GetMeteor();
+
+                    Vector2 position = new Vector2(Random.Range(areaMeteors.transform.position.x + meteor.transform.localScale.x, areaMeteors.transform.position.x + areaMeteors.size.x - meteor.transform.localScale.x), areaMeteors.transform.position.y);
+
+                    meteor.transform.position = position;
+                    //float scale = Random.Range(0.2f, 1.4f);
+                    float scale = GetRandomValueForScale();
+                    meteor.transform.localScale = new Vector3(scale, scale, scale);
+                    meteor.SetActive(true);
+                    previousValue = (int)value;
+                }
+                if (value == quantityMeteors)
+                {
+                    meteoring = false;
+                    spiritShield.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
+                    spiritShield.SetActive(false);
+
+                }
+            }
+            #endregion
+
+            #region LaserBall
+            if (laseringBall)
+            {
+                if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration + laserBallDuration)
+                {
+                    laseringBall = false;
+                    spiritVoice.SetActive(false);
+                    spiritVoice.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
+
+                    laserBall.SetActive(false);
+                    preLasers[0].SetActive(false);
+                    preLasers[1].SetActive(false);
+                    preLasers[2].SetActive(false);
+                    preLasers[3].SetActive(false);
+                    lasers[0].SetActive(false);
+                    lasers[1].SetActive(false);
+                    lasers[2].SetActive(false);
+                    lasers[3].SetActive(false);
+
+                    laserBall2.SetActive(false);
+                    preLasers2[0].SetActive(false);
+                    preLasers2[1].SetActive(false);
+                    preLasers2[2].SetActive(false);
+                    preLasers2[3].SetActive(false);
+                    lasers2[0].SetActive(false);
+                    lasers2[1].SetActive(false);
+                    lasers2[2].SetActive(false);
+                    lasers2[3].SetActive(false);
                 }
                 else
                 {
-                    if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallNoActivationDuration)
+                    laserBall.transform.Rotate(0, 0, laserBallSpeed * Time.deltaTime * direction);
+                    laserBall.SetActive(true);
+
+                    laserBall2.transform.Rotate(0, 0, laserBallSpeed * Time.deltaTime * (-1) * direction);
+                    laserBall2.SetActive(true);
+                    if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallPreDuration)
                     {
                         lasers[0].SetActive(true);
                         lasers[1].SetActive(true);
@@ -526,7 +512,8 @@ public class BossDemon : FatherEnemy
                         lasers2[1].SetActive(true);
                         lasers2[2].SetActive(true);
                         lasers2[3].SetActive(true);
-                        /*if (actualFase == 2)
+                        /*
+                        if (actualFase == 2)
                         {
 
                             lasers[0].SetActive(true);
@@ -536,7 +523,9 @@ public class BossDemon : FatherEnemy
                         }
                         else
                         {
-                            //laserBall.transform.position = spotA.transform.position;
+                            laserBall.SetActive(true);
+                            laserBall.transform.position = spotA.transform.position;
+
                             if (actualFase == 1)
                             {
                                 lasers[0].SetActive(true);
@@ -544,6 +533,7 @@ public class BossDemon : FatherEnemy
                             }
                             else
                             {
+
                                 lasers[0].SetActive(true);
                                 lasers[1].SetActive(true);
                                 lasers[2].SetActive(true);
@@ -551,49 +541,89 @@ public class BossDemon : FatherEnemy
                             }
                         }*/
                     }
-                    float pos;
-                    float pos2;
-                    /*
-                    if (actualFase == 2)
-                    {
-                        pos = Lerp(laserCenter.transform.position.y, spotB.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                        preLasers[0].SetActive(true);
-                        preLasers[1].SetActive(true);
-                    }
                     else
                     {
-                        pos = Lerp(laserCenter.transform.position.y, spotA.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                        if (actualFase == 1)
+                        if (Time.time >= laserBallStartTime + laserBallAnimationDuration + laserBallNoActivationDuration)
                         {
+                            lasers[0].SetActive(true);
+                            lasers[1].SetActive(true);
+                            lasers[2].SetActive(true);
+                            lasers[3].SetActive(true);
+
+                            lasers2[0].SetActive(true);
+                            lasers2[1].SetActive(true);
+                            lasers2[2].SetActive(true);
+                            lasers2[3].SetActive(true);
+                            /*if (actualFase == 2)
+                            {
+
+                                lasers[0].SetActive(true);
+                                lasers[1].SetActive(true);
+
+                                //laserBall.transform.position = spotB.transform.position;
+                            }
+                            else
+                            {
+                                //laserBall.transform.position = spotA.transform.position;
+                                if (actualFase == 1)
+                                {
+                                    lasers[0].SetActive(true);
+
+                                }
+                                else
+                                {
+                                    lasers[0].SetActive(true);
+                                    lasers[1].SetActive(true);
+                                    lasers[2].SetActive(true);
+                                    //lasers[3].SetActive(true);
+                                }
+                            }*/
+                        }
+                        float pos;
+                        float pos2;
+                        /*
+                        if (actualFase == 2)
+                        {
+                            pos = Lerp(laserCenter.transform.position.y, spotB.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
                             preLasers[0].SetActive(true);
+                            preLasers[1].SetActive(true);
                         }
                         else
                         {
-                            preLasers[0].SetActive(true);
-                            preLasers[1].SetActive(true);
-                            preLasers[2].SetActive(true);
-                            //preLasers[3].SetActive(true);
-                        }
-                    }*/
-                    pos = Lerp(laserCenter.transform.position.x, spotA.transform.position.x, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                    pos2 = Lerp(laserCenter.transform.position.y, spotA.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                    preLasers[0].SetActive(true);
-                    preLasers[1].SetActive(true);
-                    preLasers[2].SetActive(true);
-                    preLasers[3].SetActive(true);
-                    laserBall.transform.position = new Vector3(pos, pos2, laserBall.transform.position.z);
+                            pos = Lerp(laserCenter.transform.position.y, spotA.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                            if (actualFase == 1)
+                            {
+                                preLasers[0].SetActive(true);
+                            }
+                            else
+                            {
+                                preLasers[0].SetActive(true);
+                                preLasers[1].SetActive(true);
+                                preLasers[2].SetActive(true);
+                                //preLasers[3].SetActive(true);
+                            }
+                        }*/
+                        pos = Lerp(laserCenter.transform.position.x, spotA.transform.position.x, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        pos2 = Lerp(laserCenter.transform.position.y, spotA.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        preLasers[0].SetActive(true);
+                        preLasers[1].SetActive(true);
+                        preLasers[2].SetActive(true);
+                        preLasers[3].SetActive(true);
+                        laserBall.transform.position = new Vector3(pos, pos2, laserBall.transform.position.z);
 
-                    pos = Lerp(laserCenter.transform.position.x, spotA2.transform.position.x, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                    pos2 = Lerp(laserCenter.transform.position.y, spotA2.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
-                    preLasers2[0].SetActive(true);
-                    preLasers2[1].SetActive(true);
-                    preLasers2[2].SetActive(true);
-                    preLasers2[3].SetActive(true);
-                    laserBall2.transform.position = new Vector3(pos, pos2, laserBall2.transform.position.z);
+                        pos = Lerp(laserCenter.transform.position.x, spotA2.transform.position.x, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        pos2 = Lerp(laserCenter.transform.position.y, spotA2.transform.position.y, (laserBallStartTime + laserBallAnimationDuration), laserBallPreDuration);
+                        preLasers2[0].SetActive(true);
+                        preLasers2[1].SetActive(true);
+                        preLasers2[2].SetActive(true);
+                        preLasers2[3].SetActive(true);
+                        laserBall2.transform.position = new Vector3(pos, pos2, laserBall2.transform.position.z);
+                    }
                 }
             }
+            #endregion
+
         }
-        #endregion
 
         #region Tps comentat i borrar
         /*if (areTPsMissing)
@@ -844,10 +874,11 @@ public class BossDemon : FatherEnemy
                 ok = true;
             }
         }
+        tpStartTime = Time.time;
     }
     private void UpdateTPsState()
     {
-        if (!inDownLancers && !meteoring && !laseringBall)
+        if (Time.time >= tpStartTime + tpMinDurationAm && !inDownLancers && !meteoring && !laseringBall)
         {
             if (firstLoop)
             {
@@ -881,7 +912,7 @@ public class BossDemon : FatherEnemy
         }
         else
         {
-
+            
             Camera.main.GetComponent<Animator>().SetTrigger("shake");
             //waiting until everythingfinished
         }
@@ -896,6 +927,11 @@ public class BossDemon : FatherEnemy
         movement.WantMove(true);
         wantSpawnHearts = true;
         animator.Play("BossDemonTpCome");
+        Invoke("PlayIdle",0.5f);
+    }
+    private void PlayIdle()
+    {
+        animator.Play("BossDemonIdle");
     }
     #endregion
 
@@ -1208,12 +1244,14 @@ public class BossDemon : FatherEnemy
                 movement.WantMove(false);
                 movement.SetPos(90, 110);
                 movement.SetNewArea(107.9f, 76.11f, 45.57f + 46, 41.21f + 46); //una mica hardcoded TMP
-                statesToRandomize = new State[3];
+                statesToRandomize = new State[6];
                 
                 statesToRandomize[0] = State.Waiting;
-                statesToRandomize[1] = State.BossShield;
-                //statesToRandomize[2] = State.TPs;
-                statesToRandomize[2] = State.Waiting;
+                statesToRandomize[1] = State.Waiting;
+                statesToRandomize[2] = State.BossShield;
+                statesToRandomize[3] = State.Waiting;
+                statesToRandomize[4] = State.BossShield;
+                statesToRandomize[5] = State.TPs;
                 particlesCA.Play();
                 particlesCB.Play();
                 chargerStartTime = Time.time;
@@ -1222,6 +1260,7 @@ public class BossDemon : FatherEnemy
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
+                switchFaseDuration = switchFaseDurationV2;
                 Invoke("ActiveLavaV2", 0.03f + switchFaseAnimationDuration);
                 statesToRandomize = new State[4];
                 spawnPoint.transform.position = spiritVoice.transform.position;
@@ -1232,17 +1271,37 @@ public class BossDemon : FatherEnemy
                 movement.WantMove(false);
                 movement.SetPos(90, 45);
                 movement.SetNewArea(107.9f, 76.11f, 45.57f, 41.21f); //una mica hardcoded TMP
+
+                statesToRandomize = new State[7];
                 statesToRandomize[0] = State.Waiting;
                 statesToRandomize[1] = State.BossVoice;
-                //statesToRandomize[2] = State.TPs;
-                statesToRandomize[2] = State.Waiting;
-                statesToRandomize[3] = State.SideLava;
+                statesToRandomize[2] = State.BossVoice;
+                statesToRandomize[3] = State.Waiting;
+                statesToRandomize[4] = State.SideLava;
+                statesToRandomize[5] = State.SideLava;
+                statesToRandomize[6] = State.TPs;
                 //venomAnimation = "ShieldVenomV3";
                 //jumpAnimation = "ShieldJumpV2";
                 //spriteAnimator.Play("boss1SwitchFaseAnimation3");
+                roof.SetActive(false);
+                meteoring = false;
+                spiritShield.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
+                spiritShield.SetActive(false);
                 break;
             case 4:
-
+                switchFaseDuration = switchFaseDurationV3;
+                statesToRandomize = new State[2];
+                statesToRandomize[0] = State.Waiting;
+                statesToRandomize[1] = State.TPs;
+                movement.SetMaxForce(100000);
+                healthBar.SetMaxHealth(250);
+                healthBar.SetHealth(250);
+                currentHealth = 250;
+                movement.SetNewArea(108.43f, 75.48f, 23.67f, 17.56f);
+                healthBar.gameObject.SetActive(true);
+                music.Play();
+                animator.Play("BossDemonIdle");
+                
                 break;
         }
         
@@ -1295,13 +1354,17 @@ public class BossDemon : FatherEnemy
                 }
                 if (Time.time >= switchFaseStartTime + switchFaseAnimationDuration + switchFaseDuration)
                 {
-                    envAnimator.Play("noAnimationTop");
+                    envAnimator.Play("noAnimationFinal");
                     SwitchState(RandomBehaviour());
                 }
                 else
                 {
                     //moving
                 }
+            }
+            if (actualFase == 4)
+            {
+                SwitchState(RandomBehaviour());
             }
         }
 
@@ -1312,6 +1375,18 @@ public class BossDemon : FatherEnemy
         switchingFase = false;
         wantSpawnHearts = true;
         movement.WantMove(true);
+        if (actualFase == 2)
+        {
+            roof.SetActive(true);
+        }
+        /*if (actualFase == 4)
+        {
+            movement.SetMaxForce(100000);
+            healthBar.SetMaxHealth(250);
+            healthBar.SetHealth(250);
+            movement.SetNewArea(108.43f, 75.48f, 23.67f, 17.56f);
+            healthBar.gameObject.SetActive(true);
+        }*/
     }
     #endregion
 
@@ -1319,7 +1394,10 @@ public class BossDemon : FatherEnemy
     #region DEAD
     private void EnterDeadState()
     {
-        
+        souling = false;
+        wantSpawnHearts = false;
+        movement.WantMove(false);
+        animator.Play("BossDemonDeath");
         healthBar.gameObject.SetActive(false);
         /*
         globalLight.intensity = startIntensity;
@@ -1360,21 +1438,60 @@ public class BossDemon : FatherEnemy
         //Destroy(gameObject);
         if (actualFase == 4) 
         {
-
+            actualFase = 5;
         }
         else
         {
-            actualFase = 4;
-            wantSwitchState = true;
-            SwitchState(State.SwitchFase);
+            music.Stop();
+            falsePortal.SetActive(true);
+            Invoke("goDown",1.5f);
+            deathStartTime = Time.time;
+
         }
     }
 
     private void UpdateDeadState()
     {
+        if (!goDownTrigger)
+        {
+            sprite.transform.position = Vector2.MoveTowards(sprite.transform.position, fase4pos.transform.position, 3 * Time.deltaTime);
+        }
+        else
+        {
 
+        }
+        if (actualFase != 5) {
+            if (Time.time >= deathStartTime + deathDuration)
+            {
+                actualFase = 4;
+                wantSwitchState = true;
+                envAnimator.Play("SwitchFase4");
+                Invoke("Fase4Env", 2);
+                falseFloor.SetActive(false);
+
+                SwitchState(State.SwitchFase);
+            }
+        }
+        else
+        {
+            //fariem lo de mascara
+
+
+            GameObject p = Instantiate(portal, portalSpawn.transform.position, portal.transform.rotation);
+            p.GetComponent<EndLevel>().nextLevelName = "DemoEnd";
+            Instantiate(lostSoul, portalSpawn.transform.position - new Vector3(4,0,0), lostSoul.transform.rotation);
+            for (int i = 0; i <= soulsToGive; i++)
+            {
+                GameObject g = Instantiate(finalSouls, sprite.transform.position - new Vector3(0, 3, 0), Quaternion.identity);
+                g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
+            }
+            Destroy(this.gameObject);
+        }
     }
-
+    private void Fase4Env()
+    {
+        envAnimator.Play("noAnimationFinalFinal");
+    }
     private void ExitDeadState()
     {
 
@@ -1440,6 +1557,13 @@ public class BossDemon : FatherEnemy
         }
 
         currentState = state;
+    }
+
+    private void goDown()
+    {
+        movement.SetPos(91.54f, 16.56f);
+        movement.SetMaxForce(1000);
+        goDownTrigger = true;
     }
 
     private State RandomBehaviour()

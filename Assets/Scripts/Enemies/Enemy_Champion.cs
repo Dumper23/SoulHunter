@@ -329,8 +329,9 @@ public class Enemy_Champion : FatherEnemy
         SpikesStartTime = Time.time;
         swicher = false;
         inThorns = true;
-        sprite.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
-        sprite2.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
+        //sprite.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
+        //sprite2.transform.localScale -= new Vector3(0.2f, 0.0f, 0.0f);
+        spriteAnimator.Play("Champion1Shoot");
     }
 
     private void UpdateSpikesState()
@@ -345,8 +346,9 @@ public class Enemy_Champion : FatherEnemy
     {
         GetComponent<fireSpikes>().Shoot();
         inThorns = false;
-        sprite.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
-        sprite2.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
+        //sprite.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
+        //sprite2.transform.localScale += new Vector3(0.2f, 0.0f, 0.0f);
+        spriteAnimator.Play("Champion1Defense");
     }
 
     #endregion

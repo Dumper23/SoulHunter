@@ -286,7 +286,7 @@ public class playerController : MonoBehaviour
             "Enemies will leave x2 souls when you kill them. \n\n");
 
         lostSoulDescriptionDictionary.Add("DeflectMissiles",
-            "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a different planet, and in the back it says 'May the force be with you', it's procedence it's a big mistery.");
+            "With this Lost Soul you will be able to desviate projectiles. (It won't hurt enemies)\n\nThis Lost Soul appears to come from a distant galaxy, and in the back it says 'May the force be with you'.");
 
         lostSoulDescriptionDictionary.Add("HolyWater",
             "You will deal more damage to Demonic enemies (Indicated with a demon logo on top of the enemy).\n\nShadow almost used this water as a perfume, luckily it doesn't smell too good.");
@@ -1120,7 +1120,10 @@ public class playerController : MonoBehaviour
 
     private void returnCollision()
     {
-        Physics2D.IgnoreCollision(tempCollider.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
+        if (tempCollider != null)
+        {
+            Physics2D.IgnoreCollision(tempCollider.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

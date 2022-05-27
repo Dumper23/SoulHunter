@@ -19,7 +19,7 @@ public class Arrow : MonoBehaviour
         {
             c = GetComponent<Collider2D>();
             c.enabled = false;
-            Invoke("enableCollision", 0.5f);
+            Invoke("enableCollision", 0.07f);
         }
         Destroy(gameObject, lifeTime);
         if (GetComponentInChildren<Animator>())

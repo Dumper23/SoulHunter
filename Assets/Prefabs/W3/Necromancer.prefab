@@ -55,8 +55,8 @@ MonoBehaviour:
   lineMaterial: {fileID: 2100000, guid: ad0e90c20e007e44492788b57023365c, type: 2}
   deadSoundObject: {fileID: 3631797305425108967, guid: 525cc56e37b4e5d4b847858ef2a811c8, type: 3}
   audios:
-  - {fileID: 8300000, guid: 8302e0cc8970a3f4f97fa9ef91794f81, type: 3}
-  - {fileID: 8300000, guid: 6f525e323bae0c04abc456692d975292, type: 3}
+  - {fileID: 8300000, guid: acde7b5c27632d0459cf02ea6f3cbabe, type: 3}
+  - {fileID: 8300000, guid: acde7b5c27632d0459cf02ea6f3cbabe, type: 3}
   soul: {fileID: 5330374998443095163, guid: d80be715e73c85346a5937a84666fc92, type: 3}
   soulForce: 35
   soulsToGive: 10

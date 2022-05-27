@@ -282,7 +282,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: e0b2ffff8a7f94d428c0f4793d75bfc2, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -326,7 +326,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -391,8 +391,8 @@ MonoBehaviour:
   soul: {fileID: 5330374998443095163, guid: d80be715e73c85346a5937a84666fc92, type: 3}
   soulForce: 35
   audios:
-  - {fileID: 8300000, guid: 8302e0cc8970a3f4f97fa9ef91794f81, type: 3}
-  - {fileID: 8300000, guid: 6f525e323bae0c04abc456692d975292, type: 3}
+  - {fileID: 8300000, guid: 8237224dce40b5047897e5b253f88b43, type: 3}
+  - {fileID: 8300000, guid: 8237224dce40b5047897e5b253f88b43, type: 3}
   deadSoundObject: {fileID: 3631797305425108967, guid: 525cc56e37b4e5d4b847858ef2a811c8, type: 3}
   groundCheckDistance: 0.44
   wallCheckDistance: 0.3

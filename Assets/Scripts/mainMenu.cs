@@ -168,6 +168,7 @@ public class mainMenu : MonoBehaviour
     {
         levels.SetActive(true);
         buttonPlay.SetActive(false);
+        cheatCode = false;
         levelSelection.SetActive(false);
         quitButton.SetActive(false);
         optionsButton.SetActive(false);
@@ -183,6 +184,7 @@ public class mainMenu : MonoBehaviour
 
     public void backLevels()
     {
+        cheatCode = true;
         levels.SetActive(false);
         buttonPlay.SetActive(true);
         levelSelection.SetActive(true);

@@ -136,7 +136,7 @@ public class kamikaze : FatherEnemy
     {
         //Spawn chunks and blood
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
-        deadSoundObject.GetComponent<AudioSource>().volume = 0.5f;
+        deadSoundObject.GetComponent<AudioSource>().volume = 0.2f;
         Instantiate(deadSoundObject, transform.position, transform.rotation);
 
         for (int i = 0; i < soulsToGive; i++)

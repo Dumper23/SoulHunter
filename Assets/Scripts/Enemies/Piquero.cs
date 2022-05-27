@@ -35,6 +35,7 @@ public class Piquero : FatherEnemy
 
     private const int DAMAGE_SOUND = 0;
     private const int DEAD_SOUND = 1;
+    private const int RESSURRECT_SOUND = 2;
 
 
     private State currentState;
@@ -246,9 +247,12 @@ public class Piquero : FatherEnemy
         //Spawn chunks and blood
         deadSoundObject.GetComponent<AudioSource>().clip = audios[DEAD_SOUND];
         Instantiate(deadSoundObject, alive.transform.position, transform.rotation);
+        
 
         if (!isSkeleton)
         {
+            deadSoundObject.GetComponent<AudioSource>().clip = audios[DAMAGE_SOUND];
+            Instantiate(deadSoundObject, alive.transform.position, transform.rotation);
             for (int i = 0; i <= soulsToGive; i++)
             {
                 GameObject g = Instantiate(soul, alive.transform.position, Quaternion.identity);
@@ -293,6 +297,8 @@ public class Piquero : FatherEnemy
     {
         anim.Play("res");
         currentHealth = maxHealth;
+        audioSource.clip = audios[RESSURRECT_SOUND];
+        audioSource.Play();
         Invoke("walkAgain", 0.9f);
     }
 

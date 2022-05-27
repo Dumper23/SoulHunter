@@ -18,6 +18,7 @@ public class Archer : FatherEnemy
 
     private const int DAMAGE_SOUND = 0;
     private const int DEAD_SOUND = 1;
+    private const int ATTACK_SOUND = 2;
 
     private AudioSource audioSource;
     private Animator anim;
@@ -79,6 +80,8 @@ public class Archer : FatherEnemy
 
     private void shoot()
     {
+        audioSource.clip = audios[ATTACK_SOUND];
+        audioSource.Play();
         GameObject projectile = Instantiate(arrow, firePoint.position, firePoint.rotation);
         
         float angle = Mathf.Atan2((target.position - transform.position).normalized.y, (target.position - transform.position).normalized.x) * Mathf.Rad2Deg;

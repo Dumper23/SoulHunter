@@ -4971,6 +4971,7 @@ MonoBehaviour:
   audios:
   - {fileID: 8300000, guid: 8302e0cc8970a3f4f97fa9ef91794f81, type: 3}
   - {fileID: 8300000, guid: 6f525e323bae0c04abc456692d975292, type: 3}
+  - {fileID: 8300000, guid: e953220f3828e894ebbe356eaf0f008f, type: 3}
   deadSoundObject: {fileID: 3631797305425108967, guid: 525cc56e37b4e5d4b847858ef2a811c8, type: 3}
   hitParticle: {fileID: 8620610981508206902}
   deathChunkParticle: {fileID: 782816691472561430, guid: b2557309e681b5649b1c0b7566e1503b, type: 3}
@@ -5004,7 +5005,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.178
   m_Pitch: 1
   Loop: 0
   Mute: 0

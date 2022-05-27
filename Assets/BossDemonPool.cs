@@ -12,7 +12,8 @@ public class BossDemonPool : MonoBehaviour
         poolParticles,
         poolMeteors,
         poolSideLava,
-        poolSideLavaAm;
+        poolSideLavaAm,
+        poolBullet;
 
 
     private bool notEnoughLancersInPool = true;
@@ -20,6 +21,7 @@ public class BossDemonPool : MonoBehaviour
     private bool notEnoughMeteors = true;
     private bool notEnoughSideLava = true;
     private bool notEnoughSideLavaAm = true;
+    private bool notEnoughBullets = true;
 
 
     private List<GameObject> lancers;
@@ -27,6 +29,7 @@ public class BossDemonPool : MonoBehaviour
     private List<GameObject> meteors;
     private List<GameObject> sideLava;
     private List<GameObject> sideLavaAm;
+    private List<GameObject> bullets;
 
 
     private void Awake()
@@ -42,6 +45,38 @@ public class BossDemonPool : MonoBehaviour
         meteors = new List<GameObject>();
         sideLava = new List<GameObject>();
         sideLavaAm = new List<GameObject>();
+        bullets = new List<GameObject>();
+    }
+
+    public GameObject GetBullet()
+    {
+        if (bullets.Count > 0)
+        {
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                if (!bullets[i].activeInHierarchy)
+                {
+                    return bullets[i];
+                }
+            }
+        }
+
+        if (notEnoughBullets)
+        {
+            GameObject bul = Instantiate(poolBullet);
+            bul.SetActive(false);
+            bullets.Add(bul);
+            return bul;
+        }
+
+        return null;
+    }
+    public void DisableBullets()
+    {
+        foreach (GameObject bullet in bullets)
+        {
+            bullet.SetActive(false);
+        }
     }
 
     public GameObject GetLancer()

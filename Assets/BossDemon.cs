@@ -70,7 +70,8 @@ public class BossDemon : FatherEnemy
         portal,
         finalSouls,
         falsePortal,
-        lostSoul;
+        lostSoul,
+        endBossMusic;
 
     public List<GameObject> lasers = new List<GameObject>();
     public List<GameObject> preLasers = new List<GameObject>();
@@ -107,9 +108,11 @@ public class BossDemon : FatherEnemy
         chargerMinDuration = 4f,
         chargerMaxDuration = 8f,
         deathDuration = 8f,
-        tpMinDurationAm = 2f;
+        tpMinDurationAm = 2f,
+        fireBulletCooldownMin = 1f,
+        fireBulletCooldownMax = 5f;
 
-    private float currentHealth, 
+    private float currentHealth,
         quantity,
         quantitySideLava,
         lancersParticlesStartTime,
@@ -129,7 +132,9 @@ public class BossDemon : FatherEnemy
         chargerStartTime,
         chargerDuration,
         deathStartTime,
-        tpStartTime;
+        tpStartTime,
+        fireBulletStartTime,
+        fireBulletCooldown;
 
     private bool switchingFase = false,
         inTP = false,
@@ -154,7 +159,8 @@ public class BossDemon : FatherEnemy
         wantSpawnHearts = false,
         coolDown = false,
         whatPosCharger,
-        goDownTrigger = false;
+        goDownTrigger = false,
+        wantFireBullets = false;
 
     [SerializeField]
     private BoxCollider2D areaLancers,
@@ -171,7 +177,8 @@ public class BossDemon : FatherEnemy
 
     [SerializeField]
     private int quantityMeteors = 40,
-        quantityOfSouls = 20;
+        quantityOfSouls = 20,
+        ammountBullets = 8;
 
     [SerializeField]
     private Animator envAnimator;
@@ -187,7 +194,15 @@ public class BossDemon : FatherEnemy
     private HeartDemonBehaviour[] heartsDemon;
 
     [SerializeField]
-    private AudioSource music;
+    private AudioSource music,
+        audioTp;
+
+    [SerializeField]
+    private AudioClip cliptp,
+        bossMusic,
+        endBoss,
+        clipGroar,
+        clipLaugh;
 
     // Start is called before the first frame update
     void Start()
@@ -223,11 +238,29 @@ public class BossDemon : FatherEnemy
         meteorsParticlesGO = Instantiate(meteorsParticles);
         meteorsParticlesGO.transform.position = new Vector3(areaMeteors.transform.position.x + areaMeteors.offset.x, areaMeteors.transform.position.y - 5, areaMeteors.transform.position.z);
         meteorsParticlesGO.SetActive(false);
+
+        GetComponent<FireDemonBullets>().SetAmmount(ammountBullets);
+    }
+
+    private void StopingShoot()
+    {
+        GetComponent<FireDemonBullets>().StopShoot();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (wantFireBullets)
+        {
+            if (Time.time >= fireBulletStartTime + fireBulletCooldown)
+            {
+                //fire etc
+                fireBulletStartTime = Time.time;
+                fireBulletCooldown = Random.Range(fireBulletCooldownMin, fireBulletCooldownMax);
+                GetComponent<FireDemonBullets>().Shoot();
+                Invoke("StopingShoot",0.2f);
+            }
+        }
         if (coolDown)
         {
             Invoke("RemoveCoolDown",0.2f);
@@ -833,6 +866,11 @@ public class BossDemon : FatherEnemy
                 wantSpawnHearts = true;
                 heartCurrentDuration = heartSpawnDurationMax;
                 heartSpawnStartTime = Time.time;
+                music.clip = bossMusic;
+                wantFireBullets = true;
+                fireBulletStartTime = Time.time;
+                fireBulletCooldown = Random.Range(fireBulletCooldownMin, fireBulletCooldownMax);
+                music.Play();
             }
 
         }
@@ -875,6 +913,8 @@ public class BossDemon : FatherEnemy
             }
         }
         tpStartTime = Time.time;
+        audioTp.clip = cliptp;
+        audioTp.Play();
     }
     private void UpdateTPsState()
     {
@@ -884,6 +924,13 @@ public class BossDemon : FatherEnemy
             {
                 firstLoop = false;
                 TPs[posTP].GetComponent<TPFunctionality>().startTP();
+                for (int i = 0; i < heartsDemon.Length; i++)
+                {
+
+                    heartsDemon[i].gameObject.SetActive(false);
+
+                }
+                wantFireBullets = false;
             }
 
             if (TPs[posTP].GetComponent<TPFunctionality>().hasFinished())
@@ -901,11 +948,36 @@ public class BossDemon : FatherEnemy
                 {
                     areTPsMissing = false;
                     //treiem de la possibilitat de estat el de TPs
-                    statesToRandomize = new State[4];
-                    statesToRandomize[0] = State.BossLancer;
-                    statesToRandomize[1] = State.BossShield;
-                    statesToRandomize[2] = State.BossVoice;
-                    statesToRandomize[3] = State.Waiting;
+                    if (actualFase == 1)
+                    {
+                        statesToRandomize = new State[6];
+                        statesToRandomize[0] = State.Waiting;
+                        statesToRandomize[1] = State.SideLava;
+                        statesToRandomize[2] = State.BossLancer;
+                        statesToRandomize[3] = State.Waiting;
+                        statesToRandomize[4] = State.SideLava;
+                        statesToRandomize[5] = State.BossLancer;
+                    }
+                    if (actualFase == 2)
+                    {
+                        statesToRandomize = new State[5];
+                        statesToRandomize[0] = State.Waiting;
+                        statesToRandomize[1] = State.Waiting;
+                        statesToRandomize[2] = State.BossShield;
+                        statesToRandomize[3] = State.Waiting;
+                        statesToRandomize[4] = State.BossShield;
+                    }
+                    if (actualFase == 3)
+                    {
+                        statesToRandomize = new State[6];
+                        statesToRandomize[0] = State.Waiting;
+                        statesToRandomize[1] = State.BossVoice;
+                        statesToRandomize[2] = State.BossVoice;
+                        statesToRandomize[3] = State.Waiting;
+                        statesToRandomize[4] = State.SideLava;
+                        statesToRandomize[5] = State.SideLava;
+                    }
+
                 }
                 SwitchState(State.Waiting);
             }
@@ -924,10 +996,16 @@ public class BossDemon : FatherEnemy
     }
     private void ExitTPsState()
     {
+        wantFireBullets = true;
         movement.WantMove(true);
         wantSpawnHearts = true;
         animator.Play("BossDemonTpCome");
-        Invoke("PlayIdle",0.5f);
+        Invoke("PlayIdle", 0.5f);
+        BossDemonPool.BossDemonPoolInstance.DisableBullets();
+        if (wantSwitchState)
+        {
+            inTP = false;
+        }
     }
     private void PlayIdle()
     {
@@ -1226,6 +1304,8 @@ public class BossDemon : FatherEnemy
     #region SWITCHFASE
     private void EnterSwitchFaseState()
     {
+        wantFireBullets = false;
+        BossDemonPool.BossDemonPoolInstance.DisableBullets();
         souling = false;
         wantSpawnHearts = false;
         switch (actualFase)
@@ -1257,6 +1337,8 @@ public class BossDemon : FatherEnemy
                 chargerStartTime = Time.time;
                 chargerDuration = Random.Range(chargerMinDuration, chargerMaxDuration);
                 whatPosCharger = Random.value > 0.5f;
+                audioTp.clip = clipGroar;
+                audioTp.Play();
                 //spriteAnimator.Play("boss1SwitchFaseAnimation2");
                 break;
             case 3:
@@ -1287,6 +1369,9 @@ public class BossDemon : FatherEnemy
                 meteoring = false;
                 spiritShield.transform.parent.transform.GetComponent<Animator>().Play("NotShowing");
                 spiritShield.SetActive(false);
+                audioTp.clip = clipGroar;
+                audioTp.Play();
+
                 break;
             case 4:
                 switchFaseDuration = switchFaseDurationV3;
@@ -1299,7 +1384,10 @@ public class BossDemon : FatherEnemy
                 currentHealth = 250;
                 movement.SetNewArea(108.43f, 75.48f, 23.67f, 17.56f);
                 healthBar.gameObject.SetActive(true);
+                music.clip = bossMusic;
                 music.Play();
+                audioTp.clip = clipLaugh;
+                audioTp.Play();
                 animator.Play("BossDemonIdle");
                 
                 break;
@@ -1387,6 +1475,14 @@ public class BossDemon : FatherEnemy
             movement.SetNewArea(108.43f, 75.48f, 23.67f, 17.56f);
             healthBar.gameObject.SetActive(true);
         }*/
+        wantFireBullets = true;
+        if (actualFase == 3)
+        {
+            columnA.tag = "difWall";
+            columnA.layer = LayerMask.NameToLayer("DiffWall");
+            columnB.tag = "difWall";
+            columnB.layer = LayerMask.NameToLayer("DiffWall");
+        }
     }
     #endregion
 
@@ -1394,9 +1490,14 @@ public class BossDemon : FatherEnemy
     #region DEAD
     private void EnterDeadState()
     {
+        wantFireBullets = false;
+        BossDemonPool.BossDemonPoolInstance.DisableBullets();
         souling = false;
         wantSpawnHearts = false;
         movement.WantMove(false);
+        animator.StopPlayback();
+        CancelInvoke("animationTp");
+        CancelInvoke("PlayIdle");
         animator.Play("BossDemonDeath");
         healthBar.gameObject.SetActive(false);
         /*
@@ -1439,10 +1540,14 @@ public class BossDemon : FatherEnemy
         if (actualFase == 4) 
         {
             actualFase = 5;
+            
         }
         else
         {
+
             music.Stop();
+            music.clip = endBoss;
+            music.Play();
             falsePortal.SetActive(true);
             Invoke("goDown",1.5f);
             deathStartTime = Time.time;
@@ -1485,6 +1590,8 @@ public class BossDemon : FatherEnemy
                 GameObject g = Instantiate(finalSouls, sprite.transform.position - new Vector3(0, 3, 0), Quaternion.identity);
                 g.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * soulForce, ForceMode2D.Impulse);
             }
+            music.Stop();
+            Instantiate(endBossMusic);
             Destroy(this.gameObject);
         }
     }

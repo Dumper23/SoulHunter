@@ -1,0 +1,258 @@
+fileFormatVersion: 2
+guid: 906be3f6996db1643b9ebfcda0f00e5e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2162766994774161030
+    second: MiniSpearMan_0
+  - first:
+      213: -5562096071103744139
+    second: MiniSpearMan_1
+  - first:
+      213: -7482988128699340779
+    second: MiniSpearMan_2
+  - first:
+      213: 3747124102054857487
+    second: MiniSpearMan_3
+  - first:
+      213: 7799384791829634183
+    second: MiniSpearMan_4
+  - first:
+      213: -4636717877653839678
+    second: MiniSpearMan_5
+  - first:
+      213: 383374598439774415
+    second: MiniSpearMan_6
+  - first:
+      213: -255400804039188915
+    second: MiniSpearMan_7
+  - first:
+      213: -8594910477352517244
+    second: MiniSpearMan_8
+  - first:
+      213: -6526007213610444219
+    second: MiniSpearMan_9
+  - first:
+      213: 4876747651469033931
+    second: MiniSpearMan_10
+  - first:
+      213: 2401450097206899915
+    second: MiniSpearMan_11
+  - first:
+      213: 980161217612829656
+    second: MiniSpearMan_12
+  - first:
+      213: 8554882482823335935
+    second: MiniSpearMan_13
+  - first:
+      213: -746633045687430018
+    second: MiniSpearMan_14
+  - first:
+      213: 7840843372608783117
+    second: MiniSpearMan_15
+  - first:
+      213: -8740010173717043448
+    second: MiniSpearMan_16
+  - first:
+      213: 8126511288811796868
+    second: MiniSpearMan_17
+  - first:
+      213: 4023094116534102115
+    second: MiniSpearMan_18
+  - first:
+      213: 8540764438802995667
+    second: MiniSpearMan_19
+  - first:
+      213: 2387466484870569373
+    second: MiniSpearMan_20
+  - first:
+      213: 641021518690718148
+    second: MiniSpearMan_21
+  - first:
+      213: -632410494518889265
+    second: MiniSpearMan_22
+  - first:
+      213: 8916712658608939260
+    second: MiniSpearMan_23
+  - first:
+      213: 4882006378774180178
+    second: MiniSpearMan_24
+  - first:
+      213: 6573133240277011525
+    second: MiniSpearMan_25
+  - first:
+      213: 4630660933939301319
+    second: LancerChunks_0
+  - first:
+      213: -4224575842031054013
+    second: LancerChunks_1
+  - first:
+      213: 7593883258059404859
+    second: LancerChunks_2
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LancerChunks_0
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 168
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cb0bbac599634040800000000000000
+      internalID: 4630660933939301319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LancerChunks_1
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 162
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 343da0987aa4f55c0800000000000000
+      internalID: -4224575842031054013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LancerChunks_2
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 163
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b36ba6ec694e26960800000000000000
+      internalID: 7593883258059404859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -101,6 +101,7 @@ public class Enemy_Champion : FatherEnemy
         statesToRandomize[2] = State.Spikes;
         statesToRandomize[3] = State.Spikes;
         statesToRandomize[4] = State.Spikes;
+        SwitchState(State.Waiting);
 
         if (player.position.x > this.transform.position.x)
         {

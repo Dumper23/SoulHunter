@@ -59,8 +59,8 @@ MonoBehaviour:
   damageToPlayer: 1
   pointsToGive: 10
   audios:
-  - {fileID: 8300000, guid: 0c4209b567475e6439d5b70fefe660f2, type: 3}
   - {fileID: 8300000, guid: 6f525e323bae0c04abc456692d975292, type: 3}
+  - {fileID: 8300000, guid: 0c4209b567475e6439d5b70fefe660f2, type: 3}
   deadSoundObject: {fileID: 3631797305425108967, guid: 525cc56e37b4e5d4b847858ef2a811c8, type: 3}
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1

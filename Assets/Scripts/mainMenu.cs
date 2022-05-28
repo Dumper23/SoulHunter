@@ -104,7 +104,7 @@ public class mainMenu : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("Intro");
+            SceneManager.LoadScene("Tutorial");
         }
     }
 

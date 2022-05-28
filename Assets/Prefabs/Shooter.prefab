@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 5668566062277139048}
   - component: {fileID: 5668566062277139047}
   - component: {fileID: -8764961386994548896}
-  - component: {fileID: 596112814}
+  - component: {fileID: 6493948655173910686}
   m_Layer: 6
   m_Name: Shooter
   m_TagString: Enemy
@@ -291,7 +291,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!95 &596112814
+--- !u!95 &6493948655173910686
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -301,7 +301,7 @@ Animator:
   m_GameObject: {fileID: 5668566062277139043}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 917a9cd16784e884eac5a4e226c0a3dc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7c331d2d784bd274b8c3c12c00087055, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

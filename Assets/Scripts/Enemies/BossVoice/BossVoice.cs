@@ -169,6 +169,8 @@ public class BossVoice : FatherEnemy
         audio6,
         audio7;
 
+    public GameObject voiceSoul;
+
     private string amS1 = "VoiceSwitchTop";
     private string amS2 = "VoiceSwitchDown";
     private string amS = "VoiceSwitchTop";
@@ -910,7 +912,7 @@ public class BossVoice : FatherEnemy
     private void EnterDeadState()
     {
         healthBar.gameObject.SetActive(false);
-        //Instantiate(hardSkinSoul, sprite.transform.position + new Vector3(0, 1, 0), hardSkinSoul.transform.rotation);
+        Instantiate(voiceSoul, sprite.transform.position + new Vector3(0, 1, 0), voiceSoul.transform.rotation);
         GameObject p = Instantiate(portal, portalSpawnPoint.transform.position, portal.transform.rotation) as GameObject;
         p.GetComponent<EndLevel>().nextLevelName = "L1W4";
         for (int i = 0; i <= soulsToGive; i++)
